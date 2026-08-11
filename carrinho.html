@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saúde HP - Carrinho</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topo">
+    <h1>SAÚDE HP</h1>
+    <div class="usuario-topo">
+        <span>Farmácia: farmacia1</span>
+        <a class="logout" href="index.html">SAIR</a>
+    </div>
+</header>
+
+<nav class="menu">
+    <a href="inicio.html" class="">INÍCIO</a>
+<a href="produtos.html" class="">PRODUTOS</a>
+<a href="cadastrar.html" class="">CADASTRAR</a>
+<a href="carrinho.html" class="ativo">CARRINHO (2)</a>
+</nav>
+
+<main class="container">
+
+<div class="card">
+    <h2>CARRINHO</h2>
+
+    <table class="tabela">
+        <tr>
+            <th>Produto</th>
+            <th>Quantidade</th>
+            <th>Valor unitário</th>
+            <th>Subtotal</th>
+            <th>Ação</th>
+        </tr>
+
+        <tr>
+            <td>Dipirona</td>
+            <td>2</td>
+            <td>R$ 12,50</td>
+            <td>R$ 25,00</td>
+            <td><a class="acao excluir" href="#">REMOVER</a></td>
+        </tr>
+
+        <tr>
+            <td>Álcool 70%</td>
+            <td>1</td>
+            <td>R$ 8,90</td>
+            <td>R$ 8,90</td>
+            <td><a class="acao excluir" href="#">REMOVER</a></td>
+        </tr>
+    </table>
+
+    <div class="total">TOTAL: R$ 33,90</div>
+
+    <br>
+
+    <input type="text" placeholder="Nome da pessoa que comprou">
+    <a class="botao" href="recibo.html">FINALIZAR COMPRA</a>
+</div>
+
+</main>
+
+</body>
+</html>

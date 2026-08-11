@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saúde HP - Produtos</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topo">
+    <h1>SAÚDE HP</h1>
+    <div class="usuario-topo">
+        <span>Farmácia: farmacia1</span>
+        <a class="logout" href="index.html">SAIR</a>
+    </div>
+</header>
+
+<nav class="menu">
+    <a href="inicio.html" class="">INÍCIO</a>
+<a href="produtos.html" class="ativo">PRODUTOS</a>
+<a href="cadastrar.html" class="">CADASTRAR</a>
+<a href="carrinho.html" class="">CARRINHO (2)</a>
+</nav>
+
+<main class="container">
+
+<div class="card">
+    <h2>PRODUTOS CADASTRADOS</h2>
+
+    <table class="tabela">
+        <tr>
+            <th>Foto</th>
+            <th>Produto</th>
+            <th>Valor</th>
+            <th>Estoque</th>
+            <th>Repor estoque</th>
+            <th>Comprar</th>
+            <th>Ação</th>
+        </tr>
+
+        <tr>
+            <td><div class="foto-exemplo">💊</div></td>
+            <td>Dipirona</td>
+            <td>R$ 12,50</td>
+            <td>15</td>
+            <td>
+                <input type="number" value="1" min="1">
+                <button>ADICIONAR ESTOQUE</button>
+            </td>
+            <td>
+                <input type="number" value="1" min="1">
+                <button>ADICIONAR</button>
+            </td>
+            <td><a class="acao excluir" href="#">EXCLUIR</a></td>
+        </tr>
+
+        <tr>
+            <td><div class="foto-exemplo">🧴</div></td>
+            <td>Álcool 70%</td>
+            <td>R$ 8,90</td>
+            <td>6</td>
+            <td>
+                <input type="number" value="1" min="1">
+                <button>ADICIONAR ESTOQUE</button>
+            </td>
+            <td>
+                <input type="number" value="1" min="1">
+                <button>ADICIONAR</button>
+            </td>
+            <td><a class="acao excluir" href="#">EXCLUIR</a></td>
+        </tr>
+
+        <tr>
+            <td><div class="foto-exemplo">📦</div></td>
+            <td>Paracetamol</td>
+            <td>R$ 9,00</td>
+            <td><span class="sem-estoque">0<br>SEM ESTOQUE</span></td>
+            <td>
+                <input type="number" value="1" min="1">
+                <button>ADICIONAR ESTOQUE</button>
+            </td>
+            <td><strong class="sem-estoque">SEM ESTOQUE</strong></td>
+            <td><a class="acao excluir" href="#">EXCLUIR</a></td>
+        </tr>
+    </table>
+</div>
+
+</main>
+
+</body>
+</html>

@@ -1,0 +1,434 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background: #d9d9d9;
+    color: #222;
+}
+
+/* =========================
+   TELA DE LOGIN
+   ========================= */
+
+.login-body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #d9d9d9;
+}
+
+.login-card {
+    width: 430px;
+    background: #ff2b2f;
+    border-radius: 28px;
+    padding: 45px 55px;
+    box-shadow: 14px 12px 0 #777;
+}
+
+.login-card h1 {
+    color: white;
+    text-align: center;
+    font-size: 46px;
+    margin-bottom: 30px;
+}
+
+.logo-farmacia {
+    width: 145px;
+    height: 145px;
+    margin: 0 auto 38px auto;
+    border: 9px solid white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cruz {
+    color: white;
+    font-size: 85px;
+    line-height: 1;
+}
+
+.login-card label {
+    display: block;
+    color: white;
+    font-size: 21px;
+    font-weight: bold;
+    margin: 15px 0 5px 8px;
+}
+
+.login-card input {
+    width: 100%;
+    height: 48px;
+    border: none;
+    border-radius: 30px;
+    background: white;
+    padding: 0 18px;
+    font-size: 17px;
+    outline: none;
+}
+
+.login-card button {
+    width: 100%;
+    margin-top: 25px;
+    padding: 14px;
+    border: 3px solid white;
+    border-radius: 30px;
+    background: transparent;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.login-card button:hover {
+    background: white;
+    color: #ff2b2f;
+}
+
+.teste {
+    color: white;
+    text-align: center;
+    margin-top: 18px;
+    font-size: 12px;
+}
+
+
+/* =========================
+   PARTE INTERNA DO SISTEMA
+   ========================= */
+
+.topo {
+    background: #ff2b2f;
+    color: white;
+    padding: 22px 35px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 5px 0 #777;
+}
+
+.topo h1 {
+    font-size: 32px;
+}
+
+.usuario-topo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logout {
+    color: #ff2b2f;
+    text-decoration: none;
+    background: white;
+    padding: 10px 16px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+.menu {
+    background: white;
+    padding: 18px 30px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    border-bottom: 3px solid #ececec;
+}
+
+.menu a {
+    text-decoration: none;
+    color: #ff2b2f;
+    border: 2px solid #ff2b2f;
+    padding: 10px 17px;
+    border-radius: 22px;
+    font-weight: bold;
+}
+
+.menu a:hover {
+    background: #ff2b2f;
+    color: white;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 35px auto;
+    padding: 0 20px;
+}
+
+.card {
+    background: #ff2b2f;
+    color: white;
+    border-radius: 25px;
+    padding: 30px;
+    box-shadow: 10px 9px 0 #888;
+}
+
+.card h2 {
+    font-size: 30px;
+    margin-bottom: 22px;
+}
+
+.card p {
+    line-height: 1.6;
+}
+
+.painel-inicio {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 25px;
+}
+
+.bloco {
+    background: white;
+    color: #ff2b2f;
+    padding: 25px;
+    border-radius: 18px;
+    text-align: center;
+}
+
+.bloco h3 {
+    margin-bottom: 8px;
+}
+
+/* FORMULÁRIOS */
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.form-grid .campo-grande {
+    grid-column: 1 / 3;
+}
+
+.card input {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 22px;
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.card button {
+    border: 3px solid white;
+    background: transparent;
+    color: white;
+    padding: 11px 18px;
+    border-radius: 22px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.card button:hover {
+    background: white;
+    color: #ff2b2f;
+}
+
+/* TABELAS */
+
+.tabela {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    color: #222;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.tabela th {
+    background: #efefef;
+    color: #ff2b2f;
+}
+
+.tabela th,
+.tabela td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.produto-img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.tabela input {
+    border: 1px solid #ddd;
+    border-radius: 18px;
+    margin: 0 0 6px 0;
+    padding: 8px;
+}
+
+.tabela button {
+    width: 100%;
+    border: none;
+    background: #ff2b2f;
+    color: white;
+    padding: 8px;
+}
+
+.acao {
+    display: inline-block;
+    text-decoration: none;
+    background: #ff2b2f;
+    color: white;
+    padding: 8px 11px;
+    border-radius: 18px;
+    font-weight: bold;
+}
+
+.excluir {
+    background: #b80000;
+}
+
+.total {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: right;
+    margin-top: 22px;
+}
+
+.recibo {
+    max-width: 700px;
+    margin: auto;
+}
+
+.recibo h2 {
+    text-align: center;
+}
+
+.recibo .tabela {
+    margin-top: 20px;
+}
+
+.aviso {
+    background: white;
+    color: #ff2b2f;
+    padding: 14px;
+    border-radius: 15px;
+    margin-bottom: 18px;
+    font-weight: bold;
+}
+
+@media (max-width: 750px) {
+
+    .login-card {
+        width: 90%;
+        padding: 35px;
+    }
+
+    .login-card h1 {
+        font-size: 36px;
+    }
+
+    .menu {
+        flex-wrap: wrap;
+    }
+
+    .topo {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .painel-inicio {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grid .campo-grande {
+        grid-column: auto;
+    }
+
+    .tabela {
+        font-size: 13px;
+    }
+}
+
+
+/* VERSÃO SOMENTE HTML + CSS */
+.menu a.ativo {
+    background: #ff2b2f;
+    color: white;
+}
+
+.botao {
+    display: inline-block;
+    text-decoration: none;
+    border: 3px solid white;
+    background: transparent;
+    color: white;
+    padding: 11px 18px;
+    border-radius: 22px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.botao:hover {
+    background: white;
+    color: #ff2b2f;
+}
+
+.botao-vermelho {
+    display: inline-block;
+    text-decoration: none;
+    border: none;
+    background: #ff2b2f;
+    color: white;
+    padding: 9px 12px;
+    border-radius: 18px;
+    font-weight: bold;
+}
+
+.sem-estoque {
+    color: #b80000;
+    font-weight: bold;
+}
+
+.foto-exemplo {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    background: #eeeeee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+}
+
+.form-visual input {
+    background: white;
+}
+
+.login-link {
+    display: block;
+    width: 100%;
+    margin-top: 25px;
+    padding: 14px;
+    border: 3px solid white;
+    border-radius: 30px;
+    background: transparent;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+}
+
+.login-link:hover {
+    background: white;
+    color: #ff2b2f;
+}
