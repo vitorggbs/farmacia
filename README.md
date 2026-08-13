@@ -55,7 +55,7 @@ Projeto desenvolvido em grupo por alunos do curso de **Programador de Sistemas d
 
 - **Vitor Gabriel**
 - **Lucas Ariel**
-- **Gabriel Adolfo**
+- **Adolfo Gabriel**
 
 [![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/vitorggbs)
 
