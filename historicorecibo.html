@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmaCerta - Histórico de Recibos</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="assets/LOGO_2.png">
+</head>
+<body>
+
+<header class="topo">
+    <img src="assets/LOGO_1.png" alt="foto da empresa" width="200" height="auto">
+    <h1> Sistema de Gestão</h1>
+    <div class="usuario-topo">
+        <span>Farmácia: farmacia1</span>
+        <a class="logout" href="index.html">SAIR</a>
+    </div>
+</header>
+
+<nav class="menu">
+    <a href="inicio.html" class="">INÍCIO</a>
+<a href="produtos.html" class="">PRODUTOS</a>
+<a href="cadastrar.html" class="">CADASTRAR</a>
+<a href="carrinho.html" class="">CARRINHO (2)</a>
+<a href="historicorecibo.html" class="ativo">HISTÓRICO</a>
+</nav>
+
+<main class="container">
+
+<div class="card">
+    <h2>HISTÓRICO DE RECIBOS</h2>
+    <p>Consulte os recibos emitidos pela farmacia1.</p>
+
+    <div class="form-grid form-visual">
+        <input class="campo-grande" type="text" placeholder="Buscar por cliente ou produto">
+        <input type="date" placeholder="Data inicial">
+        <input type="date" placeholder="Data final">
+        <select>
+            <option>Todas as formas de pagamento</option>
+            <option>PIX</option>
+            <option>Dinheiro</option>
+            <option>Cartão</option>
+        </select>
+    </div>
+
+    <button>FILTRAR</button>
+</div>
+
+<div class="card">
+    <h2>RECIBOS EMITIDOS</h2>
+
+    <table class="tabela">
+        <tr>
+            <th>Data</th>
+            <th>Cliente</th>
+            <th>Itens</th>
+            <th>Pagamento</th>
+            <th>Valor</th>
+            <th>Ação</th>
+        </tr>
+
+        <tr>
+            <td>14/08/2026</td>
+            <td>João da Silva</td>
+            <td>Dipirona, Álcool 70%</td>
+            <td>PIX</td>
+            <td>R$ 33,90</td>
+            <td><a class="acao" href="recibo.html">VER RECIBO</a></td>
+        </tr>
+
+        <tr>
+            <td>13/08/2026</td>
+            <td>Maria Fernanda Alves</td>
+            <td>Paracetamol</td>
+            <td>Dinheiro</td>
+            <td>R$ 9,00</td>
+            <td><a class="acao" href="recibo.html">VER RECIBO</a></td>
+        </tr>
+
+        <tr>
+            <td>12/08/2026</td>
+            <td>Carlos Mendes</td>
+            <td>Dipirona</td>
+            <td>Cartão</td>
+            <td>R$ 12,50</td>
+            <td><a class="acao" href="recibo.html">VER RECIBO</a></td>
+        </tr>
+    </table>
+
+    <div class="total" style="color: white;">TOTAL DO PERÍODO: R$ 55,40</div>
+</div>
+
+</main>
+
+</body>
+</html>
