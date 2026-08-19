@@ -1,29 +1,69 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>FarmaCerta - Login</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/png" href="assets/LOGO_2.png">
 </head>
+
 <body class="login-body">
 
-<div class="login-card">
-    <h1>FarmaCerta</h1>
+    <div class="login-card">
 
-    <div class="logo-farmacia">
-        <div class="cruz">✚</div>
+        <h1>FarmaCerta</h1>
+
+        <div class="logo-farmacia">
+            <div class="cruz">✚</div>
+        </div>
+
+        <label>LOGIN</label>
+        <input type="text" id="login">
+
+        <label>SENHA</label>
+        <input type="password" id="senha">
+
+        <label>ENTRAR COMO</label>
+
+        <select id="cargo">
+            <option value="">Selecione uma função</option>
+            <option value="gerente">Gerente</option>
+            <option value="balconista">Balconista</option>
+        </select>
+
+        <button type="button" onclick="entrar()">
+            ENTRAR
+        </button>
+
+        <p id="mensagem-login" class="mensagem-login"></p>
+
     </div>
 
-    <label>LOGIN</label>
-    <input type="text">
+    <script>
+        function entrar() {
 
-    <label>SENHA</label>
-    <input type="password">
+            var cargo = document.getElementById("cargo").value;
 
-    <a class="login-link" href="inicio.html">ENTRAR</a>
-</div>
+            if (cargo == "gerente") {
+
+                window.location.href = "gerente/iniciogerente.html";
+
+            } else if (cargo == "balconista") {
+
+                document.getElementById("mensagem-login").innerHTML =
+                    "vou fazer a do balconista depois";
+
+            } else {
+
+                document.getElementById("mensagem-login").innerHTML =
+                    "Selecione uma função.";
+            }
+        }
+    </script>
 
 </body>
+
 </html>
