@@ -21,7 +21,6 @@
 <nav class="menu">
     <a href="iniciobalconista.html" class="">INÍCIO</a>
 <a href="produtosbalconista.html" class="ativo">PRODUTOS</a>
-<a href="cadastrarbalconista.html" class="">CADASTRAR</a>
 <a href="carrinhobalconista.php" class="">CARRINHO (2)</a>
 <a href="historicorecibobalconista.html" class="">HISTÓRICO</a>
 </nav>
@@ -33,61 +32,48 @@
         <h2>PRODUTOS CADASTRADOS</h2>
         <input class="busca-produtos" type="text" placeholder=" Buscar produto...">
     </div>
-
     <table class="tabela">
         <tr>
             <th>Foto</th>
             <th>Produto</th>
             <th>Valor</th>
             <th>Estoque</th>
-            <th>Repor estoque</th>
+            <th>Prateleira</th>
             <th>Comprar</th>
-            <th>Ação</th>
         </tr>
-
         <tr>
             <td><div class="foto-exemplo"></div></td>
             <td>Dipirona</td>
             <td>R$ 12,50</td>
             <td>15</td>
-            <td>
-                <input type="number" value="1" min="1">
-                <button>ADICIONAR ESTOQUE</button>
-            </td>
-            <td>
+            <td>B5</td>
+            <td>    
                 <input type="number" value="1" min="1">
                 <button>ADICIONAR</button>
             </td>
-            <td><a class="acao excluir" href="#">EXCLUIR</a></td>
+            </td>
         </tr>
-
         <tr>
             <td><div class="foto-exemplo"></div></td>
             <td>Álcool 70%</td>
             <td>R$ 8,90</td>
             <td>6</td>
-            <td>
-                <input type="number" value="1" min="1">
-                <button>ADICIONAR ESTOQUE</button>
-            </td>
+            <td>A3</td>
             <td>
                 <input type="number" value="1" min="1">
                 <button>ADICIONAR</button>
             </td>
-            <td><a class="acao excluir" href="#">EXCLUIR</a></td>
+            </td>
         </tr>
-
         <tr>
             <td><div class="foto-exemplo"></div></td>
             <td>Paracetamol</td>
             <td>R$ 9,00</td>
             <td><span class="sem-estoque">0<br>SEM ESTOQUE</span></td>
+            <td>C7</td>
             <td>
                 <input type="number" value="1" min="1">
-                <button>ADICIONAR ESTOQUE</button>
-            </td>
-            <td><strong class="sem-estoque">SEM ESTOQUE</strong></td>
-            <td><a class="acao excluir" href="#">EXCLUIR</a></td>
+                <button>ADICIONAR</button>
         </tr>
     </table>
 </div>
