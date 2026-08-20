@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmaCerta - Cadastrar Produto</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="icon" type="image/png" href="../assets/LOGO_2.png">
+</head>
+<body>
+
+    <header class="topo">
+        <img src="../assets/LOGO_1.png" alt="foto da empresa" width="200" height="auto">
+        <h1>FarmaCerta - Gerente</h1>
+        <div class="usuario-topo">
+            <span>Gerente: farmacia1</span>
+            <a class="logout" href="../index.html">SAIR</a>
+        </div>
+    </header>
+
+    <nav class="menu">
+        <a href="iniciogerente.html">INÍCIO</a>
+        <a href="cadastrargerente.html" class="ativo">CADASTRAR PRODUTO</a>
+        <a href="historicorecibogerente.html">RECIBOS</a>
+    </nav>
+
+    <main class="container">
+        <div class="card">
+            <h2>CADASTRAR PRODUTO</h2>
+
+            <form onsubmit="cadastrarProduto(); return false;">
+                <label>Nome do produto</label>
+                <input type="text" placeholder="Nome do produto" required>
+
+                <label>Valor</label>
+                <input type="number" step="0.01" placeholder="Valor" required>
+
+                <label>Quantidade</label>
+                <input type="number" placeholder="Quantidade" required>
+
+                <label>Prateleira</label>
+                <input type="text" placeholder="Exemplo: Prateleira A3" required>
+
+                <label>Imagem</label>
+                <input type="file" accept="image/*" required>
+
+                <button type="submit">CADASTRAR PRODUTO</button>
+            </form>
+
+            <p id="mensagem" class="mensagem-sucesso"></p>
+        </div>
+    </main>
+
+    <script>
+        function cadastrarProduto() {
+            document.getElementById("mensagem").innerHTML = "Produto cadastrado com sucesso!";
+        }
+    </script>
+
+</body>
+</html>
