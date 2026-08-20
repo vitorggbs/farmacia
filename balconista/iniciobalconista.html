@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmaCerta - Início</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="icon" type="image/png" href="../assets/LOGO_2.png">
+</head>
+<body>
+
+<header class="topo">
+    <img src="../assets/LOGO_1.png" alt="foto da empresa" width="200" height="auto">
+    <h1> Sistema de Gestão</h1>
+    <div class="usuario-topo">
+        <span>Farmácia: farmacia1</span>
+        <a class="logout" href="../index.html">SAIR</a>
+    </div>
+</header>
+
+<nav class="menu">
+    <a href="iniciobalconista.html" class="ativo">INÍCIO</a>
+<a href="produtosbalconista.html" class="">PRODUTOS</a>
+<a href="cadastrarbalconista.html" class="">CADASTRAR</a>
+<a href="carrinhobalconista.php" class="">CARRINHO (2)</a>
+<a href="historicorecibobalconista.html" class="">HISTÓRICO</a>
+</nav>
+
+<main class="container">
+
+<div class="card">
+    <div class="dashboard-cabecalho">
+        <div>
+            <h2>GERENCIAMENTO DE ESTOQUE</h2>
+            <p>Bem-vindo de volta! Aqui está um resumo da farmacia1 hoje.</p>
+        </div>
+    </div>
+
+    <div class="painel-inicio">
+        <div class="bloco bloco-destaque">
+            <div class="bloco-icone">💊</div>
+            <h3>3</h3>
+            <p>Produtos cadastrados</p>
+        </div>
+
+        <div class="bloco bloco-destaque">
+            <div class="bloco-icone">🛒</div>
+            <h3>2</h3>
+            <p>Itens no carrinho</p>
+        </div>
+
+        <div class="bloco bloco-destaque">
+            <div class="bloco-icone">⚠️</div>
+            <h3>1</h3>
+            <p>Produto sem estoque</p>
+        </div>
+
+        <div class="bloco bloco-destaque">
+            <div class="bloco-icone">💰</div>
+            <h3>R$ 33,90</h3>
+            <p>Última venda registrada</p>
+        </div>
+    </div>
+</div>
+
+<section class="secao-branca">
+    <h2>AÇÕES RÁPIDAS</h2>
+    <p class="subtitulo">Acesse rapidamente as principais funções do sistema.</p>
+
+    <div class="acoes-rapidas">
+        <a class="botao-vermelho" href="cadastrar.html">➕ CADASTRAR PRODUTO</a>
+        <a class="botao-vermelho" href="produtos.html">💊 VER PRODUTOS</a>
+        <a class="botao-vermelho" href="carrinho.html">🛒 IR PARA O CARRINHO</a>
+        <a class="botao-vermelho" href="historicorecibo.html">🧾 HISTÓRICO DE RECIBOS</a>
+    </div>
+</section>
+
+<section class="secao-branca">
+    <div class="secao-titulo">
+        <div>
+            <h2>ALERTA DE ESTOQUE</h2>
+            <p class="subtitulo">Produtos que precisam de reposição.</p>
+        </div>
+        <a class="acao" href="produtos.html">REPOR ESTOQUE</a>
+    </div>
+
+    <table class="tabela">
+        <tr>
+            <th>Produto</th>
+            <th>Estoque atual</th>
+            <th>Situação</th>
+        </tr>
+
+        <tr>
+            <td>Paracetamol</td>
+            <td>0</td>
+            <td><span class="sem-estoque">SEM ESTOQUE</span></td>
+        </tr>
+
+        <tr>
+            <td>Álcool 70%</td>
+            <td>6</td>
+            <td><span class="sem-estoque">ESTOQUE BAIXO</span></td>
+        </tr>
+    </table>
+</section>
+
+</main>
+
+</body>
+</html>
