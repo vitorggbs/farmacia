@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FarmaCerta - Login</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="assets/LOGO_2.png">
+</head>
+
+<body class="login-body">
+
+    <div class="login-card">
+
+        <h1>FarmaCerta aa</h1>
+
+        <div class="logo-farmacia">
+            <img src="assets/LOGO_2.png" alt="Logo FarmaCerta">
+        </div>
+
+        <label for="login">LOGIN</label>
+        <input type="text" id="login" required>
+
+        <label for="senha">SENHA</label>
+        <input type="password" id="senha" required>
+
+        <label for="cargo">ENTRAR COMO</label>
+        <select id="cargo" required>
+            <option value="">Selecione uma função</option>
+            <option value="gerente">Gerente</option>
+            <option value="balconista">Balconista</option>
+        </select>
+
+        <button type="button" onclick="entrar()">
+            ENTRAR
+        </button>
+
+        <p id="mensagem-login" class="mensagem-login"></p>
+
+    </div>
+
+    <script>
+        function entrar() {
+
+            
+            var login = document.getElementById("login").value.trim();
+            var senha = document.getElementById("senha").value.trim();
+            var cargo = document.getElementById("cargo").value;
+            var mensagem = document.getElementById("mensagem-login");
+            mensagem.innerHTML = "";
+
+            if (login === "") {
+                mensagem.innerHTML = "Digite seu login.";
+                document.getElementById("login").focus();
+                return;
+            }
+
+            if (senha === "") {
+                mensagem.innerHTML = "Digite sua senha.";
+                document.getElementById("senha").focus();
+                return;
+            }
+
+            if (cargo === "") {
+                mensagem.innerHTML = "Selecione uma função.";
+                document.getElementById("cargo").focus();
+                return;
+            }
+
+            if (cargo === "gerente") {
+
+                window.location.href = "gerente/iniciogerente.html";
+
+            }
+
+            else if (cargo === "balconista") {
+
+                window.location.href = "balconista/iniciobalconista.html";
+
+            }
+        }
+    </script>
+
+</body>
+
+</html>
