@@ -8,80 +8,432 @@
     <title>FarmaCerta - Login</title>
 
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/png" href="assets/LOGO_2.png">
+<script>navigator.serviceWorker.register("service-worker.js")</script> 
+<link rel="manifest" href="manifest.json" />    <link rel="icon" type="image/png" href="assets/LOGO_2.png">
 </head>
 
 <body class="login-body">
 
-    <div class="login-card">
+    <main class="login-card">
+
+        <!-- TÍTULO -->
 
         <h1>FarmaCerta</h1>
 
+
+        <!-- LOGO -->
+
         <div class="logo-farmacia">
-            <img src="assets/LOGO_2.png" alt="Logo FarmaCerta">
+
+            <img
+                src="assets/LOGO_2.png"
+                alt="Logo FarmaCerta"
+            >
+
         </div>
 
-        <label for="login">LOGIN</label>
-        <input type="text" id="login" required>
 
-        <label for="senha">SENHA</label>
-        <input type="password" id="senha" required>
+        <!-- LOGIN -->
 
-        <label for="cargo">ENTRAR COMO</label>
-        <select id="cargo" required>
-            <option value="">Selecione uma função</option>
-            <option value="gerente">Gerente</option>
-            <option value="balconista">Balconista</option>
-        </select>
+        <label for="login">
+            LOGIN
+        </label>
 
-        <button type="button" onclick="entrar()">
+        <input
+            type="text"
+            id="login"
+            name="login"
+            autocomplete="username"
+        >
+
+
+        <!-- SENHA -->
+
+        <label for="senha">
+            SENHA
+        </label>
+
+        <input
+            type="password"
+            id="senha"
+            name="senha"
+            autocomplete="current-password"
+        >
+
+
+        <!-- CARGO -->
+
+        <label for="cargo">
+            ENTRAR COMO
+        </label>
+
+
+        <!-- SELECT PERSONALIZADO -->
+
+        <div class="select-custom">
+
+            <div
+                class="select-button"
+                id="select-cargo"
+                tabindex="0"
+                role="button"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+                aria-controls="lista-cargo"
+            >
+
+                <span class="texto-select">
+                    Selecione uma função
+                </span>
+
+                <span class="seta-select">
+                    ▼
+                </span>
+
+            </div>
+
+
+            <div
+                class="select-lista"
+                id="lista-cargo"
+                role="listbox"
+                aria-label="Selecione uma função"
+            >
+
+                <!-- GERENTE -->
+
+                <div
+                    class="opcao-select"
+                    role="option"
+                    tabindex="0"
+                    data-valor="gerente"
+                    aria-selected="false"
+                >
+                    Gerente
+                </div>
+
+
+                <!-- BALCONISTA -->
+
+                <div
+                    class="opcao-select"
+                    role="option"
+                    tabindex="0"
+                    data-valor="balconista"
+                    aria-selected="false"
+                >
+                    Balconista
+                </div>
+
+            </div>
+
+
+            <!-- VALOR DO CARGO -->
+
+            <input
+                type="hidden"
+                id="cargo"
+                name="cargo"
+            >
+
+        </div>
+
+
+        <!-- BOTÃO ENTRAR -->
+
+        <button
+            type="button"
+            id="botao-entrar"
+        >
             ENTRAR
         </button>
 
-        <p id="mensagem-login" class="mensagem-login"></p>
 
-    </div>
+        <!-- MENSAGEM -->
+
+        <p
+            id="mensagem-login"
+            class="mensagem-login"
+            aria-live="polite"
+        ></p>
+
+    </main>
+
 
     <script>
+
+        /* =====================================================
+           ELEMENTOS
+        ====================================================== */
+
+        const selectButton =
+            document.querySelector(".select-button");
+
+        const selectLista =
+            document.querySelector(".select-lista");
+
+        const textoSelect =
+            document.querySelector(".texto-select");
+
+        const campoCargo =
+            document.getElementById("cargo");
+
+        const mensagem =
+            document.getElementById("mensagem-login");
+
+        const botaoEntrar =
+            document.getElementById("botao-entrar");
+
+        const opcoes =
+            document.querySelectorAll(".opcao-select");
+
+
+        /* =====================================================
+           ABRIR / FECHAR SELECT
+        ====================================================== */
+
+        function abrirSelect() {
+
+            const aberto =
+                selectLista.classList.toggle("abrir");
+
+            selectButton.setAttribute(
+                "aria-expanded",
+                aberto
+            );
+
+        }
+
+
+        function fecharSelect() {
+
+            selectLista.classList.remove("abrir");
+
+            selectButton.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+        }
+
+
+        /* =====================================================
+           SELECIONAR OPÇÃO
+        ====================================================== */
+
+        function selecionar(opcao) {
+
+            textoSelect.textContent =
+                opcao.textContent.trim();
+
+            campoCargo.value =
+                opcao.dataset.valor;
+
+            fecharSelect();
+
+            mensagem.textContent = "";
+
+
+            opcoes.forEach(function(item) {
+
+                item.setAttribute(
+                    "aria-selected",
+                    item === opcao
+                        ? "true"
+                        : "false"
+                );
+
+            });
+
+        }
+
+
+        /* =====================================================
+           BOTÃO DO SELECT
+        ====================================================== */
+
+        selectButton.addEventListener(
+            "click",
+            function(event) {
+
+                event.stopPropagation();
+
+                abrirSelect();
+
+            }
+        );
+
+
+        /* =====================================================
+           OPÇÕES DO SELECT
+        ====================================================== */
+
+        opcoes.forEach(function(opcao) {
+
+            opcao.addEventListener(
+                "click",
+                function(event) {
+
+                    event.stopPropagation();
+
+                    selecionar(opcao);
+
+                }
+            );
+
+
+            opcao.addEventListener(
+                "keydown",
+                function(event) {
+
+                    if (
+                        event.key === "Enter" ||
+                        event.key === " "
+                    ) {
+
+                        event.preventDefault();
+
+                        selecionar(opcao);
+
+                    }
+
+                }
+            );
+
+        });
+
+
+        /* =====================================================
+           TECLADO DO SELECT
+        ====================================================== */
+
+        selectButton.addEventListener(
+            "keydown",
+            function(event) {
+
+                if (
+                    event.key === "Enter" ||
+                    event.key === " "
+                ) {
+
+                    event.preventDefault();
+
+                    abrirSelect();
+
+                }
+
+
+                if (event.key === "Escape") {
+
+                    event.preventDefault();
+
+                    fecharSelect();
+
+                }
+
+            }
+        );
+
+
+        /* =====================================================
+           FECHAR AO CLICAR FORA
+        ====================================================== */
+
+        document.addEventListener(
+            "click",
+            function(event) {
+
+                if (
+                    !event.target.closest(
+                        ".select-custom"
+                    )
+                ) {
+
+                    fecharSelect();
+
+                }
+
+            }
+        );
+
+
+        /* =====================================================
+           LOGIN
+        ====================================================== */
+
         function entrar() {
 
-            
-            var login = document.getElementById("login").value.trim();
-            var senha = document.getElementById("senha").value.trim();
-            var cargo = document.getElementById("cargo").value;
-            var mensagem = document.getElementById("mensagem-login");
-            mensagem.innerHTML = "";
+            const cargo =
+                campoCargo.value;
 
-            if (login === "") {
-                mensagem.innerHTML = "Digite seu login.";
-                document.getElementById("login").focus();
-                return;
-            }
 
-            if (senha === "") {
-                mensagem.innerHTML = "Digite sua senha.";
-                document.getElementById("senha").focus();
-                return;
-            }
-
-            if (cargo === "") {
-                mensagem.innerHTML = "Selecione uma função.";
-                document.getElementById("cargo").focus();
-                return;
-            }
+            /* GERENTE */
 
             if (cargo === "gerente") {
 
-                window.location.href = "gerente/iniciogerente.html";
+                window.location.href =
+                    "gerente/iniciogerente.html";
+
+                return;
 
             }
 
-            else if (cargo === "balconista") {
-    window.location.href = "balconista/cpfbalconista.html";
-}
+
+            /* BALCONISTA */
+
+            if (cargo === "balconista") {
+
+                mensagem.textContent =
+                    "Vou fazer a do balconista depois.";
+
+                return;
 
             }
-        
+
+
+            /* NENHUM CARGO */
+
+            mensagem.textContent =
+                "Selecione uma função.";
+
+        }
+
+
+        /* =====================================================
+           BOTÃO ENTRAR
+        ====================================================== */
+
+        botaoEntrar.addEventListener(
+            "click",
+            entrar
+        );
+
+
+        /* =====================================================
+           ENTER NOS CAMPOS
+        ====================================================== */
+
+        document
+            .querySelectorAll("#login, #senha")
+            .forEach(function(campo) {
+
+                campo.addEventListener(
+                    "keydown",
+                    function(event) {
+
+                        if (event.key === "Enter") {
+
+                            event.preventDefault();
+
+                            entrar();
+
+                        }
+
+                    }
+                );
+
+            });
+
     </script>
 
 </body>
