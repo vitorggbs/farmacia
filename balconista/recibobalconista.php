@@ -57,7 +57,6 @@ if (isset($_POST["forma_pagamento"])) {
 <nav class="menu">
     <a href="iniciobalconista.html" class="">INÍCIO</a>
 <a href="produtosbalconista.html" class="">PRODUTOS</a>
-<a href="cadastrarbalconista.html" class="">CADASTRAR</a>
 <a href="carrinhobalconista.php" class="">CARRINHO (2)</a>
 <a href="historicorecibobalconista.html" class="">HISTÓRICO</a>
 </nav>
