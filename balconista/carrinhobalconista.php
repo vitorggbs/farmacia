@@ -25,7 +25,6 @@ $total = 33.90;
 <nav class="menu">
     <a href="iniciobalconista.html" class="">INÍCIO</a>
 <a href="produtosbalconista.html" class="">PRODUTOS</a>
-<a href="cadastrarbalconista.html" class="">CADASTRAR</a>
 <a href="carrinhobalconista.php" class="ativo">CARRINHO (2)</a>
 <a href="historicorecibobalconista.html" class="">HISTÓRICO</a>
 </nav>
@@ -65,7 +64,7 @@ $total = 33.90;
         VALOR TOTAL DA VENDA: R$ <?php echo number_format($total, 2, ',', '.'); ?>
     </div>
 
-    <form method="POST" action="recibo.php" class="dados-pagamento" style="margin-top: 24px;">
+    <form method="POST" action="recibobalconista.php" class="dados-pagamento" style="margin-top: 24px;">
         <label for="nome-cliente">Nome do cliente</label>
         <input id="nome-cliente" name="nome_cliente" type="text"
                placeholder="Nome da pessoa que comprou">
