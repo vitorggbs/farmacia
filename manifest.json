@@ -1,7 +1,7 @@
 {
 "name": "Aplicativo FarmaCerta",
 "short_name": "App FarmaCerta",
-"start_url": "/",
+"start_url": "/farmacia-main",
 "display": "standalone",
 "description": "App incrível de farmácia",
 "lang": "pt-BR",
@@ -11,13 +11,13 @@
 "orientation": "any",
 "icons": [
     {
-        "src": "assets/LOGO_DO_APP.png",
+        "src": "assets/farmacerta-icon-192x192.png",
         "sizes": "192x192",
         "type": "image/png",
         "purpose": "maskable"
     },
     {
-        "src": "assets/LOGO_DO_APP.png",
+        "src": "assets/farmacerta-icon-512x512.png",
         "sizes": "512x512",
         "type": "image/png",
         "purpose": "any"
@@ -34,14 +34,14 @@
 "related_applications": [
     {
         "platform":"windows",
-        "url": "/"
+        "url": "/farmacia-main"
     }
 ],
 "prefer_related_applications": false,
 "shortcuts": [
     {
         "name":"The name you would like to be displayed for your shortcut",
-        "url":"The url you would like to open when the user chooses this shortcut. This must be a URL local to your PWA. For example: If my start_url is /, this URL must be something like /shortcut",
+        "url":"farmacia-main",
         "description":"A description of the functionality of this shortcut"
     }
 ]
