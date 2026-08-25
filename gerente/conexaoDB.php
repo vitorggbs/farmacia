@@ -3,7 +3,7 @@
 $host = "localhost";
 $usuario = "root";
 $senha = "usbw";
-$banco = "estoque";
+$banco = "farmacia1";
 
 $conexao = mysqli_connect(
     $host,
@@ -17,5 +17,3 @@ if (!$conexao) {
 }
 
 mysqli_set_charset($conexao, "utf8");
-
-?>
