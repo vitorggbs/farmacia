@@ -1,7 +1,50 @@
 <?php
-$total = 33.90;
-?>
+session_start();
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
+require_once __DIR__ . '/../gerente/conexaoDB.php';
+
+if (!isset($_SESSION['carrinho'])) {
+    $_SESSION['carrinho'] = array();
+}
+
+$carrinho = $_SESSION['carrinho'];
+$produtosCarrinho = array();
+$total = 0;
+
+foreach ($carrinho as $produto_id => $quantidade) {
+    $produto_id = (int) $produto_id;
+    $quantidade = (int) $quantidade;
+
+    $stmt = mysqli_prepare(
+        $conexao,
+        "SELECT id, nome, preco, quantidade FROM produtos WHERE id = ?"
+    );
+
+    mysqli_stmt_bind_param($stmt, 'i', $produto_id);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_bind_result($stmt, $id, $nome, $preco, $estoque);
+
+    if (mysqli_stmt_fetch($stmt)) {
+        $subtotal = (float) $preco * $quantidade;
+        $total += $subtotal;
+
+        $produtosCarrinho[] = array(
+            'id' => $id,
+            'nome' => $nome,
+            'preco' => $preco,
+            'quantidade' => $quantidade,
+            'estoque' => $estoque,
+            'subtotal' => $subtotal
+        );
+    }
+
+    mysqli_stmt_close($stmt);
+}
+
+$quantidadeCarrinho = array_sum($carrinho);
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -15,7 +58,7 @@ $total = 33.90;
 
 <header class="topo">
     <img src="../assets/LOGO_1.png" alt="foto da empresa" width="200" height="auto">
-    <h1> Sistema de Gestão</h1>
+    <h1>Sistema de Gestão</h1>
     <div class="usuario-topo">
         <span>Farmácia: farmacia1</span>
         <a class="logout" href="../index.html">SAIR</a>
@@ -23,16 +66,19 @@ $total = 33.90;
 </header>
 
 <nav class="menu">
-    <a href="iniciobalconista.html" class="">INÍCIO</a>
-<a href="produtosbalconista.html" class="">PRODUTOS</a>
-<a href="carrinhobalconista.php" class="ativo">CARRINHO (2)</a>
-<a href="historicorecibobalconista.html" class="">HISTÓRICO</a>
+    <a href="iniciobalconista.html">INÍCIO</a>
+    <a href="produtosbalconista.php">PRODUTOS</a>
+    <a href="carrinhobalconista.php" class="ativo">CARRINHO (<?php echo $quantidadeCarrinho; ?>)</a>
+    <a href="historicorecibobalconista.html">HISTÓRICO</a>
 </nav>
 
 <main class="container">
-
 <div class="card">
     <h2>CARRINHO</h2>
+
+    <?php if (isset($_GET['erro'])) { ?>
+        <p><?php echo htmlspecialchars($_GET['erro']); ?></p>
+    <?php } ?>
 
     <table class="tabela">
         <tr>
@@ -43,104 +89,143 @@ $total = 33.90;
             <th>Ação</th>
         </tr>
 
-        <tr>
-            <td>Dipirona</td>
-            <td>2</td>
-            <td>R$ 12,50</td>
-            <td>R$ 25,00</td>
-            <td><a class="acao excluir" href="#">REMOVER</a></td>
-        </tr>
+        <?php if (count($produtosCarrinho) > 0) { ?>
 
-        <tr>
-            <td>Álcool 70%</td>
-            <td>1</td>
-            <td>R$ 8,90</td>
-            <td>R$ 8,90</td>
-            <td><a class="acao excluir" href="#">REMOVER</a></td>
-        </tr>
+            <?php foreach ($produtosCarrinho as $produto) { ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($produto['nome']); ?></td>
+
+                    <td>
+                        <form action="atualizarcarrinho.php" method="POST">
+                            <input type="hidden" name="produto_id" value="<?php echo (int) $produto['id']; ?>">
+                            <input
+                                type="number"
+                                name="quantidade"
+                                value="<?php echo (int) $produto['quantidade']; ?>"
+                                min="1"
+                                max="<?php echo (int) $produto['estoque']; ?>"
+                                required
+                            >
+                            <button type="submit">ATUALIZAR</button>
+                        </form>
+                    </td>
+
+                    <td>R$ <?php echo number_format((float) $produto['preco'], 2, ',', '.'); ?></td>
+                    <td>R$ <?php echo number_format((float) $produto['subtotal'], 2, ',', '.'); ?></td>
+
+                    <td>
+                        <form action="removercarrinho.php" method="POST">
+                            <input type="hidden" name="produto_id" value="<?php echo (int) $produto['id']; ?>">
+                            <button class="acao excluir" type="submit">REMOVER</button>
+                        </form>
+                    </td>
+                </tr>
+            <?php } ?>
+
+        <?php } else { ?>
+            <tr>
+                <td colspan="5">O carrinho está vazio.</td>
+            </tr>
+        <?php } ?>
     </table>
 
     <div class="total" style="color: white;">
         VALOR TOTAL DA VENDA: R$ <?php echo number_format($total, 2, ',', '.'); ?>
     </div>
 
-    <form method="POST" action="recibobalconista.php" class="dados-pagamento" style="margin-top: 24px;">
-        <label for="nome-cliente">Nome do cliente</label>
-        <input id="nome-cliente" name="nome_cliente" type="text"
-               placeholder="Nome da pessoa que comprou">
+    <?php if (count($produtosCarrinho) > 0) { ?>
+        <form method="POST" action="finalizarvenda.php" class="dados-pagamento" style="margin-top: 24px;">
 
-        <label for="forma-pagamento">Forma de pagamento</label>
-        <select id="forma-pagamento" name="forma_pagamento" onchange="mostrarValorRecebido()" required>
-            <option value="">Selecione a forma de pagamento</option>
-            <option value="dinheiro">Dinheiro</option>
-            <option value="pix">Pix</option>
-            <option value="debito">Cartão de débito</option>
-            <option value="credito">Cartão de crédito</option>
-        </select>
+            <label for="nome-cliente">Nome do cliente</label>
+            <input
+                id="nome-cliente"
+                name="nome_cliente"
+                type="text"
+                placeholder="Nome da pessoa que comprou"
+            >
 
-        <div id="campo-dinheiro" style="display: none;">
-            <label for="valor-recebido">Valor recebido</label>
-            <input id="valor-recebido" name="valor_recebido" type="number"
-                   min="33.90" step="0.01" placeholder="R$ 0,00" oninput="calcularTroco()">
-        </div>
+            <label for="forma-pagamento">Forma de pagamento</label>
+            <select
+                id="forma-pagamento"
+                name="forma_pagamento"
+                onchange="mostrarValorRecebido()"
+                required
+            >
+                <option value="">Selecione a forma de pagamento</option>
+                <option value="dinheiro">Dinheiro</option>
+                <option value="pix">Pix</option>
+                <option value="debito">Cartão de débito</option>
+                <option value="credito">Cartão de crédito</option>
+            </select>
 
-        <div class="total" style="color: white; margin-top: 18px;">
-            VALOR RECEBIDO: R$ <span id="valor-mostrado">0,00</span>
+            <div id="campo-dinheiro" style="display: none;">
+                <label for="valor-recebido">Valor recebido</label>
+                <input
+                    id="valor-recebido"
+                    name="valor_recebido"
+                    type="number"
+                    min="<?php echo number_format($total, 2, '.', ''); ?>"
+                    step="0.01"
+                    placeholder="R$ 0,00"
+                    oninput="calcularTroco()"
+                >
+            </div>
+
+            <div class="total" style="color: white; margin-top: 18px;">
+                VALOR RECEBIDO: R$ <span id="valor-mostrado">0,00</span>
+                <br>
+                TROCO: R$ <span id="troco-mostrado">0,00</span>
+            </div>
+
             <br>
-            TROCO: R$ <span id="troco-mostrado">0,00</span>
-        </div>
-
-        <br>
-        <button class="botao" type="submit">FINALIZAR COMPRA</button>
-    </form>
+            <button class="botao" type="submit">FINALIZAR COMPRA</button>
+        </form>
+    <?php } ?>
 </div>
-
 </main>
 
 <script>
-    var total = 33.90;
+var total = <?php echo json_encode((float) $total); ?>;
 
-    function mostrarValorRecebido() {
-        var forma = document.getElementById("forma-pagamento").value;
-        var campo = document.getElementById("campo-dinheiro");
+function mostrarValorRecebido() {
+    var forma = document.getElementById("forma-pagamento").value;
+    var campo = document.getElementById("campo-dinheiro");
+    var recebido = document.getElementById("valor-recebido");
 
-        if (forma == "dinheiro") {
-            campo.style.display = "block";
-            document.getElementById("valor-recebido").required = true;
-            calcularTroco();
+    if (forma == "dinheiro") {
+        campo.style.display = "block";
+        recebido.required = true;
+        calcularTroco();
+    } else {
+        campo.style.display = "none";
+        recebido.required = false;
+        recebido.value = "";
+
+        if (forma == "") {
+            document.getElementById("valor-mostrado").innerHTML = "0,00";
         } else {
-            campo.style.display = "none";
-            document.getElementById("valor-recebido").required = false;
-            document.getElementById("valor-recebido").value = "";
-
-            if (forma == "") {
-                document.getElementById("valor-mostrado").innerHTML = "0,00";
-            } else {
-                document.getElementById("valor-mostrado").innerHTML = "33,90";
-            }
-
-            document.getElementById("troco-mostrado").innerHTML = "0,00";
+            document.getElementById("valor-mostrado").innerHTML = total.toFixed(2).replace(".", ",");
         }
+
+        document.getElementById("troco-mostrado").innerHTML = "0,00";
+    }
+}
+
+function calcularTroco() {
+    var recebido = parseFloat(document.getElementById("valor-recebido").value || 0);
+    var troco = recebido - total;
+
+    if (troco < 0) {
+        troco = 0;
     }
 
-    function calcularTroco() {
-        var recebido = document.getElementById("valor-recebido").value;
-
-        if (recebido == "") {
-            recebido = 0;
-        }
-
-        recebido = parseFloat(recebido);
-        var troco = recebido - total;
-
-        if (troco < 0) {
-            troco = 0;
-        }
-
-        document.getElementById("valor-mostrado").innerHTML = recebido.toFixed(2).replace(".", ",");
-        document.getElementById("troco-mostrado").innerHTML = troco.toFixed(2).replace(".", ",");
-    }
+    document.getElementById("valor-mostrado").innerHTML = recebido.toFixed(2).replace(".", ",");
+    document.getElementById("troco-mostrado").innerHTML = troco.toFixed(2).replace(".", ",");
+}
 </script>
 
 </body>
 </html>
+<?php
+mysqli_close($conexao);
+?>
