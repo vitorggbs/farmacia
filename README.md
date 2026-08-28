@@ -1,3 +1,7 @@
+EM DESENVOLVIMENTO ERP FARMÁCIA 
+
+
+
 # 💊 Sistema de Gerenciamento de Estoque para Farmácia
 
 Projeto desenvolvido em grupo durante o curso de **Programador de Sistemas do SENAC RN**, com o objetivo de facilitar o controle de produtos e a organização do estoque de uma farmácia. A aplicação apresenta uma interface simples, moderna e responsiva, permitindo visualizar medicamentos, cadastrar produtos, acompanhar quantidades disponíveis, realizar reposições e montar um carrinho.
