@@ -1,3 +1,7 @@
+
+em desenvolvimento
+
+
 # FarmaCerta ERP
 
 Sistema simples em PHP e MySQL para estoque, funcionários, vendas e recibos de farmácias.
