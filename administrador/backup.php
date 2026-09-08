@@ -1,0 +1,8 @@
+<?php
+session_start(); require_once __DIR__.'/../autenticacao.php'; require_once __DIR__.'/../gerente/conexaoDB.php'; exigirAdministrador();
+if(isset($_GET['baixar'])){
+ header('Content-Type: application/sql; charset=UTF-8'); header('Content-Disposition: attachment; filename="farmacerta_backup_'.date('Y-m-d_H-i').'.sql"'); echo "SET FOREIGN_KEY_CHECKS=0;\n";
+ $tabelas=mysqli_query($conexao,'SHOW TABLES'); while($linha=mysqli_fetch_row($tabelas)){ $t=$linha[0]; $cr=mysqli_fetch_assoc(mysqli_query($conexao,"SHOW CREATE TABLE `$t`")); echo "DROP TABLE IF EXISTS `$t`;\n".$cr['Create Table'].";\n\n"; $dados=mysqli_query($conexao,"SELECT * FROM `$t`"); while($row=mysqli_fetch_assoc($dados)){ $cols=array();$vals=array(); foreach($row as $c=>$v){$cols[]='`'.$c.'`';$vals[]=$v===null?'NULL':"'".mysqli_real_escape_string($conexao,(string)$v)."'";} echo "INSERT INTO `$t` (".implode(',',$cols).") VALUES (".implode(',',$vals).");\n";} echo "\n"; } echo "SET FOREIGN_KEY_CHECKS=1;\n"; exit;
+}
+require_once __DIR__.'/cabecalhoadmin.php';
+?><!DOCTYPE html><html lang="pt-BR"><head><?php recursosCabeca('Backup'); ?></head><body><?php cabecalhoAdmin('FarmaCerta - Administrador'); ?><main class="container py-4"><section class="card shadow-sm rounded-4 p-4"><h2 class="h3 fw-bold">BACKUP DO BANCO</h2><p>Gere um arquivo SQL com a estrutura e os dados atuais do sistema.</p><div class="alert alert-warning">Guarde o arquivo em local seguro. Ele contém dados do sistema.</div><a class="btn btn-primary rounded-pill" href="backup.php?baixar=1">BAIXAR BACKUP .SQL</a></section></main><?php recursosRodape(); ?></body></html>
