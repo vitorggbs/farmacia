@@ -14,6 +14,7 @@ if (!isset($_SESSION['carrinho'])) {
 }
 
 $farmaciaId = (int) $_SESSION['farmacia_id'];
+
 $carrinho = $_SESSION['carrinho'];
 $produtosCarrinho = array();
 $total = 0;
@@ -113,12 +114,13 @@ foreach ($carrinho as $produto_id => $quantidade) {
             <?php if (count($produtosCarrinho) > 0) { ?>
                 <form method="POST" action="finalizarvenda.php" class="row g-3 mt-3">
                     <div class="col-12 col-md-6">
-                        <label class="form-label fw-bold" for="nome-cliente">Nome do cliente</label>
-                        <input class="form-control" id="nome-cliente" name="nome_cliente" type="text" placeholder="Nome da pessoa que comprou">
+                        <label class="form-label fw-bold" for="cliente-nome">Nome do cliente</label>
+                        <input class="form-control" id="cliente-nome" name="cliente" type="text" maxlength="150" placeholder="Opcional">
                     </div>
                     <div class="col-12 col-md-6">
-                        <label class="form-label fw-bold" for="cpf-cliente">CPF do cliente (opcional)</label>
-                        <input class="form-control" id="cpf-cliente" name="cpf_cliente" type="text" maxlength="14">
+                        <label class="form-label fw-bold" for="cliente-cpf">CPF do cliente</label>
+                        <input class="form-control" id="cliente-cpf" name="cpf_cliente" type="text" maxlength="14" placeholder="Opcional">
+                        <div class="form-text text-white">Se este CPF estiver cadastrado na aba CLIENTES, a compra aparecerá automaticamente no histórico dele. Informar nome e CPF aqui não cadastra o cliente.</div>
                     </div>
                     <div class="col-12">
                         <label class="form-label fw-bold" for="forma-pagamento">Forma de pagamento</label>

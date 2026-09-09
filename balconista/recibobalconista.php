@@ -23,7 +23,9 @@ $sqlVenda = 'SELECT
                 cliente,
                 valor_recebido,
                 troco,
-                usuario_id
+                usuario_id,
+                status,
+                motivo_cancelamento
              FROM vendas
              WHERE id = ? AND farmacia_id = ?';
 
@@ -39,7 +41,9 @@ mysqli_stmt_bind_result(
     $cliente,
     $valorRecebido,
     $troco,
-    $vendedorId
+    $vendedorId,
+    $statusVenda,
+    $motivoCancelamento
 );
 
 if (!mysqli_stmt_fetch($stmtVenda)) {
@@ -102,6 +106,9 @@ $paginaAtiva = $pasta === 'gerente' ? 'recibos' : 'historico';
                 <p><strong>Farmácia:</strong> <?php echo htmlspecialchars($nomeFarmacia); ?></p>
                 <p><strong>Cliente:</strong> <?php echo htmlspecialchars($cliente); ?></p>
                 <p><strong>Data:</strong> <?php echo date('d/m/Y H:i', strtotime($dataVenda)); ?></p>
+                <?php if ($statusVenda === 'cancelada') { ?>
+                    <div class="alert alert-danger"><strong>VENDA CANCELADA</strong><?php if ($motivoCancelamento) { ?> — <?php echo htmlspecialchars($motivoCancelamento); ?><?php } ?></div>
+                <?php } ?>
 
                 <div class="table-responsive bg-white rounded-3">
                 <table class="table table-hover align-middle mb-0">

@@ -45,6 +45,23 @@ body {
     color: var(--fc-text);
 }
 
+.card,
+.alert,
+.table-responsive,
+.form-control,
+.form-select,
+.input-group-text,
+.list-group,
+.list-group-item,
+.progress {
+    border-radius: var(--bs-border-radius);
+}
+
+.card.rounded-4,
+.card-brand {
+    border-radius: var(--bs-border-radius-lg);
+}
+
 .btn:focus-visible,
 .form-control:focus-visible,
 .form-select:focus-visible,

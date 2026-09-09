@@ -40,6 +40,7 @@ $vendas = mysqli_stmt_get_result($stmt);
                             <th>Cliente</th>
                             <th>Pagamento</th>
                             <th>Valor</th>
+                            <th>Status</th>
                             <th>Acao</th>
                         </tr>
                     </thead>
@@ -51,6 +52,7 @@ $vendas = mysqli_stmt_get_result($stmt);
                             <td><?php echo htmlspecialchars($v['cliente'] ?: 'Nao informado'); ?></td>
                             <td><?php echo htmlspecialchars($v['forma_pagamento']); ?></td>
                             <td>R$ <?php echo number_format($v['valor_total'], 2, ',', '.'); ?></td>
+                            <td><span class="badge <?php echo ($v['status'] ?? 'concluida') === 'cancelada' ? 'text-bg-danger' : 'text-bg-success'; ?>"><?php echo strtoupper($v['status'] ?? 'concluida'); ?></span></td>
                             <td>
                                 <a class="btn btn-sm btn-primary rounded-pill" href="recibobalconista.php?id=<?php echo $v['id']; ?>">ABRIR</a>
                             </td>

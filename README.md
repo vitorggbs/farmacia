@@ -1,68 +1,32 @@
+# FarmaCerta
 
-em desenvolvimento
+Sistema acadêmico de gestão para uma rede de farmácias, feito em PHP, MySQL, HTML, CSS e JavaScript.
 
+## Estrutura
+O sistema usa **um único banco MySQL (`farmacerta`)**. Cada registro operacional possui `farmacia_id`, mantendo os dados separados por unidade.
 
-# FarmaCerta ERP
+## Perfis
+- Administrador: gerencia unidades, auditoria, visão geral e backup.
+- Gerente: produtos, categorias, estoque, lotes/validade, fornecedores, entradas, funcionários, clientes, recibos, relatórios, auditoria e controle fiscal.
+- Balconista: produtos, clientes, carrinho e histórico de vendas.
 
-Sistema simples em PHP e MySQL para estoque, funcionários, vendas e recibos de farmácias.
+## Funcionalidades principais
+- Multi-farmácia por `farmacia_id`
+- Estoque e movimentações
+- Lotes e validade com saída dos lotes que vencem primeiro
+- Categorias de produtos
+- Fornecedores e histórico de entradas
+- Cadastro e edição de clientes pelo balconista
+- Histórico do cliente e produtos mais comprados
+- Venda e cancelamento com devolução ao estoque
+- Relatórios por período, impressão e CSV
+- Auditoria
+- Backup SQL pelo administrador
+- Registro de dados fiscais de NF-e/NFC-e
 
-## Instalação no USBWebserver
+## Banco
+Para instalação nova, importe `bancodasfarmacias.sql`.
+Para uma instalação anterior, faça backup e use `atualizar_banco.sql` uma vez.
 
-1. Coloque a pasta `farmacerta-erp` dentro da pasta `root` do USBWebserver.
-2. Abra o phpMyAdmin e importe `bancodasfarmacias.sql`.
-3. Confira usuário, senha e nome do banco em `gerente/conexaoDB.php`.
-4. Acesse `http://localhost/farmacerta-erp/`.
-
-## Acessos iniciais
-
-- Gerente: login `gerente` e senha `123456`.
-- Balconista: login `balconista` e senha `123456`.
-
-As senhas estão em texto normal para deixar o código mais simples para estudo.
-Em um sistema real, o recomendado é proteger as senhas com `password_hash`.
-
-Troque esses acessos depois da instalação. O gerente pode cadastrar outros balconistas pelo sistema.
-
-## Várias farmácias
-
-Cada farmácia possui banco e dados separados. Para instalar outra:
-
-1. Faça outra cópia da pasta do sistema.
-2. No SQL, troque `farmacia1` pelo nome do novo banco, por exemplo `farmacia2`.
-3. Importe o SQL.
-4. Na cópia da nova farmácia, altere `$nomeBanco` em `gerente/conexaoDB.php`.
-
-Assim, produtos, funcionários, vendas e recibos de uma farmácia nunca se misturam com os de outra.
-
-## Funções
-
-- Login por cargo e bloqueio de páginas sem permissão.
-- Cadastro e desativação de balconistas.
-- Cadastro, edição, busca, exclusão e reposição de produtos.
-- Aviso de estoque baixo e sem estoque.
-- Carrinho com atualização e remoção de itens.
-- Dinheiro, PIX, débito e crédito.
-- Troco automático e baixa segura do estoque.
-- Recibos reais e históricos por balconista.
-- Dashboard do gerente com dados do banco.
-- Registro de movimentações do estoque.
-- Tabelas de lotes e validade prontas para expansão.
-
-## Multi-farmacias
-
-O sistema usa um unico banco chamado `farmacerta`.
-Cada usuario, produto, venda e movimentacao possui um `farmacia_id`.
-O `farmacia_id` do usuario e salvo na sessao quando ele faz login.
-Assim, gerente e balconista acessam somente os dados da propria farmacia.
-
-### Usuarios de teste
-
-Farmacia 1:
-- Gerente: `gerente` / `123456`
-- Balconista: `balconista` / `123456`
-
-Farmacia 2:
-- Gerente: `gerente2` / `123456`
-- Balconista: `balconista2` / `123456`
-
-Importe o arquivo `bancodasfarmacias.sql` no phpMyAdmin antes de testar.
+## Fiscal
+A tela Fiscal guarda número, série, chave, protocolo e status. A emissão oficial de NF-e/NFC-e na SEFAZ exige certificado digital e integração com uma API/provedor fiscal, que depende das credenciais da farmácia.

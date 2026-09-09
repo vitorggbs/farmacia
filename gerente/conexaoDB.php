@@ -1,9 +1,10 @@
 <?php
 
-$host = 'localhost';
-$usuarioBanco = 'root';
-$senhaBanco = '';
-$nomeBanco = 'farmacerta';
+$host = getenv('FARMACERTA_DB_HOST') ?: 'localhost';
+$usuarioBanco = getenv('FARMACERTA_DB_USER') ?: 'root';
+$senhaBanco = getenv('FARMACERTA_DB_PASSWORD');
+$senhaBanco = $senhaBanco === false ? '' : $senhaBanco;
+$nomeBanco = getenv('FARMACERTA_DB_NAME') ?: 'farmacerta';
 
 $conexao = mysqli_connect(
     $host,

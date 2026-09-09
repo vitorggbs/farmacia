@@ -19,6 +19,8 @@ $quantidade = (int) $_POST['quantidade'];
 $estoqueMinimo = (int) $_POST['estoque_minimo'];
 $prateleira = trim($_POST['prateleira']);
 $descricao = '';
+$categoriaId = (int) ($_POST['categoria_id'] ?? 0);
+if ($categoriaId < 1) { $categoriaId = null; }
 
 $imagem = basename($_FILES['imagem']['name']);
 $temporario = $_FILES['imagem']['tmp_name'];
@@ -43,16 +45,17 @@ $nomeImagem = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $imagem);
 move_uploaded_file($temporario, $pasta . $nomeImagem);
 
 $sql = 'INSERT INTO produtos
-        (farmacia_id, nome, descricao, preco, quantidade,
+        (farmacia_id, categoria_id, nome, descricao, preco, quantidade,
          estoque_minimo, imagem, prateleira)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
 $stmt = mysqli_prepare($conexao, $sql);
 
 mysqli_stmt_bind_param(
     $stmt,
-    'issdiiss',
+    'iissdiiss',
     $farmaciaId,
+    $categoriaId,
     $nome,
     $descricao,
     $preco,

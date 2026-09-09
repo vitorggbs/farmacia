@@ -17,6 +17,7 @@ $sql = 'SELECT COUNT(*) AS vendas,
         FROM vendas
         WHERE usuario_id = ?
         AND farmacia_id = ?
+        AND status = \'concluida\'
         AND DATE(data_venda) = CURDATE()';
 
 $stmt = mysqli_prepare($conexao, $sql);

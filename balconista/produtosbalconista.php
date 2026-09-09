@@ -17,10 +17,15 @@ if (!isset($_SESSION['carrinho'])) {
 
 $farmaciaId = (int) $_SESSION['farmacia_id'];
 
-$sql = 'SELECT id, nome, preco, quantidade, imagem
-        FROM produtos
-        WHERE farmacia_id = ? AND ativo = 1
-        ORDER BY nome ASC';
+$sql = 'SELECT p.id,p.nome,p.preco,p.quantidade,p.imagem,c.nome categoria,
+        COALESCE(SUM(l.quantidade),0) lote_total,
+        COALESCE(SUM(CASE WHEN l.validade >= CURDATE() THEN l.quantidade ELSE 0 END),0) lote_valido
+        FROM produtos p
+        LEFT JOIN categorias c ON c.id=p.categoria_id
+        LEFT JOIN lotes l ON l.produto_id=p.id
+        WHERE p.farmacia_id = ? AND p.ativo = 1
+        GROUP BY p.id,p.nome,p.preco,p.quantidade,p.imagem,c.nome
+        ORDER BY p.nome ASC';
 
 $stmt = mysqli_prepare($conexao, $sql);
 mysqli_stmt_bind_param($stmt, 'i', $farmaciaId);
@@ -59,6 +64,7 @@ if (!$resultado) {
                         <tr>
                             <th>Foto</th>
                             <th>Produto</th>
+                            <th>Categoria</th>
                             <th>Valor</th>
                             <th>Estoque</th>
                             <th>Comprar</th>
@@ -66,7 +72,7 @@ if (!$resultado) {
                     </thead>
                     <tbody>
                     <?php if (mysqli_num_rows($resultado) > 0) { ?>
-                        <?php while ($produto = mysqli_fetch_assoc($resultado)) { ?>
+                        <?php while ($produto = mysqli_fetch_assoc($resultado)) { $disponivel = max(0, (int)$produto['quantidade'] - (int)$produto['lote_total']) + (int)$produto['lote_valido']; ?>
                             <tr>
                                 <td>
                                     <?php if (!empty($produto['imagem'])) { ?>
@@ -76,19 +82,20 @@ if (!$resultado) {
                                     <?php } ?>
                                 </td>
                                 <td><?php echo htmlspecialchars($produto['nome']); ?></td>
+                                <td><?php echo htmlspecialchars($produto['categoria'] ?: 'Sem categoria'); ?></td>
                                 <td>R$ <?php echo number_format((float) $produto['preco'], 2, ',', '.'); ?></td>
                                 <td>
-                                    <?php if ((int) $produto['quantidade'] <= 0) { ?>
+                                    <?php if ($disponivel <= 0) { ?>
                                         <span class="text-danger fw-bold">0<br>SEM ESTOQUE</span>
                                     <?php } else { ?>
-                                        <?php echo (int) $produto['quantidade']; ?>
+                                        <?php echo $disponivel; ?>
                                     <?php } ?>
                                 </td>
                                 <td>
-                                    <?php if ((int) $produto['quantidade'] > 0) { ?>
+                                    <?php if ($disponivel > 0) { ?>
                                         <form action="adicionarcarrinho.php" method="POST" class="d-flex gap-1">
                                             <input type="hidden" name="produto_id" value="<?php echo (int) $produto['id']; ?>">
-                                            <input class="form-control form-control-sm" type="number" name="quantidade" value="1" min="1" max="<?php echo (int) $produto['quantidade']; ?>" required>
+                                            <input class="form-control form-control-sm" type="number" name="quantidade" value="1" min="1" max="<?php echo $disponivel; ?>" required>
                                             <button class="btn btn-sm btn-primary rounded-pill" type="submit">ADICIONAR</button>
                                         </form>
                                     <?php } else { ?>
@@ -99,7 +106,7 @@ if (!$resultado) {
                         <?php } ?>
                     <?php } else { ?>
                         <tr>
-                            <td colspan="5">Nenhum produto cadastrado.</td>
+                            <td colspan="6">Nenhum produto cadastrado.</td>
                         </tr>
                     <?php } ?>
                     </tbody>

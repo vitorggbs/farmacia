@@ -10,13 +10,16 @@ require_once __DIR__ . '/conexaoDB.php';
 require_once __DIR__ . '/../cabecalho.php';
 
 $farmaciaId = (int) $_SESSION['farmacia_id'];
+$categorias = mysqli_query($conexao, 'SELECT id, nome FROM categorias WHERE ativo = 1 ORDER BY nome');
+$listaCategorias = mysqli_fetch_all($categorias, MYSQLI_ASSOC);
 
 $sql = '
-    SELECT *
-    FROM produtos
-    WHERE farmacia_id = ?
-    AND ativo = 1
-    ORDER BY nome
+    SELECT p.*, c.nome AS categoria
+    FROM produtos p
+    LEFT JOIN categorias c ON c.id = p.categoria_id
+    WHERE p.farmacia_id = ?
+    AND p.ativo = 1
+    ORDER BY p.nome
 ';
 
 $stmt = mysqli_prepare($conexao, $sql);
@@ -34,7 +37,7 @@ $resultado = mysqli_stmt_get_result($stmt);
 
 <main class="container py-4">
     <section class="card card-brand rounded-4 p-4 mb-4" id="cadastrar">
-        <h2 class="h3 fw-bold">CADASTRAR PRODUTO</h2>
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2"><h2 class="h3 fw-bold mb-0">CADASTRAR PRODUTO</h2><a class="btn btn-outline-light rounded-pill" href="categorias.php">GERENCIAR CATEGORIAS</a></div>
         <?php if (isset($_GET['cadastro'])) { ?>
             <div class="alert alert-light text-success fw-bold">Produto cadastrado com sucesso!</div>
         <?php } ?>
@@ -54,6 +57,13 @@ $resultado = mysqli_stmt_get_result($stmt);
             <div class="col-12 col-md-6">
                 <label class="form-label fw-bold">Estoque mínimo</label>
                 <input class="form-control" type="number" name="estoque_minimo" min="0" value="5" required>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label fw-bold">Categoria</label>
+                <select class="form-select" name="categoria_id" required>
+                    <option value="">Selecione</option>
+                    <?php foreach ($listaCategorias as $cat) { ?><option value="<?php echo $cat['id']; ?>"><?php echo htmlspecialchars($cat['nome']); ?></option><?php } ?>
+                </select>
             </div>
             <div class="col-12 col-md-6">
                 <label class="form-label fw-bold">Prateleira</label>
@@ -80,6 +90,7 @@ $resultado = mysqli_stmt_get_result($stmt);
                     <tr>
                         <th>Foto</th>
                         <th>Produto</th>
+                        <th>Categoria</th>
                         <th>Preço</th>
                         <th>Estoque</th>
                         <th>Prateleira</th>
@@ -95,6 +106,7 @@ $resultado = mysqli_stmt_get_result($stmt);
                             <?php } ?>
                         </td>
                         <td><?php echo htmlspecialchars($produto['nome']); ?></td>
+                        <td><?php echo htmlspecialchars($produto['categoria'] ?: 'Sem categoria'); ?></td>
                         <td>R$ <?php echo number_format($produto['preco'], 2, ',', '.'); ?></td>
                         <td>
                             <?php echo (int) $produto['quantidade']; ?>
@@ -114,14 +126,15 @@ $resultado = mysqli_stmt_get_result($stmt);
                                     <input class="form-control form-control-sm" type="number" step="0.01" name="preco" value="<?php echo $produto['preco']; ?>" required>
                                     <input class="form-control form-control-sm" type="number" name="estoque_minimo" value="<?php echo $produto['estoque_minimo']; ?>" required>
                                     <input class="form-control form-control-sm" name="prateleira" value="<?php echo htmlspecialchars($produto['prateleira']); ?>" required>
+                                    <select class="form-select form-select-sm" name="categoria_id" required>
+                                        <?php foreach ($listaCategorias as $cat) { ?>
+                                            <option value="<?php echo $cat['id']; ?>" <?php echo ((int) $produto['categoria_id'] === (int) $cat['id']) ? 'selected' : ''; ?>><?php echo htmlspecialchars($cat['nome']); ?></option>
+                                        <?php } ?>
+                                    </select>
                                     <button class="btn btn-sm btn-primary rounded-pill">SALVAR</button>
                                 </form>
                             </details>
-                            <form action="reporproduto.php" method="POST" class="d-flex gap-1 mb-2" onsubmit="return confirmarReposicao()">
-                                <input type="hidden" name="produto_id" value="<?php echo $produto['id']; ?>">
-                                <input class="form-control form-control-sm" type="number" name="quantidade" min="1" placeholder="Qtd" required>
-                                <button class="btn btn-sm btn-primary rounded-pill">REPOR</button>
-                            </form>
+                            <a class="btn btn-sm btn-outline-primary rounded-pill mb-2" href="entradasmercadoria.php">ENTRADA COM LOTE</a>
                             <form action="excluirproduto.php" method="POST" onsubmit="return confirm('Excluir produto?')">
                                 <input type="hidden" name="produto_id" value="<?php echo $produto['id']; ?>">
                                 <button class="btn btn-sm btn-danger rounded-pill">EXCLUIR</button>

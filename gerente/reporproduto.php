@@ -4,6 +4,7 @@ session_start();
 
 require_once __DIR__ . '/../autenticacao.php';
 require_once __DIR__ . '/conexaoDB.php';
+require_once __DIR__ . '/../includes/auditoria.php';
 
 exigirLogin('gerente');
 
@@ -49,6 +50,8 @@ mysqli_stmt_bind_param(
     $observacao
 );
 mysqli_stmt_execute($stmt);
+
+registrarAuditoria($conexao, 'repor', 'produto', $produtoId, 'Reposição de ' . $quantidade . ' unidade(s)');
 
 header('Location: produtosgerente.php?ok=reposto');
 exit;

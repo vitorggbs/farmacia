@@ -27,6 +27,7 @@ $horario = trim($_POST['horario'] ?? '');
 $login = trim($_POST['login'] ?? '');
 $senha = $_POST['senha'] ?? '';
 $cargo = 'balconista';
+$senhaHash = password_hash($senha, PASSWORD_BCRYPT);
 
 if ($nome == '' || $cpf == '' || $login == '' || $senha == '') {
     die('Preencha os campos obrigatorios. <a href="funcionarios.php#cadastrar">Voltar</a>');
@@ -79,7 +80,7 @@ mysqli_stmt_bind_param(
     $salario,
     $horario,
     $login,
-    $senha,
+    $senhaHash,
     $cargo
 );
 

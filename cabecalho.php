@@ -15,9 +15,16 @@ function cabecalho($titulo, $pasta, $paginaAtiva)
         $itens = array(
             'inicio' => array($prefixo . 'iniciogerente.php', 'INÍCIO'),
             'produtos' => array($prefixo . 'produtosgerente.php', 'PRODUTOS'),
+            'lotes' => array($prefixo . 'lotes.php', 'LOTES/VALIDADE'),
             'movimentacoes' => array($prefixo . 'movimentacoesestoque.php', 'MOVIMENTAÇÕES'),
+            'fornecedores' => array($prefixo . 'fornecedores.php', 'FORNECEDORES'),
+            'entradas' => array($prefixo . 'entradasmercadoria.php', 'ENTRADAS'),
             'funcionarios' => array($prefixo . 'funcionarios/funcionarios.php', 'FUNCIONÁRIOS'),
+            'clientes' => array($prefixo . 'clientes.php', 'CLIENTES'),
             'recibos' => array($prefixo . 'historicorecibogerente.php', 'RECIBOS'),
+            'relatorios' => array($prefixo . 'relatorios.php', 'RELATÓRIOS'),
+            'auditoria' => array($prefixo . 'auditoria.php', 'AUDITORIA'),
+            'fiscal' => array($prefixo . 'fiscal.php', 'FISCAL'),
         );
     } else {
         $inicio = $prefixo . 'iniciobalconista.php';
@@ -28,6 +35,7 @@ function cabecalho($titulo, $pasta, $paginaAtiva)
         $itens = array(
             'inicio' => array($prefixo . 'iniciobalconista.php', 'INÍCIO'),
             'produtos' => array($prefixo . 'produtosbalconista.php', 'PRODUTOS'),
+            'clientes' => array($prefixo . 'clientes.php', 'CLIENTES'),
             'carrinho' => array($prefixo . 'carrinhobalconista.php', $carrinhoTexto),
             'historico' => array($prefixo . 'historicorecibobalconista.php', 'HISTÓRICO'),
         );

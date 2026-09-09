@@ -49,11 +49,17 @@ function imprimirLinksAdmin($paginaAtual, $mobile = false)
 {
     $inicioAtivo = in_array($paginaAtual, array('inicioadmin.php'), true);
     $farmaciasAtivo = in_array($paginaAtual, array('farmacias.php', 'editarfarmacia.php'), true);
+    $auditoriaAtivo = in_array($paginaAtual, array('auditoria.php'), true);
+    $backupAtivo = in_array($paginaAtual, array('backup.php'), true);
     $extra = $mobile ? ' border' : '';
 
     $classeInicio = 'nav-link rounded-pill px-3 py-2' . $extra . ($inicioAtivo ? ' active' : '');
     $classeFarmacias = 'nav-link rounded-pill px-3 py-2' . $extra . ($farmaciasAtivo ? ' active' : '');
+    $classeAuditoria = 'nav-link rounded-pill px-3 py-2' . $extra . ($auditoriaAtivo ? ' active' : '');
+    $classeBackup = 'nav-link rounded-pill px-3 py-2' . $extra . ($backupAtivo ? ' active' : '');
 
     echo '<a class="' . $classeInicio . '" href="inicioadmin.php">INÍCIO</a>';
     echo '<a class="' . $classeFarmacias . '" href="farmacias.php">FARMÁCIAS</a>';
+    echo '<a class="' . $classeAuditoria . '" href="auditoria.php">AUDITORIA</a>';
+    echo '<a class="' . $classeBackup . '" href="backup.php">BACKUP</a>';
 }

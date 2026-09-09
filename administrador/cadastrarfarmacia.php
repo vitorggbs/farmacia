@@ -51,6 +51,7 @@ if (!mysqli_stmt_execute($stmt)) {
 
 $farmaciaId = mysqli_insert_id($conexao);
 $cargo = 'gerente';
+$gerenteSenhaHash = password_hash($gerenteSenha, PASSWORD_BCRYPT);
 
 $sql = 'INSERT INTO usuarios (farmacia_id, nome, cpf, login, senha, cargo)
         VALUES (?, ?, ?, ?, ?, ?)';
@@ -62,7 +63,7 @@ mysqli_stmt_bind_param(
     $gerenteNome,
     $gerenteCpf,
     $gerenteLogin,
-    $gerenteSenha,
+    $gerenteSenhaHash,
     $cargo
 );
 
