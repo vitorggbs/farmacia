@@ -52,6 +52,7 @@ function e($valor)
 
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <?php recursosCabeca('Funcionários'); ?>
 </head>
@@ -67,10 +68,13 @@ function e($valor)
         <h2 class="h3 fw-bold">CADASTRAR BALCONISTA</h2>
 
         <?php if (isset($_GET['ok'])): ?>
+
             <div class="alert alert-light text-success fw-bold">
                 Funcionário cadastrado!
             </div>
+
         <?php endif; ?>
+
 
         <form
             action="cadastrarfuncionario.php"
@@ -79,8 +83,14 @@ function e($valor)
             class="row g-3"
         >
 
+            <!-- NOME -->
+
             <div class="col-12 col-md-6">
-                <label class="form-label fw-bold" for="nome">
+
+                <label
+                    class="form-label fw-bold"
+                    for="nome"
+                >
                     Nome completo
                 </label>
 
@@ -92,15 +102,21 @@ function e($valor)
                     placeholder="Digite o seu nome completo"
                     required
                 >
+
             </div>
 
 
+            <!-- CPF -->
+
             <div class="col-12 col-md-6">
-                <label class="form-label fw-bold" for="cpf">
+
+                <label
+                    class="form-label fw-bold"
+                    for="cpf"
+                >
                     CPF
                 </label>
 
-                <!-- MANTIDO DO CÓDIGO ORIGINAL -->
                 <input
                     class="form-control"
                     type="text"
@@ -109,31 +125,50 @@ function e($valor)
                     maxlength="14"
                     placeholder="000.000.000-00"
                     inputmode="numeric"
+                    autocomplete="off"
                     required
                 >
+
             </div>
 
 
+            <!-- NASCIMENTO -->
+
             <div class="col-12 col-md-6">
-                <label class="form-label fw-bold" for="nascimento">
+
+                <label
+                    class="form-label fw-bold"
+                    for="nascimento"
+                >
                     Nascimento
                 </label>
 
                 <input
                     class="form-control"
-                    type="date"
+                    type="text"
                     id="nascimento"
                     name="nascimento"
+                    maxlength="10"
+                    placeholder="DD/MM/AAAA"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    required
                 >
+
             </div>
 
 
+            <!-- TELEFONE -->
+
             <div class="col-12 col-md-6">
-                <label class="form-label fw-bold" for="telefone">
+
+                <label
+                    class="form-label fw-bold"
+                    for="telefone"
+                >
                     Telefone
                 </label>
 
-                <!-- MANTIDO DO CÓDIGO ORIGINAL -->
                 <input
                     class="form-control"
                     type="text"
@@ -142,12 +177,20 @@ function e($valor)
                     maxlength="15"
                     placeholder="(00) 00000-0000"
                     inputmode="numeric"
+                    autocomplete="off"
                 >
+
             </div>
 
 
+            <!-- E-MAIL -->
+
             <div class="col-12 col-md-6">
-                <label class="form-label fw-bold" for="email">
+
+                <label
+                    class="form-label fw-bold"
+                    for="email"
+                >
                     E-mail
                 </label>
 
@@ -158,11 +201,18 @@ function e($valor)
                     name="email"
                     placeholder="Digite o seu e-mail"
                 >
+
             </div>
 
 
+            <!-- ENDEREÇO -->
+
             <div class="col-12 col-md-6">
-                <label class="form-label fw-bold" for="endereco">
+
+                <label
+                    class="form-label fw-bold"
+                    for="endereco"
+                >
                     Endereço
                 </label>
 
@@ -173,29 +223,47 @@ function e($valor)
                     name="endereco"
                     placeholder="Digite o seu endereço"
                 >
+
             </div>
 
 
+            <!-- ADMISSÃO -->
+
             <div class="col-12 col-md-6">
-                <label class="form-label fw-bold" for="admissao">
+
+                <label
+                    class="form-label fw-bold"
+                    for="admissao"
+                >
                     Admissão
                 </label>
 
                 <input
                     class="form-control"
-                    type="date"
+                    type="text"
                     id="admissao"
                     name="admissao"
+                    maxlength="10"
+                    placeholder="DD/MM/AAAA"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    required
                 >
+
             </div>
 
 
+            <!-- SALÁRIO -->
+
             <div class="col-12 col-md-6">
-                <label class="form-label fw-bold" for="salario">
+
+                <label
+                    class="form-label fw-bold"
+                    for="salario"
+                >
                     Salário
                 </label>
 
-                <!-- MANTIDO DO CÓDIGO ORIGINAL -->
                 <input
                     class="form-control"
                     type="text"
@@ -203,16 +271,23 @@ function e($valor)
                     name="salario"
                     placeholder="R$ 0,00"
                     inputmode="decimal"
+                    autocomplete="off"
                 >
+
             </div>
 
 
+            <!-- HORÁRIO -->
+
             <div class="col-12 col-md-6">
-                <label class="form-label fw-bold" for="horario">
+
+                <label
+                    class="form-label fw-bold"
+                    for="horario"
+                >
                     Horário
                 </label>
 
-                <!-- MANTIDO DO CÓDIGO ORIGINAL -->
                 <input
                     class="form-control"
                     type="text"
@@ -228,11 +303,18 @@ function e($valor)
                     id="horarioValor"
                     name="horario"
                 >
+
             </div>
 
 
+            <!-- LOGIN -->
+
             <div class="col-12 col-md-6">
-                <label class="form-label fw-bold" for="login">
+
+                <label
+                    class="form-label fw-bold"
+                    for="login"
+                >
                     Login
                 </label>
 
@@ -244,11 +326,18 @@ function e($valor)
                     placeholder="Digite o seu login"
                     required
                 >
+
             </div>
 
 
+            <!-- SENHA -->
+
             <div class="col-12 col-md-6">
-                <label class="form-label fw-bold" for="senha">
+
+                <label
+                    class="form-label fw-bold"
+                    for="senha"
+                >
                     Senha
                 </label>
 
@@ -261,16 +350,21 @@ function e($valor)
                     minlength="6"
                     required
                 >
+
             </div>
 
 
+            <!-- BOTÃO -->
+
             <div class="col-12">
+
                 <button
                     class="btn btn-outline-light rounded-pill fw-bold"
                     type="submit"
                 >
                     CADASTRAR
                 </button>
+
             </div>
 
         </form>
@@ -278,15 +372,20 @@ function e($valor)
     </section>
 
 
+    <!-- LISTAGEM DOS BALCONISTAS -->
+
     <section class="card shadow-sm rounded-4 p-4">
 
-        <h2 class="h4 fw-bold">BALCONISTAS</h2>
+        <h2 class="h4 fw-bold">
+            BALCONISTAS
+        </h2>
 
         <div class="table-responsive">
 
             <table class="table table-hover align-middle">
 
                 <thead>
+
                     <tr>
                         <th>Nome</th>
                         <th>CPF</th>
@@ -295,6 +394,7 @@ function e($valor)
                         <th>Situação</th>
                         <th>Ação</th>
                     </tr>
+
                 </thead>
 
                 <tbody>
@@ -303,25 +403,46 @@ function e($valor)
 
                     <tr>
 
-                        <td><?= e($u['nome']) ?></td>
-
-                        <td><?= e($u['cpf']) ?></td>
-
                         <td>
-                            <?= e(($u['telefone'] ?: '-') . ' / ' . ($u['email'] ?: '-')) ?>
+                            <?= e($u['nome']) ?>
                         </td>
 
-                        <td><?= e($u['login']) ?></td>
+                        <td>
+                            <?= e($u['cpf']) ?>
+                        </td>
 
                         <td>
-                            <span class="badge rounded-pill <?= $u['ativo'] ? 'text-bg-success' : 'text-bg-secondary' ?>">
-                                <?= $u['ativo'] ? 'Ativo' : 'Inativo' ?>
+                            <?= e(
+                                ($u['telefone'] ?: '-') .
+                                ' / ' .
+                                ($u['email'] ?: '-')
+                            ) ?>
+                        </td>
+
+                        <td>
+                            <?= e($u['login']) ?>
+                        </td>
+
+                        <td>
+
+                            <span
+                                class="badge rounded-pill <?= $u['ativo']
+                                    ? 'text-bg-success'
+                                    : 'text-bg-secondary' ?>"
+                            >
+                                <?= $u['ativo']
+                                    ? 'Ativo'
+                                    : 'Inativo' ?>
                             </span>
+
                         </td>
 
                         <td>
 
-                            <form action="alterarstatus.php" method="POST">
+                            <form
+                                action="alterarstatus.php"
+                                method="POST"
+                            >
 
                                 <input
                                     type="hidden"
@@ -330,10 +451,14 @@ function e($valor)
                                 >
 
                                 <button
-                                    class="btn btn-sm <?= $u['ativo'] ? 'btn-danger' : 'btn-primary' ?> rounded-pill"
+                                    class="btn btn-sm <?= $u['ativo']
+                                        ? 'btn-danger'
+                                        : 'btn-primary' ?> rounded-pill"
                                     type="submit"
                                 >
-                                    <?= $u['ativo'] ? 'DESATIVAR' : 'ATIVAR' ?>
+                                    <?= $u['ativo']
+                                        ? 'DESATIVAR'
+                                        : 'ATIVAR' ?>
                                 </button>
 
                             </form>
@@ -363,10 +488,11 @@ function e($valor)
    ELEMENTOS
    ========================= */
 
-const $ = id =>
-    document.getElementById(id);
+const $ = id => document.getElementById(id);
 
 const cpf = $('cpf');
+const nascimento = $('nascimento');
+const admissao = $('admissao');
 const telefone = $('telefone');
 const salario = $('salario');
 const horario = $('horario');
@@ -377,11 +503,258 @@ let hora = '';
 
 
 /* =========================
-   NÚMEROS
+   SOMENTE NÚMEROS
    ========================= */
 
-const numeros = (valor, limite) =>
-    valor.replace(/\D/g, '').slice(0, limite);
+function somenteNumeros(valor, limite)
+{
+    return valor
+        .replace(/\D/g, '')
+        .slice(0, limite);
+}
+
+
+/* =========================
+   MÁSCARA DE DATA
+   =========================
+
+   Exemplos:
+
+   4       → 04
+   5       → 05
+   6       → 06
+   7       → 07
+   8       → 08
+   9       → 09
+
+   Formato final:
+
+   DD/MM/AAAA
+   ========================= */
+
+function aplicarMascaraData(campo)
+{
+    campo.addEventListener('input', () => {
+
+        let valor = campo.value
+            .replace(/\D/g, '')
+            .slice(0, 8);
+
+
+        /*
+         * Se o primeiro número digitado for
+         * de 4 até 9, acrescenta o zero.
+         *
+         * Exemplo:
+         * 4 → 04
+         * 9 → 09
+         */
+
+        if (
+            valor.length === 1 &&
+            /[4-9]/.test(valor)
+        ) {
+            valor = '0' + valor;
+        }
+
+
+        /*
+         * Limitar o dia entre 01 e 31.
+         */
+
+        if (valor.length >= 2) {
+
+            let dia = Number(
+                valor.substring(0, 2)
+            );
+
+            if (dia < 1) {
+                dia = 1;
+            }
+
+            if (dia > 31) {
+                dia = 31;
+            }
+
+            valor =
+                String(dia).padStart(2, '0') +
+                valor.substring(2);
+        }
+
+
+        /*
+         * Quando o usuário digitar o terceiro
+         * número, ele será o primeiro número
+         * do mês.
+         *
+         * Exemplo:
+         * 044 → 04/04
+         * 049 → 04/09
+         */
+
+        if (valor.length === 3) {
+
+            const dia = valor.substring(0, 2);
+
+            let mes = valor.substring(2, 3);
+
+            if (/[4-9]/.test(mes)) {
+                mes = '0' + mes;
+            }
+
+            valor = dia + mes;
+        }
+
+
+        /*
+         * Limitar o mês entre 01 e 12.
+         */
+
+        if (valor.length >= 4) {
+
+            let mes = Number(
+                valor.substring(2, 4)
+            );
+
+            if (mes < 1) {
+                mes = 1;
+            }
+
+            if (mes > 12) {
+                mes = 12;
+            }
+
+            valor =
+                valor.substring(0, 2) +
+                String(mes).padStart(2, '0') +
+                valor.substring(4);
+        }
+
+
+        /*
+         * Formatar como DD/MM/AAAA.
+         */
+
+        if (valor.length > 4) {
+
+            valor = valor.replace(
+                /(\d{2})(\d{2})(\d{1,4})/,
+                '$1/$2/$3'
+            );
+
+        } else if (valor.length > 2) {
+
+            valor = valor.replace(
+                /(\d{2})(\d{1,2})/,
+                '$1/$2'
+            );
+        }
+
+        campo.value = valor;
+
+    });
+}
+
+
+/* Aplicar a máscara nos campos de data */
+
+aplicarMascaraData(nascimento);
+aplicarMascaraData(admissao);
+
+
+/* =========================
+   VALIDAR DATA COMPLETA
+   ========================= */
+
+function dataValida(valor)
+{
+    const partes = valor.split('/');
+
+    if (partes.length !== 3) {
+        return false;
+    }
+
+    const diaTexto = partes[0];
+    const mesTexto = partes[1];
+    const anoTexto = partes[2];
+
+
+    /*
+     * Exigir:
+     * Dia com 2 dígitos;
+     * Mês com 2 dígitos;
+     * Ano com 4 dígitos.
+     */
+
+    if (
+        diaTexto.length !== 2 ||
+        mesTexto.length !== 2 ||
+        anoTexto.length !== 4
+    ) {
+        return false;
+    }
+
+    const dia = Number(diaTexto);
+    const mes = Number(mesTexto);
+    const ano = Number(anoTexto);
+
+
+    /*
+     * Verificar os limites básicos.
+     */
+
+    if (
+        dia < 1 ||
+        dia > 31 ||
+        mes < 1 ||
+        mes > 12 ||
+        ano < 1000 ||
+        ano > 9999
+    ) {
+        return false;
+    }
+
+
+    /*
+     * Verificar se a data realmente existe.
+     *
+     * Exemplos recusados:
+     * 31/02/2024
+     * 31/04/2024
+     * 29/02/2023
+     */
+
+    const data = new Date(
+        ano,
+        mes - 1,
+        dia
+    );
+
+    return (
+        data.getFullYear() === ano &&
+        data.getMonth() === mes - 1 &&
+        data.getDate() === dia
+    );
+}
+
+
+/* =========================
+   CONVERTER DATA PARA MYSQL
+   DD/MM/AAAA → AAAA-MM-DD
+   ========================= */
+
+function converterDataParaMySQL(valor)
+{
+    const partes = valor.split('/');
+
+    return (
+        partes[2] +
+        '-' +
+        partes[1] +
+        '-' +
+        partes[0]
+    );
+}
 
 
 /* =========================
@@ -390,32 +763,34 @@ const numeros = (valor, limite) =>
 
 cpf.addEventListener('input', () => {
 
-    let v = numeros(cpf.value, 11);
+    let valor = somenteNumeros(
+        cpf.value,
+        11
+    );
 
-    if (v.length > 9) {
+    if (valor.length > 9) {
 
-        v = v.replace(
+        valor = valor.replace(
             /(\d{3})(\d{3})(\d{3})(\d{1,2})/,
             '$1.$2.$3-$4'
         );
 
-    } else if (v.length > 6) {
+    } else if (valor.length > 6) {
 
-        v = v.replace(
+        valor = valor.replace(
             /(\d{3})(\d{3})(\d{1,3})/,
             '$1.$2.$3'
         );
 
-    } else if (v.length > 3) {
+    } else if (valor.length > 3) {
 
-        v = v.replace(
+        valor = valor.replace(
             /(\d{3})(\d{1,3})/,
             '$1.$2'
         );
-
     }
 
-    cpf.value = v;
+    cpf.value = valor;
 
 });
 
@@ -426,32 +801,32 @@ cpf.addEventListener('input', () => {
 
 telefone.addEventListener('input', () => {
 
-    let v = numeros(
+    let valor = somenteNumeros(
         telefone.value,
         11
     );
 
-    if (v.length > 7) {
+    if (valor.length > 7) {
 
-        v = v.replace(
+        valor = valor.replace(
             /(\d{2})(\d{5})(\d{1,4})/,
             '($1) $2-$3'
         );
 
-    } else if (v.length > 2) {
+    } else if (valor.length > 2) {
 
-        v = v.replace(
+        valor = valor.replace(
             /(\d{2})(\d+)/,
             '($1) $2'
         );
 
-    } else if (v) {
+    } else if (valor) {
 
-        v = `(${v}`;
+        valor = `(${valor}`;
 
     }
 
-    telefone.value = v;
+    telefone.value = valor;
 
 });
 
@@ -462,19 +837,20 @@ telefone.addEventListener('input', () => {
 
 salario.addEventListener('input', () => {
 
-    const v =
-        numeros(salario.value, 15);
+    const valor = somenteNumeros(
+        salario.value,
+        15
+    );
 
-    if (!v) {
+    if (!valor) {
 
         salario.value = '';
 
         return;
-
     }
 
     let [reais, centavos] =
-        (Number(v) / 100)
+        (Number(valor) / 100)
         .toFixed(2)
         .split('.');
 
@@ -495,80 +871,58 @@ salario.addEventListener('input', () => {
 
 horario.addEventListener('input', () => {
 
-    let v =
-        numeros(horario.value, 8);
+    let valor = somenteNumeros(
+        horario.value,
+        8
+    );
 
     [0, 2, 4, 6].forEach(posicao => {
 
-        v = corrigirInicio(
-            v,
+        valor = corrigirInicio(
+            valor,
             posicao
         );
 
     });
 
-    hora = validarHorario(v);
+    hora = validarHorario(valor);
 
-    horario.value =
-        formatarHorario(hora);
+    horario.value = formatarHorario(hora);
 
-    horarioValor.value =
-        horario.value;
+    horarioValor.value = horario.value;
 
 });
 
 
 function corrigirInicio(valor, posicao)
 {
-
-    if (
-        valor.length !== posicao + 1
-    ) {
-
+    if (valor.length !== posicao + 1) {
         return valor;
-
     }
 
     const numero = valor[posicao];
-
-    const minuto =
-        posicao === 2 ||
-        posicao === 6;
 
     const horaCampo =
         posicao === 0 ||
         posicao === 4;
 
-
     if (
-
-        /[6-9]/.test(numero)
-
-        ||
-
+        /[6-9]/.test(numero) ||
         (
             horaCampo &&
             /[3-5]/.test(numero)
         )
-
     ) {
 
         return (
-
             valor.slice(0, posicao) +
-
             '0' +
-
             numero +
-
             valor.slice(posicao + 1)
-
         );
-
     }
 
     return valor;
-
 }
 
 
@@ -578,7 +932,6 @@ function corrigirInicio(valor, posicao)
 
 function validarHorario(valor)
 {
-
     let resultado = '';
 
     for (
@@ -590,49 +943,34 @@ function validarHorario(valor)
         const numero = valor[i];
 
 
-        /* 20 até 23 */
+        /*
+         * Horas de 20 até 23.
+         */
 
         if (
-
-            (i === 1 || i === 5)
-
-            &&
-
-            valor[i - 1] === '2'
-
-            &&
-
+            (i === 1 || i === 5) &&
+            valor[i - 1] === '2' &&
             !/[0-3]/.test(numero)
-
         ) {
-
             continue;
-
         }
 
 
-        /* Minutos 00 até 59 */
+        /*
+         * Minutos de 00 até 59.
+         */
 
         if (
-
-            (i === 2 || i === 6)
-
-            &&
-
+            (i === 2 || i === 6) &&
             !/[0-5]/.test(numero)
-
         ) {
-
             continue;
-
         }
 
         resultado += numero;
-
     }
 
     return resultado.slice(0, 8);
-
 }
 
 
@@ -642,118 +980,159 @@ function validarHorario(valor)
 
 function formatarHorario(valor)
 {
-
     if (valor.length <= 2) {
-
         return valor;
-
     }
 
     if (valor.length <= 4) {
 
         return (
-
             `${valor.slice(0, 2)}:` +
-
             valor.slice(2)
-
         );
-
     }
 
     let texto =
-
         `${valor.slice(0, 2)}:` +
-
         `${valor.slice(2, 4)} às ` +
-
         valor.slice(4, 6);
 
     if (valor.length > 6) {
 
         texto +=
-
             `:${valor.slice(6, 8)}`;
-
     }
 
     return texto;
-
 }
 
 
 /* =========================
-   ENVIO
+   ENVIO DO FORMULÁRIO
    ========================= */
 
-formulario.addEventListener(
-    'submit',
-    event => {
-
-        horarioValor.value =
-            formatarHorario(hora);
+formulario.addEventListener('submit', event => {
 
 
-        if (
+    /*
+     * Validar nascimento.
+     */
 
-            hora &&
+    if (!dataValida(nascimento.value)) {
 
-            hora.length !== 8
+        event.preventDefault();
 
-        ) {
+        alert(
+            'Informe uma data de nascimento válida no formato DD/MM/AAAA.'
+        );
+
+        nascimento.focus();
+
+        return;
+    }
+
+
+    /*
+     * Validar admissão.
+     */
+
+    if (!dataValida(admissao.value)) {
+
+        event.preventDefault();
+
+        alert(
+            'Informe uma data de admissão válida no formato DD/MM/AAAA.'
+        );
+
+        admissao.focus();
+
+        return;
+    }
+
+
+    /*
+     * Converter as datas para o formato
+     * aceito pelo MySQL.
+     */
+
+    nascimento.value =
+        converterDataParaMySQL(nascimento.value);
+
+    admissao.value =
+        converterDataParaMySQL(admissao.value);
+
+
+    /*
+     * Atualizar o horário oculto.
+     */
+
+    horarioValor.value =
+        formatarHorario(hora);
+
+
+    /*
+     * Verificar se o horário está completo.
+     */
+
+    if (
+        hora &&
+        hora.length !== 8
+    ) {
+
+        event.preventDefault();
+
+        alert(
+            'Digite o horário completo no formato 08:00 às 17:00.'
+        );
+
+        horario.focus();
+
+        return;
+    }
+
+
+    /*
+     * Verificar se o horário final é maior
+     * que o horário inicial.
+     */
+
+    if (hora.length === 8) {
+
+        const inicio =
+            Number(hora.slice(0, 2)) * 60 +
+            Number(hora.slice(2, 4));
+
+        const fim =
+            Number(hora.slice(4, 6)) * 60 +
+            Number(hora.slice(6, 8));
+
+        if (fim <= inicio) {
 
             event.preventDefault();
+
+            alert(
+                'O horário final deve ser maior que o horário inicial.'
+            );
 
             horario.focus();
 
             return;
-
         }
-
-
-        if (hora.length === 8) {
-
-            const inicio =
-
-                Number(hora.slice(0, 2)) * 60 +
-
-                Number(hora.slice(2, 4));
-
-
-            const fim =
-
-                Number(hora.slice(4, 6)) * 60 +
-
-                Number(hora.slice(6, 8));
-
-
-            if (fim <= inicio) {
-
-                event.preventDefault();
-
-                horario.focus();
-
-                return;
-
-            }
-
-        }
-
-
-        salario.value =
-
-            salario.value
-
-                .replace('R$', '')
-
-                .replace(/\./g, '')
-
-                .replace(',', '.')
-
-                .trim();
-
     }
-);
+
+
+    /*
+     * Converter salário para formato decimal.
+     */
+
+    salario.value =
+        salario.value
+            .replace('R$', '')
+            .replace(/\./g, '')
+            .replace(',', '.')
+            .trim();
+
+});
 
 </script>
 

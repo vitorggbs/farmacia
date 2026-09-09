@@ -12,18 +12,22 @@ exigirLogin('gerente');
 $farmaciaId = (int) $_SESSION['farmacia_id'];
 $usuarioId = (int) $_SESSION['usuario_id'];
 
-/*
-|--------------------------------------------------------------------------
-| Registrar lote
-|--------------------------------------------------------------------------
-*/
+
+/* =========================
+   REGISTRAR LOTE
+   ========================= */
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $produtoId = (int) ($_POST['produto_id'] ?? 0);
     $numero = trim($_POST['numero_lote'] ?? '');
     $qtd = (int) ($_POST['quantidade'] ?? 0);
-    $validade = $_POST['validade'] ?? '';
+    $validade = trim($_POST['validade'] ?? '');
+
+    /*
+     * A data chega no formato AAAA-MM-DD,
+     * depois de ser convertida pelo JavaScript.
+     */
 
     if (
         $produtoId > 0 &&
@@ -36,11 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         try {
 
-            /*
-            |--------------------------------------------------------------------------
-            | Insere ou atualiza o lote
-            |--------------------------------------------------------------------------
-            */
+            /* =========================
+               INSERIR OU ATUALIZAR LOTE
+               ========================= */
 
             $stmt = mysqli_prepare(
                 $conexao,
@@ -65,11 +67,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             mysqli_stmt_execute($stmt);
             mysqli_stmt_close($stmt);
 
-            /*
-            |--------------------------------------------------------------------------
-            | Busca o ID do lote
-            |--------------------------------------------------------------------------
-            */
+
+            /* =========================
+               BUSCAR ID DO LOTE
+               ========================= */
 
             $stmt = mysqli_prepare(
                 $conexao,
@@ -97,16 +98,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             mysqli_stmt_close($stmt);
 
             if (!$lote) {
-                throw new Exception('Lote não encontrado após o cadastro.');
+                throw new Exception(
+                    'Lote não encontrado após o cadastro.'
+                );
             }
 
             $loteId = (int) $lote['id'];
 
-            /*
-            |--------------------------------------------------------------------------
-            | Atualiza estoque do produto
-            |--------------------------------------------------------------------------
-            */
+
+            /* =========================
+               ATUALIZAR ESTOQUE
+               ========================= */
 
             $stmt = mysqli_prepare(
                 $conexao,
@@ -128,16 +130,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if (mysqli_stmt_affected_rows($stmt) < 1) {
                 mysqli_stmt_close($stmt);
-                throw new Exception('Produto não encontrado.');
+
+                throw new Exception(
+                    'Produto não encontrado.'
+                );
             }
 
             mysqli_stmt_close($stmt);
 
-            /*
-            |--------------------------------------------------------------------------
-            | Registra movimentação de estoque
-            |--------------------------------------------------------------------------
-            */
+
+            /* =========================
+               REGISTRAR MOVIMENTAÇÃO
+               ========================= */
 
             $tipo = 'entrada';
             $obs = 'Cadastro/entrada manual do lote ' . $numero;
@@ -164,11 +168,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             mysqli_stmt_execute($stmt);
             mysqli_stmt_close($stmt);
 
-            /*
-            |--------------------------------------------------------------------------
-            | Auditoria
-            |--------------------------------------------------------------------------
-            */
+
+            /* =========================
+               AUDITORIA
+               ========================= */
 
             registrarAuditoria(
                 $conexao,
@@ -196,11 +199,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-/*
-|--------------------------------------------------------------------------
-| Produtos ativos
-|--------------------------------------------------------------------------
-*/
+
+/* =========================
+   PRODUTOS ATIVOS
+   ========================= */
 
 $stmt = mysqli_prepare(
     $conexao,
@@ -221,11 +223,10 @@ mysqli_stmt_execute($stmt);
 
 $produtos = mysqli_stmt_get_result($stmt);
 
-/*
-|--------------------------------------------------------------------------
-| Lotes cadastrados
-|--------------------------------------------------------------------------
-*/
+
+/* =========================
+   LOTES CADASTRADOS
+   ========================= */
 
 $stmt = mysqli_prepare(
     $conexao,
@@ -261,12 +262,6 @@ $lotes = mysqli_stmt_get_result($stmt);
 
     <style>
 
-        /*
-        |--------------------------------------------------------------------------
-        | COR VERMELHA DOS CAMPOS AO SELECIONAR
-        |--------------------------------------------------------------------------
-        */
-
         .form-control:focus,
         .form-select:focus {
 
@@ -278,47 +273,6 @@ $lotes = mysqli_stmt_get_result($stmt);
             outline: none !important;
 
         }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | SELECT - SETA E BORDA VERMELHA
-        |--------------------------------------------------------------------------
-        */
-
-        .form-select:focus {
-
-            border-color: #e52b38 !important;
-
-            box-shadow:
-                0 0 0 0.2rem rgba(229, 43, 56, 0.25) !important;
-
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | INPUT DATE - BORDA VERMELHA
-        |--------------------------------------------------------------------------
-        */
-
-        input[type="date"]:focus {
-
-            border-color: #e52b38 !important;
-
-            box-shadow:
-                0 0 0 0.2rem rgba(229, 43, 56, 0.25) !important;
-
-            outline: none !important;
-
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | BOTÃO REGISTRAR LOTE
-        |--------------------------------------------------------------------------
-        */
 
         .btn-registrar-lote {
 
@@ -334,7 +288,6 @@ $lotes = mysqli_stmt_get_result($stmt);
 
         }
 
-
         .btn-registrar-lote:hover {
 
             background-color: #c91f2d !important;
@@ -344,7 +297,6 @@ $lotes = mysqli_stmt_get_result($stmt);
             color: #ffffff !important;
 
         }
-
 
         .btn-registrar-lote:focus {
 
@@ -358,7 +310,6 @@ $lotes = mysqli_stmt_get_result($stmt);
                 0 0 0 0.2rem rgba(229, 43, 56, 0.25) !important;
 
         }
-
 
         .btn-registrar-lote:active {
 
@@ -378,13 +329,9 @@ $lotes = mysqli_stmt_get_result($stmt);
 
 <?php cabecalho('FarmaCerta - Gerente', 'gerente', 'lotes'); ?>
 
-
 <main class="container py-4">
 
-
-    <!-- =========================================================
-         CABEÇALHO
-    ========================================================== -->
+    <!-- CABEÇALHO -->
 
     <section class="card card-brand rounded-4 p-4 mb-4">
 
@@ -399,33 +346,29 @@ $lotes = mysqli_stmt_get_result($stmt);
     </section>
 
 
+    <!-- MENSAGEM DE SUCESSO -->
 
-    <!-- =========================================================
-         MENSAGENS
-    ========================================================== -->
-
-    <?php if (isset($_GET['ok'])) { ?>
+    <?php if (isset($_GET['ok'])): ?>
 
         <div class="alert alert-success">
             Lote registrado e estoque atualizado.
         </div>
 
-    <?php } ?>
+    <?php endif; ?>
 
 
-    <?php if (isset($_GET['erro'])) { ?>
+    <!-- MENSAGEM DE ERRO -->
+
+    <?php if (isset($_GET['erro'])): ?>
 
         <div class="alert alert-danger">
             Não foi possível registrar o lote.
         </div>
 
-    <?php } ?>
+    <?php endif; ?>
 
 
-
-    <!-- =========================================================
-         REGISTRAR LOTE
-    ========================================================== -->
+    <!-- REGISTRAR LOTE -->
 
     <section class="card shadow-sm rounded-4 p-4 mb-4">
 
@@ -433,9 +376,11 @@ $lotes = mysqli_stmt_get_result($stmt);
             REGISTRAR LOTE MANUALMENTE
         </h3>
 
-
-        <form method="POST" class="row g-3">
-
+        <form
+            method="POST"
+            id="formLote"
+            class="row g-3"
+        >
 
             <!-- PRODUTO -->
 
@@ -448,7 +393,6 @@ $lotes = mysqli_stmt_get_result($stmt);
                     Produto
                 </label>
 
-
                 <select
                     name="produto_id"
                     id="produto_id"
@@ -460,30 +404,26 @@ $lotes = mysqli_stmt_get_result($stmt);
                         Selecione
                     </option>
 
-
-                    <?php while ($p = mysqli_fetch_assoc($produtos)) { ?>
+                    <?php while ($p = mysqli_fetch_assoc($produtos)): ?>
 
                         <option
-                            value="<?php echo (int) $p['id']; ?>"
+                            value="<?= (int) $p['id'] ?>"
                         >
-
-                            <?php
-                            echo htmlspecialchars(
-                                $p['nome']
-                            );
-                            ?>
-
+                            <?= htmlspecialchars(
+                                $p['nome'],
+                                ENT_QUOTES,
+                                'UTF-8'
+                            ) ?>
                         </option>
 
-                    <?php } ?>
+                    <?php endwhile; ?>
 
                 </select>
 
             </div>
 
 
-
-            <!-- LOTE -->
+            <!-- NÚMERO DO LOTE -->
 
             <div class="col-12 col-md-3">
 
@@ -493,7 +433,6 @@ $lotes = mysqli_stmt_get_result($stmt);
                 >
                     Lote
                 </label>
-
 
                 <input
                     class="form-control"
@@ -508,7 +447,6 @@ $lotes = mysqli_stmt_get_result($stmt);
             </div>
 
 
-
             <!-- QUANTIDADE -->
 
             <div class="col-6 col-md-2">
@@ -520,19 +458,18 @@ $lotes = mysqli_stmt_get_result($stmt);
                     Quantidade
                 </label>
 
-
                 <input
                     class="form-control"
                     type="number"
                     id="quantidade"
-                    min="1"
                     name="quantidade"
-                    placeholder="Digite a quantidade"
+                    min="1"
+                    step="1"
+                    placeholder="Quantidade"
                     required
                 >
 
             </div>
-
 
 
             <!-- VALIDADE -->
@@ -546,17 +483,19 @@ $lotes = mysqli_stmt_get_result($stmt);
                     Validade
                 </label>
 
-
                 <input
                     class="form-control"
-                    type="date"
+                    type="text"
                     id="validade"
                     name="validade"
+                    maxlength="10"
+                    placeholder="DD/MM/AAAA"
+                    inputmode="numeric"
+                    autocomplete="off"
                     required
                 >
 
             </div>
-
 
 
             <!-- BOTÃO -->
@@ -577,10 +516,7 @@ $lotes = mysqli_stmt_get_result($stmt);
     </section>
 
 
-
-    <!-- =========================================================
-         LISTA DE LOTES
-    ========================================================== -->
+    <!-- LISTA DE LOTES -->
 
     <section class="card shadow-sm rounded-4 p-3">
 
@@ -616,10 +552,9 @@ $lotes = mysqli_stmt_get_result($stmt);
 
                 </thead>
 
-
                 <tbody>
 
-                <?php if (mysqli_num_rows($lotes) === 0) { ?>
+                <?php if (mysqli_num_rows($lotes) === 0): ?>
 
                     <tr>
 
@@ -632,10 +567,12 @@ $lotes = mysqli_stmt_get_result($stmt);
 
                     </tr>
 
-                <?php } ?>
+                <?php endif; ?>
 
 
-                <?php while ($l = mysqli_fetch_assoc($lotes)) {
+                <?php while ($l = mysqli_fetch_assoc($lotes)): ?>
+
+                    <?php
 
                     $dias = (int) $l['dias'];
 
@@ -656,99 +593,56 @@ $lotes = mysqli_stmt_get_result($stmt);
 
                     }
 
-                ?>
+                    ?>
 
                     <tr>
-
-
-                        <!-- PRODUTO -->
 
                         <td>
 
                             <strong>
-
-                                <?php
-
-                                echo htmlspecialchars(
-                                    $l['produto']
-                                );
-
-                                ?>
-
+                                <?= htmlspecialchars(
+                                    $l['produto'],
+                                    ENT_QUOTES,
+                                    'UTF-8'
+                                ) ?>
                             </strong>
 
                         </td>
 
-
-
-                        <!-- LOTE -->
-
                         <td>
-
-                            <?php
-
-                            echo htmlspecialchars(
-                                $l['numero_lote']
-                            );
-
-                            ?>
-
+                            <?= htmlspecialchars(
+                                $l['numero_lote'],
+                                ENT_QUOTES,
+                                'UTF-8'
+                            ) ?>
                         </td>
 
-
-
-                        <!-- QUANTIDADE -->
-
                         <td>
-
-                            <?php
-
-                            echo (int) $l['quantidade'];
-
-                            ?>
-
+                            <?= (int) $l['quantidade'] ?>
                         </td>
 
-
-
-                        <!-- VALIDADE -->
-
                         <td>
-
-                            <?php
-
-                            echo date(
+                            <?= date(
                                 'd/m/Y',
                                 strtotime($l['validade'])
-                            );
-
-                            ?>
-
+                            ) ?>
                         </td>
-
-
-
-                        <!-- SITUAÇÃO -->
 
                         <td>
 
-                            <span class="badge <?php echo $badge; ?>">
-
-                                <?php
-
-                                echo htmlspecialchars(
-                                    $texto
-                                );
-
-                                ?>
-
+                            <span class="badge <?= $badge ?>">
+                                <?= htmlspecialchars(
+                                    $texto,
+                                    ENT_QUOTES,
+                                    'UTF-8'
+                                ) ?>
                             </span>
 
                         </td>
 
                     </tr>
 
-                <?php } ?>
+                <?php endwhile; ?>
 
                 </tbody>
 
@@ -760,8 +654,246 @@ $lotes = mysqli_stmt_get_result($stmt);
 
 </main>
 
-
 <?php recursosRodape(); ?>
+
+
+<script>
+
+/* =========================
+   ELEMENTOS
+   ========================= */
+
+const formulario = document.getElementById('formLote');
+const validade = document.getElementById('validade');
+
+
+/* =========================
+   MÁSCARA DA VALIDADE
+   PADRÃO: DD/MM/AAAA
+
+   4 → 04
+   5 → 05
+   6 → 06
+   7 → 07
+   8 → 08
+   9 → 09
+   ========================= */
+
+validade.addEventListener('input', () => {
+
+    let valor = validade.value
+        .replace(/\D/g, '')
+        .slice(0, 8);
+
+
+    /*
+     * Dia:
+     * transforma 4 até 9 em 04 até 09.
+     */
+
+    if (
+        valor.length === 1 &&
+        /[4-9]/.test(valor)
+    ) {
+        valor = '0' + valor;
+    }
+
+
+    /*
+     * Limita o dia entre 01 e 31.
+     */
+
+    if (valor.length >= 2) {
+
+        let dia = Number(
+            valor.substring(0, 2)
+        );
+
+        if (dia < 1) {
+            dia = 1;
+        }
+
+        if (dia > 31) {
+            dia = 31;
+        }
+
+        valor =
+            String(dia).padStart(2, '0') +
+            valor.substring(2);
+    }
+
+
+    /*
+     * Mês:
+     * transforma 4 até 9 em 04 até 09.
+     */
+
+    if (valor.length === 3) {
+
+        const dia = valor.substring(0, 2);
+
+        let mes = valor.substring(2, 3);
+
+        if (/[4-9]/.test(mes)) {
+            mes = '0' + mes;
+        }
+
+        valor = dia + mes;
+    }
+
+
+    /*
+     * Limita o mês entre 01 e 12.
+     */
+
+    if (valor.length >= 4) {
+
+        let mes = Number(
+            valor.substring(2, 4)
+        );
+
+        if (mes < 1) {
+            mes = 1;
+        }
+
+        if (mes > 12) {
+            mes = 12;
+        }
+
+        valor =
+            valor.substring(0, 2) +
+            String(mes).padStart(2, '0') +
+            valor.substring(4);
+    }
+
+
+    /*
+     * Formata para DD/MM/AAAA.
+     */
+
+    if (valor.length > 4) {
+
+        valor = valor.replace(
+            /(\d{2})(\d{2})(\d{1,4})/,
+            '$1/$2/$3'
+        );
+
+    } else if (valor.length > 2) {
+
+        valor = valor.replace(
+            /(\d{2})(\d{1,2})/,
+            '$1/$2'
+        );
+    }
+
+    validade.value = valor;
+
+});
+
+
+/* =========================
+   VALIDAR DATA
+   ========================= */
+
+function dataValida(valor)
+{
+    const partes = valor.split('/');
+
+    if (partes.length !== 3) {
+        return false;
+    }
+
+    const diaTexto = partes[0];
+    const mesTexto = partes[1];
+    const anoTexto = partes[2];
+
+    if (
+        diaTexto.length !== 2 ||
+        mesTexto.length !== 2 ||
+        anoTexto.length !== 4
+    ) {
+        return false;
+    }
+
+    const dia = Number(diaTexto);
+    const mes = Number(mesTexto);
+    const ano = Number(anoTexto);
+
+    if (
+        dia < 1 ||
+        dia > 31 ||
+        mes < 1 ||
+        mes > 12 ||
+        ano < 1000 ||
+        ano > 9999
+    ) {
+        return false;
+    }
+
+    const data = new Date(
+        ano,
+        mes - 1,
+        dia
+    );
+
+    return (
+        data.getFullYear() === ano &&
+        data.getMonth() === mes - 1 &&
+        data.getDate() === dia
+    );
+}
+
+
+/* =========================
+   CONVERTER DATA PARA MYSQL
+   DD/MM/AAAA → AAAA-MM-DD
+   ========================= */
+
+function converterDataParaMySQL(valor)
+{
+    const partes = valor.split('/');
+
+    return (
+        partes[2] +
+        '-' +
+        partes[1] +
+        '-' +
+        partes[0]
+    );
+}
+
+
+/* =========================
+   ENVIO DO FORMULÁRIO
+   ========================= */
+
+formulario.addEventListener('submit', event => {
+
+    if (!dataValida(validade.value)) {
+
+        event.preventDefault();
+
+        alert(
+            'Informe uma validade válida no formato DD/MM/AAAA.'
+        );
+
+        validade.focus();
+
+        return;
+    }
+
+
+    /*
+     * Converte a data brasileira para o formato
+     * aceito pelo MySQL.
+     */
+
+    validade.value =
+        converterDataParaMySQL(validade.value);
+
+});
+
+</script>
 
 </body>
 </html>

@@ -27,8 +27,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $custoTexto = trim($_POST['custo_unitario'] ?? '0');
 
-    // Aceita valores como 12,50 ou 1.250,50
+    // Aceita valores como:
+    // 12,50
+    // 1.250,50
+    // R$ 1.250,50
     $custoTexto = str_replace('R$', '', $custoTexto);
+    $custoTexto = str_replace(' ', '', $custoTexto);
     $custoTexto = str_replace('.', '', $custoTexto);
     $custoTexto = str_replace(',', '.', $custoTexto);
 
@@ -36,7 +40,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $nota = trim($_POST['numero_nota'] ?? '');
     $numeroLote = trim($_POST['numero_lote'] ?? '');
-    $validade = $_POST['validade'] ?? '';
+
+    /*
+     * A tela recebe DD/MM/AAAA.
+     * O banco recebe AAAA-MM-DD.
+     */
+    $validadeTexto = trim($_POST['validade'] ?? '');
+    $validade = '';
+
+    if (
+        preg_match(
+            '/^(\d{2})\/(\d{2})\/(\d{4})$/',
+            $validadeTexto,
+            $partes
+        )
+    ) {
+        $dia = (int) $partes[1];
+        $mes = (int) $partes[2];
+        $ano = (int) $partes[3];
+
+        if (checkdate($mes, $dia, $ano)) {
+            $validade = sprintf(
+                '%04d-%02d-%02d',
+                $ano,
+                $mes,
+                $dia
+            );
+        }
+    }
 
 
     /* =========================
@@ -49,9 +80,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $quantidade < 1 ||
         $custo < 0 ||
         $numeroLote === '' ||
-        !preg_match('/^\d{4}-\d{2}-\d{2}$/', $validade)
+        $validade === ''
     ) {
-
         header('Location: entradasmercadoria.php?erro=dados');
         exit;
     }
@@ -60,7 +90,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     mysqli_begin_transaction($conexao);
 
     try {
-
 
         /* =========================
            CRIA OU ATUALIZA LOTE
@@ -268,7 +297,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: entradasmercadoria.php?ok=1');
         exit;
 
-
     } catch (Throwable $e) {
 
         mysqli_rollback($conexao);
@@ -351,11 +379,6 @@ $historico = mysqli_query(
             --vermelho-farmacerta-claro: rgba(229, 43, 56, 0.25);
         }
 
-
-        /* =========================
-           BOTÃO REGISTRAR ENTRADA
-           ========================= */
-
         .btn-registrar-entrada {
             background-color: var(--vermelho-farmacerta) !important;
             border-color: var(--vermelho-farmacerta) !important;
@@ -389,16 +412,10 @@ $historico = mysqli_query(
             color: #ffffff !important;
         }
 
-
-        /* =========================
-           CAMPOS
-           ========================= */
-
         .form-control:focus,
         .form-control:focus-visible,
         .form-select:focus,
         .form-select:focus-visible {
-
             border-color: var(--vermelho-farmacerta) !important;
 
             outline: 2px solid var(--vermelho-farmacerta) !important;
@@ -409,12 +426,10 @@ $historico = mysqli_query(
                 0 0 0 0.2rem var(--vermelho-farmacerta-claro) !important;
         }
 
-
         .form-select:hover,
         .form-control:hover {
             border-color: #d94a54;
         }
-
 
         .form-control::selection,
         .form-select::selection {
@@ -422,22 +437,17 @@ $historico = mysqli_query(
             color: #ffffff;
         }
 
-
         .form-control,
         .form-select {
-
             transition:
                 border-color 0.2s ease,
                 box-shadow 0.2s ease,
                 outline 0.2s ease;
-
         }
-
 
         .form-label {
             font-weight: 600;
         }
-
 
         input:focus,
         select:focus,
@@ -445,7 +455,6 @@ $historico = mysqli_query(
         button:focus {
             -webkit-tap-highlight-color: transparent;
         }
-
 
         .form-select option:checked {
             background-color: var(--vermelho-farmacerta);
@@ -456,18 +465,13 @@ $historico = mysqli_query(
 
 </head>
 
-
 <body>
 
 <?php cabecalho('FarmaCerta - Gerente', 'gerente', 'entradas'); ?>
 
-
 <main class="container py-4">
 
-
-    <!-- =========================
-         CABEÇALHO
-         ========================= -->
+    <!-- CABEÇALHO -->
 
     <section class="card card-brand rounded-4 p-4 mb-4">
 
@@ -482,9 +486,7 @@ $historico = mysqli_query(
     </section>
 
 
-    <!-- =========================
-         MENSAGENS
-         ========================= -->
+    <!-- MENSAGENS -->
 
     <?php if (isset($_GET['ok'])) { ?>
 
@@ -493,7 +495,6 @@ $historico = mysqli_query(
         </div>
 
     <?php } ?>
-
 
     <?php if (isset($_GET['erro'])) { ?>
 
@@ -504,9 +505,7 @@ $historico = mysqli_query(
     <?php } ?>
 
 
-    <!-- =========================
-         FORMULÁRIO
-         ========================= -->
+    <!-- FORMULÁRIO -->
 
     <section class="card shadow-sm rounded-4 p-4 mb-4">
 
@@ -514,9 +513,11 @@ $historico = mysqli_query(
             REGISTRAR ENTRADA
         </h3>
 
-
-        <form method="POST" class="row g-3">
-
+        <form
+            method="POST"
+            class="row g-3"
+            id="formEntrada"
+        >
 
             <!-- FORNECEDOR -->
 
@@ -647,6 +648,7 @@ $historico = mysqli_query(
                     name="custo_unitario"
                     placeholder="Digite o custo unitário"
                     inputmode="decimal"
+                    autocomplete="off"
                     required
                 >
 
@@ -690,9 +692,13 @@ $historico = mysqli_query(
 
                 <input
                     class="form-control"
-                    type="date"
+                    type="text"
                     id="validade"
                     name="validade"
+                    maxlength="10"
+                    placeholder="DD/MM/AAAA"
+                    inputmode="numeric"
+                    autocomplete="off"
                     required
                 >
 
@@ -740,16 +746,13 @@ $historico = mysqli_query(
     </section>
 
 
-    <!-- =========================
-         HISTÓRICO
-         ========================= -->
+    <!-- HISTÓRICO -->
 
     <section class="card shadow-sm rounded-4 p-3">
 
         <h3 class="h5 fw-bold mb-3">
             ÚLTIMAS ENTRADAS
         </h3>
-
 
         <div class="table-responsive">
 
@@ -758,7 +761,6 @@ $historico = mysqli_query(
                 <thead>
 
                     <tr>
-
                         <th>Data</th>
                         <th>Fornecedor</th>
                         <th>Produto</th>
@@ -767,11 +769,9 @@ $historico = mysqli_query(
                         <th>Qtd.</th>
                         <th>Custo</th>
                         <th>Responsável</th>
-
                     </tr>
 
                 </thead>
-
 
                 <tbody>
 
@@ -790,7 +790,6 @@ $historico = mysqli_query(
 
                 <?php } ?>
 
-
                 <?php while ($e = mysqli_fetch_assoc($historico)) { ?>
 
                     <tr>
@@ -804,7 +803,6 @@ $historico = mysqli_query(
                             ?>
                         </td>
 
-
                         <td>
                             <?php
                             echo htmlspecialchars(
@@ -814,7 +812,6 @@ $historico = mysqli_query(
                             );
                             ?>
                         </td>
-
 
                         <td>
                             <?php
@@ -826,7 +823,6 @@ $historico = mysqli_query(
                             ?>
                         </td>
 
-
                         <td>
                             <?php
                             echo htmlspecialchars(
@@ -836,7 +832,6 @@ $historico = mysqli_query(
                             );
                             ?>
                         </td>
-
 
                         <td>
                             <?php
@@ -849,13 +844,11 @@ $historico = mysqli_query(
                             ?>
                         </td>
 
-
                         <td>
                             <?php
                             echo (int) $e['quantidade'];
                             ?>
                         </td>
-
 
                         <td>
                             R$
@@ -868,7 +861,6 @@ $historico = mysqli_query(
                             );
                             ?>
                         </td>
-
 
                         <td>
                             <?php
@@ -894,9 +886,7 @@ $historico = mysqli_query(
 
 </main>
 
-
 <?php recursosRodape(); ?>
-
 
 <script>
 
@@ -906,13 +896,12 @@ $historico = mysqli_query(
 
 const custo = document.getElementById('custo_unitario');
 
-custo.addEventListener('input', () => {
+custo.addEventListener('input', function () {
 
-    let valor = custo.value
-        .replace(/\D/g, '');
+    let valor = this.value.replace(/\D/g, '');
 
     if (!valor) {
-        custo.value = '';
+        this.value = '';
         return;
     }
 
@@ -925,12 +914,160 @@ custo.addEventListener('input', () => {
         '.'
     );
 
-    custo.value = `R$ ${reais},${centavos}`;
+    this.value = `R$ ${reais},${centavos}`;
+
+});
+
+
+/* =========================
+   MÁSCARA DE VALIDADE
+   ========================= */
+
+const validade = document.getElementById('validade');
+
+validade.addEventListener('input', function () {
+
+    let valor = this.value.replace(/\D/g, '');
+
+    // Limita a data a 8 números:
+    // DDMMYYYY
+    valor = valor.substring(0, 8);
+
+    let dia = valor.substring(0, 2);
+    let mes = valor.substring(2, 4);
+    let ano = valor.substring(4, 8);
+
+    /*
+     * Se o usuário digitar somente 4 até 9
+     * como primeiro número, transforma em 04 até 09.
+     */
+    if (
+        dia.length === 1 &&
+        Number(dia) >= 4 &&
+        Number(dia) <= 9
+    ) {
+        dia = '0' + dia;
+    }
+
+    /*
+     * Limita o dia entre 01 e 31.
+     */
+    if (dia.length === 2) {
+
+        let numeroDia = Number(dia);
+
+        if (numeroDia < 1) {
+            dia = '01';
+        }
+
+        if (numeroDia > 31) {
+            dia = '31';
+        }
+
+    }
+
+    /*
+     * Se o usuário digitar somente 4 até 9
+     * para o mês, transforma em 04 até 09.
+     */
+    if (
+        mes.length === 1 &&
+        Number(mes) >= 4 &&
+        Number(mes) <= 9
+    ) {
+        mes = '0' + mes;
+    }
+
+    /*
+     * Limita o mês entre 01 e 12.
+     */
+    if (mes.length === 2) {
+
+        let numeroMes = Number(mes);
+
+        if (numeroMes < 1) {
+            mes = '01';
+        }
+
+        if (numeroMes > 12) {
+            mes = '12';
+        }
+
+    }
+
+    let resultado = dia;
+
+    if (valor.length > 2) {
+        resultado += '/' + mes;
+    }
+
+    if (valor.length > 4) {
+        resultado += '/' + ano;
+    }
+
+    this.value = resultado;
+
+});
+
+
+/* =========================
+   VALIDAÇÃO DO FORMULÁRIO
+   ========================= */
+
+const formEntrada = document.getElementById('formEntrada');
+
+formEntrada.addEventListener('submit', function (event) {
+
+    const valor = validade.value.trim();
+
+    const correspondencia = valor.match(
+        /^(\d{2})\/(\d{2})\/(\d{4})$/
+    );
+
+    /*
+     * Impede o envio se não estiver no formato correto.
+     */
+    if (!correspondencia) {
+        event.preventDefault();
+        validade.focus();
+        return;
+    }
+
+    const dia = Number(correspondencia[1]);
+    const mes = Number(correspondencia[2]);
+    const ano = Number(correspondencia[3]);
+
+    /*
+     * Verifica se a data realmente existe.
+     * Exemplo: 31/02/2028 será recusado.
+     */
+    const data = new Date(ano, mes - 1, dia);
+
+    const dataValida =
+        data.getFullYear() === ano &&
+        data.getMonth() === mes - 1 &&
+        data.getDate() === dia;
+
+    if (!dataValida) {
+        event.preventDefault();
+        validade.focus();
+        return;
+    }
+
+    /*
+     * Converte DD/MM/AAAA para AAAA-MM-DD
+     * antes de enviar ao PHP e ao banco.
+     */
+    validade.value =
+        String(ano).padStart(4, '0') +
+        '-' +
+        String(mes).padStart(2, '0') +
+        '-' +
+        String(dia).padStart(2, '0');
 
 });
 
 </script>
-
 
 </body>
 </html>
