@@ -263,35 +263,111 @@ $lotes = mysqli_stmt_get_result($stmt);
 
         /*
         |--------------------------------------------------------------------------
-        | Botão Registrar Lote - Vermelho
+        | COR VERMELHA DOS CAMPOS AO SELECIONAR
+        |--------------------------------------------------------------------------
+        */
+
+        .form-control:focus,
+        .form-select:focus {
+
+            border-color: #e52b38 !important;
+
+            box-shadow:
+                0 0 0 0.2rem rgba(229, 43, 56, 0.25) !important;
+
+            outline: none !important;
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | SELECT - SETA E BORDA VERMELHA
+        |--------------------------------------------------------------------------
+        */
+
+        .form-select:focus {
+
+            border-color: #e52b38 !important;
+
+            box-shadow:
+                0 0 0 0.2rem rgba(229, 43, 56, 0.25) !important;
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | INPUT DATE - BORDA VERMELHA
+        |--------------------------------------------------------------------------
+        */
+
+        input[type="date"]:focus {
+
+            border-color: #e52b38 !important;
+
+            box-shadow:
+                0 0 0 0.2rem rgba(229, 43, 56, 0.25) !important;
+
+            outline: none !important;
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | BOTÃO REGISTRAR LOTE
         |--------------------------------------------------------------------------
         */
 
         .btn-registrar-lote {
+
             background-color: #e52b38 !important;
+
             border-color: #e52b38 !important;
+
             color: #ffffff !important;
+
             font-weight: 600;
+
             transition: all 0.2s ease;
+
         }
+
 
         .btn-registrar-lote:hover {
+
             background-color: #c91f2d !important;
+
             border-color: #c91f2d !important;
+
             color: #ffffff !important;
+
         }
+
 
         .btn-registrar-lote:focus {
+
             background-color: #c91f2d !important;
+
             border-color: #c91f2d !important;
+
             color: #ffffff !important;
-            box-shadow: 0 0 0 0.2rem rgba(229, 43, 56, 0.25) !important;
+
+            box-shadow:
+                0 0 0 0.2rem rgba(229, 43, 56, 0.25) !important;
+
         }
 
+
         .btn-registrar-lote:active {
+
             background-color: #b71c29 !important;
+
             border-color: #b71c29 !important;
+
             color: #ffffff !important;
+
         }
 
     </style>
@@ -302,7 +378,9 @@ $lotes = mysqli_stmt_get_result($stmt);
 
 <?php cabecalho('FarmaCerta - Gerente', 'gerente', 'lotes'); ?>
 
+
 <main class="container py-4">
+
 
     <!-- =========================================================
          CABEÇALHO
@@ -319,6 +397,7 @@ $lotes = mysqli_stmt_get_result($stmt);
         </p>
 
     </section>
+
 
 
     <!-- =========================================================
@@ -343,6 +422,7 @@ $lotes = mysqli_stmt_get_result($stmt);
     <?php } ?>
 
 
+
     <!-- =========================================================
          REGISTRAR LOTE
     ========================================================== -->
@@ -353,7 +433,9 @@ $lotes = mysqli_stmt_get_result($stmt);
             REGISTRAR LOTE MANUALMENTE
         </h3>
 
+
         <form method="POST" class="row g-3">
+
 
             <!-- PRODUTO -->
 
@@ -366,6 +448,7 @@ $lotes = mysqli_stmt_get_result($stmt);
                     Produto
                 </label>
 
+
                 <select
                     name="produto_id"
                     id="produto_id"
@@ -377,10 +460,19 @@ $lotes = mysqli_stmt_get_result($stmt);
                         Selecione
                     </option>
 
+
                     <?php while ($p = mysqli_fetch_assoc($produtos)) { ?>
 
-                        <option value="<?php echo (int) $p['id']; ?>">
-                            <?php echo htmlspecialchars($p['nome']); ?>
+                        <option
+                            value="<?php echo (int) $p['id']; ?>"
+                        >
+
+                            <?php
+                            echo htmlspecialchars(
+                                $p['nome']
+                            );
+                            ?>
+
                         </option>
 
                     <?php } ?>
@@ -388,6 +480,7 @@ $lotes = mysqli_stmt_get_result($stmt);
                 </select>
 
             </div>
+
 
 
             <!-- LOTE -->
@@ -401,16 +494,19 @@ $lotes = mysqli_stmt_get_result($stmt);
                     Lote
                 </label>
 
+
                 <input
                     class="form-control"
                     type="text"
                     id="numero_lote"
                     name="numero_lote"
                     maxlength="50"
+                    placeholder="Digite o número do lote"
                     required
                 >
 
             </div>
+
 
 
             <!-- QUANTIDADE -->
@@ -424,16 +520,19 @@ $lotes = mysqli_stmt_get_result($stmt);
                     Quantidade
                 </label>
 
+
                 <input
                     class="form-control"
                     type="number"
                     id="quantidade"
                     min="1"
                     name="quantidade"
+                    placeholder="Digite a quantidade"
                     required
                 >
 
             </div>
+
 
 
             <!-- VALIDADE -->
@@ -447,6 +546,7 @@ $lotes = mysqli_stmt_get_result($stmt);
                     Validade
                 </label>
 
+
                 <input
                     class="form-control"
                     type="date"
@@ -456,6 +556,7 @@ $lotes = mysqli_stmt_get_result($stmt);
                 >
 
             </div>
+
 
 
             <!-- BOTÃO -->
@@ -474,6 +575,7 @@ $lotes = mysqli_stmt_get_result($stmt);
         </form>
 
     </section>
+
 
 
     <!-- =========================================================
@@ -551,25 +653,32 @@ $lotes = mysqli_stmt_get_result($stmt);
 
                         $badge = 'text-bg-success';
                         $texto = 'OK';
+
                     }
 
                 ?>
 
                     <tr>
 
+
                         <!-- PRODUTO -->
 
                         <td>
 
                             <strong>
+
                                 <?php
+
                                 echo htmlspecialchars(
                                     $l['produto']
                                 );
+
                                 ?>
+
                             </strong>
 
                         </td>
+
 
 
                         <!-- LOTE -->
@@ -577,12 +686,15 @@ $lotes = mysqli_stmt_get_result($stmt);
                         <td>
 
                             <?php
+
                             echo htmlspecialchars(
                                 $l['numero_lote']
                             );
+
                             ?>
 
                         </td>
+
 
 
                         <!-- QUANTIDADE -->
@@ -590,10 +702,13 @@ $lotes = mysqli_stmt_get_result($stmt);
                         <td>
 
                             <?php
+
                             echo (int) $l['quantidade'];
+
                             ?>
 
                         </td>
+
 
 
                         <!-- VALIDADE -->
@@ -601,13 +716,16 @@ $lotes = mysqli_stmt_get_result($stmt);
                         <td>
 
                             <?php
+
                             echo date(
                                 'd/m/Y',
                                 strtotime($l['validade'])
                             );
+
                             ?>
 
                         </td>
+
 
 
                         <!-- SITUAÇÃO -->
@@ -617,7 +735,11 @@ $lotes = mysqli_stmt_get_result($stmt);
                             <span class="badge <?php echo $badge; ?>">
 
                                 <?php
-                                echo htmlspecialchars($texto);
+
+                                echo htmlspecialchars(
+                                    $texto
+                                );
+
                                 ?>
 
                             </span>
@@ -637,6 +759,7 @@ $lotes = mysqli_stmt_get_result($stmt);
     </section>
 
 </main>
+
 
 <?php recursosRodape(); ?>
 
