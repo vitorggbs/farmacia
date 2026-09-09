@@ -1,7 +1,7 @@
 <?php
 
 $usuarioBanco = 'root';
-$senhaBanco = getenv('DB_PASSWORD');
+$senhaBanco = getenv('BancoGoogle!1');
 $nomeBanco = 'farmacerta';
 
 $socket = '/cloudsql/farmacia-508118:europe-west1:farmacerta';
