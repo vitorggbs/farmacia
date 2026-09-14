@@ -4,6 +4,8 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+require_once __DIR__ . '/includes/seguranca.php';
+
 function caminhoInicio()
 {
     $pagina = str_replace('\\', '/', $_SERVER['SCRIPT_NAME']);

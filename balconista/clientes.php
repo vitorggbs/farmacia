@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 
 require_once __DIR__ . '/../autenticacao.php';
@@ -9,14 +10,18 @@ require_once __DIR__ . '/../includes/auditoria.php';
 exigirLogin('balconista');
 
 $farmaciaId = (int) $_SESSION['farmacia_id'];
+
 $mensagem = '';
 $erro = '';
 
-/*
-|--------------------------------------------------------------------------
-| Funções para formatar CPF e telefone
-|--------------------------------------------------------------------------
-*/
+function e($valor)
+{
+    return htmlspecialchars(
+        $valor ?? '',
+        ENT_QUOTES,
+        'UTF-8'
+    );
+}
 
 function formatarCPF($cpf)
 {
@@ -51,53 +56,65 @@ function formatarTelefone($telefone)
     return $telefone;
 }
 
-/*
-|--------------------------------------------------------------------------
-| Cadastro de cliente
-|--------------------------------------------------------------------------
-*/
+
+/* =========================
+   CADASTRO DE CLIENTE
+   ========================= */
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $nome = trim($_POST['nome'] ?? '');
 
-    // Remove pontos, hífen, espaços etc.
-    $cpf = preg_replace('/\D/', '', $_POST['cpf'] ?? '');
+    $cpf = preg_replace(
+        '/\D/',
+        '',
+        $_POST['cpf'] ?? ''
+    );
 
-    // Remove tudo que não for número do telefone
-    $telefone = preg_replace('/\D/', '', $_POST['telefone'] ?? '');
+    $telefone = preg_replace(
+        '/\D/',
+        '',
+        $_POST['telefone'] ?? ''
+    );
 
     $email = trim($_POST['email'] ?? '');
 
-    /*
-    |--------------------------------------------------------------------------
-    | Validações
-    |--------------------------------------------------------------------------
-    */
+
+    /* =========================
+       VALIDAÇÕES
+       ========================= */
 
     if ($nome === '') {
 
         $erro = 'Informe o nome do cliente.';
 
-    } elseif ($cpf !== '' && strlen($cpf) !== 11) {
+    } elseif (
+        $cpf !== '' &&
+        strlen($cpf) !== 11
+    ) {
 
         $erro = 'O CPF deve ter 11 números.';
 
-    } elseif ($telefone !== '' && !in_array(strlen($telefone), [10, 11], true)) {
+    } elseif (
+        $telefone !== '' &&
+        !in_array(strlen($telefone), [10, 11], true)
+    ) {
 
         $erro = 'O telefone deve ter 10 ou 11 números.';
 
-    } elseif ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    } elseif (
+        $email !== '' &&
+        !filter_var($email, FILTER_VALIDATE_EMAIL)
+    ) {
 
         $erro = 'Informe um e-mail válido.';
 
     } else {
 
-        /*
-        |--------------------------------------------------------------------------
-        | Verifica se o CPF já está cadastrado
-        |--------------------------------------------------------------------------
-        */
+
+        /* =========================
+           VERIFICA CPF
+           ========================= */
 
         if ($cpf !== '') {
 
@@ -110,23 +127,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                  LIMIT 1'
             );
 
-            mysqli_stmt_bind_param($stmt, 'is', $farmaciaId, $cpf);
+            mysqli_stmt_bind_param(
+                $stmt,
+                'is',
+                $farmaciaId,
+                $cpf
+            );
+
             mysqli_stmt_execute($stmt);
 
             $existente = mysqli_fetch_assoc(
                 mysqli_stmt_get_result($stmt)
             );
 
+            mysqli_stmt_close($stmt);
+
         } else {
 
             $existente = null;
+
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Cadastro
-        |--------------------------------------------------------------------------
-        */
+
+        /* =========================
+           CADASTRA
+           ========================= */
 
         if ($existente) {
 
@@ -141,7 +166,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = mysqli_prepare(
                 $conexao,
                 'INSERT INTO clientes
-                (farmacia_id, nome, cpf, telefone, email)
+                (
+                    farmacia_id,
+                    nome,
+                    cpf,
+                    telefone,
+                    email
+                )
                 VALUES (?, ?, ?, ?, ?)'
             );
 
@@ -172,37 +203,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
 
                 $erro = 'Não foi possível cadastrar o cliente.';
+
             }
+
+            mysqli_stmt_close($stmt);
+
         }
+
     }
+
 }
 
-/*
-|--------------------------------------------------------------------------
-| Busca de clientes
-|--------------------------------------------------------------------------
-*/
+
+/* =========================
+   BUSCA DE CLIENTES
+   ========================= */
 
 $busca = trim($_GET['busca'] ?? '');
 
 if ($busca !== '') {
 
-    /*
-    |--------------------------------------------------------------------------
-    | Remove máscara caso a busca seja por CPF
-    |--------------------------------------------------------------------------
-    */
+    $buscaCPF = preg_replace(
+        '/\D/',
+        '',
+        $busca
+    );
 
-    $buscaCPF = preg_replace('/\D/', '', $busca);
-
-    if ($buscaCPF !== '' && strlen($buscaCPF) >= 3 && strlen($buscaCPF) <= 11) {
+    if (
+        $buscaCPF !== '' &&
+        strlen($buscaCPF) >= 3 &&
+        strlen($buscaCPF) <= 11
+    ) {
 
         $likeNome = '%' . $busca . '%';
         $likeCPF = '%' . $buscaCPF . '%';
 
         $stmt = mysqli_prepare(
             $conexao,
-            'SELECT id, nome, cpf, telefone, email, criado_em
+            'SELECT
+                id,
+                nome,
+                cpf,
+                telefone,
+                email,
+                criado_em
              FROM clientes
              WHERE farmacia_id = ?
              AND (
@@ -226,7 +270,13 @@ if ($busca !== '') {
 
         $stmt = mysqli_prepare(
             $conexao,
-            'SELECT id, nome, cpf, telefone, email, criado_em
+            'SELECT
+                id,
+                nome,
+                cpf,
+                telefone,
+                email,
+                criado_em
              FROM clientes
              WHERE farmacia_id = ?
              AND nome LIKE ?
@@ -239,13 +289,20 @@ if ($busca !== '') {
             $farmaciaId,
             $like
         );
+
     }
 
 } else {
 
     $stmt = mysqli_prepare(
         $conexao,
-        'SELECT id, nome, cpf, telefone, email, criado_em
+        'SELECT
+            id,
+            nome,
+            cpf,
+            telefone,
+            email,
+            criado_em
          FROM clientes
          WHERE farmacia_id = ?
          ORDER BY nome'
@@ -256,6 +313,7 @@ if ($busca !== '') {
         'i',
         $farmaciaId
     );
+
 }
 
 mysqli_stmt_execute($stmt);
@@ -264,6 +322,9 @@ $clientes = mysqli_fetch_all(
     mysqli_stmt_get_result($stmt),
     MYSQLI_ASSOC
 );
+
+mysqli_stmt_close($stmt);
+
 ?>
 
 <!DOCTYPE html>
@@ -275,141 +336,108 @@ $clientes = mysqli_fetch_all(
 
     <style>
 
-        /*
-        |--------------------------------------------------------------------------
-        | BOTÃO CADASTRAR CLIENTE - VERMELHO
-        |--------------------------------------------------------------------------
-        */
+        :root {
+            --vermelho-farmacerta: #e52b38;
+            --vermelho-farmacerta-hover: #c91f2d;
+            --vermelho-farmacerta-claro: rgba(229, 43, 56, 0.25);
+        }
 
-        .btn-cadastrar-cliente {
-            background-color: #e52b38 !important;
-            border-color: #e52b38 !important;
+        .btn-cadastrar-cliente,
+        .btn-buscar-cliente {
+
+            background-color: var(--vermelho-farmacerta) !important;
+            border-color: var(--vermelho-farmacerta) !important;
             color: #ffffff !important;
             font-weight: 600;
             transition: all 0.2s ease;
+
         }
 
-        .btn-cadastrar-cliente:hover {
-            background-color: #c91f2d !important;
-            border-color: #c91f2d !important;
+        .btn-cadastrar-cliente:hover,
+        .btn-buscar-cliente:hover {
+
+            background-color: var(--vermelho-farmacerta-hover) !important;
+            border-color: var(--vermelho-farmacerta-hover) !important;
             color: #ffffff !important;
+
         }
 
         .btn-cadastrar-cliente:focus,
         .btn-cadastrar-cliente:focus-visible,
-        .btn-cadastrar-cliente:active {
-            background-color: #c91f2d !important;
-            border-color: #c91f2d !important;
-            color: #ffffff !important;
-            box-shadow: 0 0 0 0.2rem rgba(229, 43, 56, 0.25) !important;
-            outline: none !important;
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | BOTÃO BUSCAR - VERMELHO
-        |--------------------------------------------------------------------------
-        */
-
-        .btn-buscar-cliente {
-            background-color: #e52b38 !important;
-            border-color: #e52b38 !important;
-            color: #ffffff !important;
-            font-weight: 600;
-            transition: all 0.2s ease;
-        }
-
-        .btn-buscar-cliente:hover {
-            background-color: #c91f2d !important;
-            border-color: #c91f2d !important;
-            color: #ffffff !important;
-        }
-
+        .btn-cadastrar-cliente:active,
         .btn-buscar-cliente:focus,
         .btn-buscar-cliente:focus-visible,
         .btn-buscar-cliente:active {
-            background-color: #c91f2d !important;
-            border-color: #c91f2d !important;
+
+            background-color: var(--vermelho-farmacerta-hover) !important;
+            border-color: var(--vermelho-farmacerta-hover) !important;
             color: #ffffff !important;
-            box-shadow: 0 0 0 0.2rem rgba(229, 43, 56, 0.25) !important;
+
+            box-shadow:
+                0 0 0 0.2rem var(--vermelho-farmacerta-claro) !important;
+
             outline: none !important;
+
         }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | CAMPOS DO FORMULÁRIO
-        |--------------------------------------------------------------------------
-        |
-        | Remove a linha/borda azul do Bootstrap quando o campo
-        | está selecionado e coloca a cor vermelha.
-        |
-        */
 
         .form-control:focus,
         .form-control:focus-visible {
-            border-color: #e52b38 !important;
+
+            border-color: var(--vermelho-farmacerta) !important;
+
             outline: none !important;
-            box-shadow: 0 0 0 0.2rem rgba(229, 43, 56, 0.25) !important;
+
+            box-shadow:
+                0 0 0 0.2rem var(--vermelho-farmacerta-claro) !important;
+
         }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | CAMPOS CPF E TELEFONE
-        |--------------------------------------------------------------------------
-        */
 
         #cpf,
         #telefone {
+
             font-variant-numeric: tabular-nums;
+
         }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | PLACEHOLDER DOS CAMPOS
-        |--------------------------------------------------------------------------
-        */
 
         #cpf::placeholder,
         #telefone::placeholder {
+
             color: #6c757d;
             opacity: 1;
+
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | BOTÕES HISTÓRICO E EDITAR
-        |--------------------------------------------------------------------------
-        */
-
         .btn-historico {
+
             color: #e52b38 !important;
             border-color: #e52b38 !important;
+
         }
 
         .btn-historico:hover {
+
             background-color: #e52b38 !important;
             border-color: #e52b38 !important;
             color: #ffffff !important;
+
         }
 
     </style>
 
 </head>
 
+
 <body>
 
 <?php cabecalho('Sistema de Gestão', 'balconista', 'clientes'); ?>
 
+
 <main class="container py-4">
 
-    <!-- =========================================================
-         CABEÇALHO DA PÁGINA
-    ========================================================== -->
+
+    <!-- =========================
+         CABEÇALHO
+         ========================= -->
 
     <section class="card card-brand rounded-4 p-4 mb-4">
 
@@ -424,9 +452,9 @@ $clientes = mysqli_fetch_all(
     </section>
 
 
-    <!-- =========================================================
+    <!-- =========================
          MENSAGENS
-    ========================================================== -->
+         ========================= -->
 
     <?php if (isset($_GET['editado'])) { ?>
 
@@ -440,7 +468,7 @@ $clientes = mysqli_fetch_all(
     <?php if ($mensagem !== '') { ?>
 
         <div class="alert alert-success">
-            <?php echo htmlspecialchars($mensagem); ?>
+            <?php echo e($mensagem); ?>
         </div>
 
     <?php } ?>
@@ -449,15 +477,15 @@ $clientes = mysqli_fetch_all(
     <?php if ($erro !== '') { ?>
 
         <div class="alert alert-danger">
-            <?php echo htmlspecialchars($erro); ?>
+            <?php echo e($erro); ?>
         </div>
 
     <?php } ?>
 
 
-    <!-- =========================================================
+    <!-- =========================
          CADASTRAR CLIENTE
-    ========================================================== -->
+         ========================= -->
 
     <section class="card shadow-sm rounded-4 p-4 mb-4">
 
@@ -465,7 +493,9 @@ $clientes = mysqli_fetch_all(
             CADASTRAR CLIENTE
         </h3>
 
+
         <form method="POST" class="row g-3">
+
 
             <!-- NOME -->
 
@@ -484,6 +514,7 @@ $clientes = mysqli_fetch_all(
                     id="nome"
                     name="nome"
                     maxlength="150"
+                    placeholder="Digite o nome completo"
                     autocomplete="name"
                     required
                 >
@@ -501,6 +532,8 @@ $clientes = mysqli_fetch_all(
                 >
                     CPF
                 </label>
+
+                <!-- MANTIDO DO CÓDIGO ORIGINAL -->
 
                 <input
                     class="form-control"
@@ -526,6 +559,8 @@ $clientes = mysqli_fetch_all(
                 >
                     Telefone
                 </label>
+
+                <!-- MANTIDO DO CÓDIGO ORIGINAL -->
 
                 <input
                     class="form-control"
@@ -558,13 +593,14 @@ $clientes = mysqli_fetch_all(
                     id="email"
                     name="email"
                     maxlength="150"
+                    placeholder="Digite o seu e-mail"
                     autocomplete="email"
                 >
 
             </div>
 
 
-            <!-- BOTÃO CADASTRAR -->
+            <!-- BOTÃO -->
 
             <div class="col-12">
 
@@ -582,15 +618,14 @@ $clientes = mysqli_fetch_all(
     </section>
 
 
-    <!-- =========================================================
+    <!-- =========================
          CLIENTES CADASTRADOS
-    ========================================================== -->
+         ========================= -->
 
     <section class="card shadow-sm rounded-4 p-4">
 
         <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3">
 
-            <!-- TÍTULO -->
 
             <h3 class="h5 fw-bold mb-0">
                 CLIENTES CADASTRADOS
@@ -608,11 +643,9 @@ $clientes = mysqli_fetch_all(
                     class="form-control"
                     type="text"
                     name="busca"
-                    value="<?php echo htmlspecialchars($busca); ?>"
-                    placeholder="Nome ou CPF"
+                    value="<?php echo e($busca); ?>"
+                    placeholder="Digite o nome ou CPF"
                 >
-
-                <!-- BOTÃO BUSCAR -->
 
                 <button
                     class="btn btn-buscar-cliente rounded-pill px-4"
@@ -626,9 +659,9 @@ $clientes = mysqli_fetch_all(
         </div>
 
 
-        <!-- =====================================================
+        <!-- =========================
              TABELA
-        ====================================================== -->
+             ========================= -->
 
         <div class="table-responsive">
 
@@ -638,25 +671,11 @@ $clientes = mysqli_fetch_all(
 
                     <tr>
 
-                        <th>
-                            Nome
-                        </th>
-
-                        <th>
-                            CPF
-                        </th>
-
-                        <th>
-                            Telefone
-                        </th>
-
-                        <th>
-                            E-mail
-                        </th>
-
-                        <th>
-                            Ação
-                        </th>
+                        <th>Nome</th>
+                        <th>CPF</th>
+                        <th>Telefone</th>
+                        <th>E-mail</th>
+                        <th>Ação</th>
 
                     </tr>
 
@@ -685,16 +704,13 @@ $clientes = mysqli_fetch_all(
 
                     <tr>
 
+
                         <!-- NOME -->
 
                         <td>
 
                             <strong>
-                                <?php
-                                echo htmlspecialchars(
-                                    $cliente['nome']
-                                );
-                                ?>
+                                <?php echo e($cliente['nome']); ?>
                             </strong>
 
                         </td>
@@ -704,15 +720,11 @@ $clientes = mysqli_fetch_all(
 
                         <td>
 
-                            <?php
-
-                            echo htmlspecialchars(
+                            <?php echo e(
                                 $cliente['cpf']
                                     ? formatarCPF($cliente['cpf'])
                                     : '-'
-                            );
-
-                            ?>
+                            ); ?>
 
                         </td>
 
@@ -721,15 +733,11 @@ $clientes = mysqli_fetch_all(
 
                         <td>
 
-                            <?php
-
-                            echo htmlspecialchars(
+                            <?php echo e(
                                 $cliente['telefone']
                                     ? formatarTelefone($cliente['telefone'])
                                     : '-'
-                            );
-
-                            ?>
+                            ); ?>
 
                         </td>
 
@@ -738,13 +746,9 @@ $clientes = mysqli_fetch_all(
 
                         <td>
 
-                            <?php
-
-                            echo htmlspecialchars(
+                            <?php echo e(
                                 $cliente['email'] ?: '-'
-                            );
-
-                            ?>
+                            ); ?>
 
                         </td>
 
@@ -788,19 +792,13 @@ $clientes = mysqli_fetch_all(
 <?php recursosRodape(); ?>
 
 
-<!-- =========================================================
-     MÁSCARAS CPF E TELEFONE
-========================================================== -->
-
 <script>
 
-document.addEventListener('DOMContentLoaded', function () {
+/* =========================
+   MÁSCARA CPF
+   ========================= */
 
-    /*
-    |--------------------------------------------------------------------------
-    | CPF
-    |--------------------------------------------------------------------------
-    */
+document.addEventListener('DOMContentLoaded', function () {
 
     const campoCPF = document.getElementById('cpf');
 
@@ -808,17 +806,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         campoCPF.addEventListener('input', function () {
 
-            // Remove tudo que não for número
             let valor = this.value.replace(/\D/g, '');
 
-            // Limita a exatamente 11 números
             valor = valor.substring(0, 11);
 
-            /*
-            |--------------------------------------------------------------------------
-            | 000
-            |--------------------------------------------------------------------------
-            */
 
             if (valor.length > 9) {
 
@@ -827,30 +818,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     '$1.$2.$3-$4'
                 );
 
-            }
-
-            /*
-            |--------------------------------------------------------------------------
-            | 000.000
-            |--------------------------------------------------------------------------
-            */
-
-            else if (valor.length > 6) {
+            } else if (valor.length > 6) {
 
                 valor = valor.replace(
                     /^(\d{3})(\d{3})(\d{1,3}).*/,
                     '$1.$2.$3'
                 );
 
-            }
-
-            /*
-            |--------------------------------------------------------------------------
-            | 000.000
-            |--------------------------------------------------------------------------
-            */
-
-            else if (valor.length > 3) {
+            } else if (valor.length > 3) {
 
                 valor = valor.replace(
                     /^(\d{3})(\d{1,3}).*/,
@@ -866,11 +841,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | TELEFONE
-    |--------------------------------------------------------------------------
-    */
+    /* =========================
+       MÁSCARA TELEFONE
+       ========================= */
 
     const campoTelefone = document.getElementById('telefone');
 
@@ -878,19 +851,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         campoTelefone.addEventListener('input', function () {
 
-            // Remove tudo que não for número
             let valor = this.value.replace(/\D/g, '');
 
-            // Limita a no máximo 11 números
             valor = valor.substring(0, 11);
 
-
-            /*
-            |--------------------------------------------------------------------------
-            | CELULAR
-            | (00) 00000-0000
-            |--------------------------------------------------------------------------
-            */
 
             if (valor.length > 10) {
 
@@ -899,49 +863,21 @@ document.addEventListener('DOMContentLoaded', function () {
                     '($1) $2-$3'
                 );
 
-            }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | TELEFONE FIXO
-            | (00) 0000-0000
-            |--------------------------------------------------------------------------
-            */
-
-            else if (valor.length > 6) {
+            } else if (valor.length > 6) {
 
                 valor = valor.replace(
                     /^(\d{2})(\d{4})(\d{1,4}).*/,
                     '($1) $2-$3'
                 );
 
-            }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | DDD + NÚMERO
-            |--------------------------------------------------------------------------
-            */
-
-            else if (valor.length > 2) {
+            } else if (valor.length > 2) {
 
                 valor = valor.replace(
                     /^(\d{2})(\d{1,5}).*/,
                     '($1) $2'
                 );
 
-            }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | COMEÇANDO O DDD
-            |--------------------------------------------------------------------------
-            */
-
-            else if (valor.length > 0) {
+            } else if (valor.length > 0) {
 
                 valor = '(' + valor;
 

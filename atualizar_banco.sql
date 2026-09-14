@@ -1,13 +1,5 @@
 USE farmacerta;
 
--- Novos cadastros usam bcrypt. Senhas legadas sao atualizadas no primeiro login.
-UPDATE administradores
-SET senha = '$2y$10$LuFRqVUmFpEmCblvz9D7fuSEexp5I7C0MBuFsAYwEJ1CmXnGKFphq'
-WHERE senha = '123456';
-UPDATE usuarios
-SET senha = '$2y$10$LuFRqVUmFpEmCblvz9D7fuSEexp5I7C0MBuFsAYwEJ1CmXnGKFphq'
-WHERE senha = '123456';
-
 CREATE TABLE IF NOT EXISTS categorias (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(80) NOT NULL UNIQUE,
@@ -46,3 +38,11 @@ CREATE TABLE IF NOT EXISTS notas_fiscais (
     observacao VARCHAR(255), criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     UNIQUE KEY unico_fiscal_venda (venda_id)
 ) ENGINE=InnoDB;
+
+-- Atualização de segurança para hashes de senha (Bcrypt)
+ALTER TABLE administradores MODIFY COLUMN senha VARCHAR(255) NOT NULL;
+ALTER TABLE usuarios MODIFY COLUMN senha VARCHAR(255) NOT NULL;
+
+-- Migração de senhas padrão em texto plano remanescentes para hash bcrypt de '123456'
+UPDATE administradores SET senha = '$2y$12$XXCLC7PXQRo6MBi4eezwze2vQxb/qr2gaLRCtJhWZILHWbzPCvI3m' WHERE senha = '123456';
+UPDATE usuarios SET senha = '$2y$12$XXCLC7PXQRo6MBi4eezwze2vQxb/qr2gaLRCtJhWZILHWbzPCvI3m' WHERE senha = '123456';

@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $nome = trim($_POST['nome'] ?? '');
 
-    // Remove pontos, barras, hífen e qualquer caractere que não seja número.
+    // Remove tudo que não for número do CNPJ.
     $cnpj = preg_replace('/\D/', '', $_POST['cnpj'] ?? '');
 
     // Remove tudo que não for número do telefone.
@@ -94,12 +94,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: fornecedores.php?erro=cnpj');
         exit;
 
-    } elseif ($telefone !== '' && !in_array(strlen($telefone), [10, 11], true)) {
+    } elseif (
+        $telefone !== '' &&
+        !in_array(strlen($telefone), [10, 11], true)
+    ) {
 
         header('Location: fornecedores.php?erro=telefone');
         exit;
 
-    } elseif ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    } elseif (
+        $email !== '' &&
+        !filter_var($email, FILTER_VALIDATE_EMAIL)
+    ) {
 
         header('Location: fornecedores.php?erro=email');
         exit;
@@ -135,6 +141,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $existente = mysqli_fetch_assoc(
             mysqli_stmt_get_result($stmt)
         );
+
+        mysqli_stmt_close($stmt);
 
     } else {
 
@@ -195,6 +203,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $id = mysqli_insert_id($conexao);
 
+        mysqli_stmt_close($stmt);
+
         registrarAuditoria(
             $conexao,
             'cadastrar',
@@ -207,6 +217,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
 
     } else {
+
+        mysqli_stmt_close($stmt);
 
         header('Location: fornecedores.php?erro=cadastro');
         exit;
@@ -243,6 +255,8 @@ if (isset($_GET['status'], $_GET['id'])) {
     );
 
     mysqli_stmt_execute($stmt);
+
+    mysqli_stmt_close($stmt);
 
     registrarAuditoria(
         $conexao,
@@ -285,6 +299,9 @@ $fornecedores = mysqli_fetch_all(
     $resultado,
     MYSQLI_ASSOC
 );
+
+mysqli_stmt_close($stmt);
+
 ?>
 
 <!DOCTYPE html>
@@ -298,7 +315,7 @@ $fornecedores = mysqli_fetch_all(
 
         /*
         |--------------------------------------------------------------------------
-        | COR PRINCIPAL VERMELHA
+        | CORES PRINCIPAIS
         |--------------------------------------------------------------------------
         */
 
@@ -311,7 +328,7 @@ $fornecedores = mysqli_fetch_all(
 
         /*
         |--------------------------------------------------------------------------
-        | Botão Cadastrar - Vermelho
+        | BOTÃO CADASTRAR
         |--------------------------------------------------------------------------
         */
 
@@ -330,17 +347,19 @@ $fornecedores = mysqli_fetch_all(
         }
 
         .btn-cadastrar-fornecedor:focus,
-        .btn-cadastrar-fornecedor:active {
+        .btn-cadastrar-fornecedor:active,
+        .btn-cadastrar-fornecedor:focus-visible {
             background-color: var(--cor-vermelha-hover) !important;
             border-color: var(--cor-vermelha-hover) !important;
             color: #ffffff !important;
             box-shadow: 0 0 0 0.2rem var(--cor-vermelha-clara) !important;
+            outline: none !important;
         }
 
 
         /*
         |--------------------------------------------------------------------------
-        | Botão Histórico - Vermelho
+        | BOTÃO HISTÓRICO
         |--------------------------------------------------------------------------
         */
 
@@ -359,25 +378,36 @@ $fornecedores = mysqli_fetch_all(
         }
 
         .btn-historico-fornecedor:focus,
-        .btn-historico-fornecedor:active {
+        .btn-historico-fornecedor:active,
+        .btn-historico-fornecedor:focus-visible {
             color: #ffffff !important;
             background-color: var(--cor-vermelha-hover) !important;
             border-color: var(--cor-vermelha-hover) !important;
             box-shadow: 0 0 0 0.2rem var(--cor-vermelha-clara) !important;
+            outline: none !important;
         }
 
 
         /*
         |--------------------------------------------------------------------------
-        | Foco dos campos - Vermelho
+        | CAMPOS DO FORMULÁRIO
+        |--------------------------------------------------------------------------
         |
-        | Isso remove o contorno azul que aparecia ao clicar
-        | nos campos.
+        | Remove o azul padrão do Bootstrap/navegador.
+        | Quando clicar em qualquer campo, a borda ficará vermelha.
         |--------------------------------------------------------------------------
         */
+
+        .form-control,
+        .form-select {
+            border-color: #dee2e6;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
 
         .form-control:focus,
-        .form-select:focus {
+        .form-control:focus-visible,
+        .form-select:focus,
+        .form-select:focus-visible {
             border-color: var(--cor-vermelha) !important;
             box-shadow: 0 0 0 0.2rem var(--cor-vermelha-clara) !important;
             outline: none !important;
@@ -386,21 +416,19 @@ $fornecedores = mysqli_fetch_all(
 
         /*
         |--------------------------------------------------------------------------
-        | Foco específico do CNPJ e telefone
+        | PLACEHOLDERS
         |--------------------------------------------------------------------------
         */
 
-        #cnpj:focus,
-        #telefone:focus {
-            border-color: var(--cor-vermelha) !important;
-            box-shadow: 0 0 0 0.2rem var(--cor-vermelha-clara) !important;
-            outline: none !important;
+        .form-control::placeholder {
+            color: #8a8f98;
+            opacity: 1;
         }
 
 
         /*
         |--------------------------------------------------------------------------
-        | Campos CNPJ e telefone
+        | CNPJ E TELEFONE
         |--------------------------------------------------------------------------
         */
 
@@ -412,7 +440,23 @@ $fornecedores = mysqli_fetch_all(
 
         /*
         |--------------------------------------------------------------------------
-        | Cor do texto dos labels
+        | FOCO ESPECÍFICO CNPJ E TELEFONE
+        |--------------------------------------------------------------------------
+        */
+
+        #cnpj:focus,
+        #cnpj:focus-visible,
+        #telefone:focus,
+        #telefone:focus-visible {
+            border-color: var(--cor-vermelha) !important;
+            box-shadow: 0 0 0 0.2rem var(--cor-vermelha-clara) !important;
+            outline: none !important;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | LABELS
         |--------------------------------------------------------------------------
         */
 
@@ -423,12 +467,32 @@ $fornecedores = mysqli_fetch_all(
 
         /*
         |--------------------------------------------------------------------------
-        | Botão Editar - mantém aparência neutra
+        | BOTÃO EDITAR
         |--------------------------------------------------------------------------
         */
 
         .btn-editar-fornecedor {
             transition: all 0.2s ease;
+        }
+
+        .btn-editar-fornecedor:focus,
+        .btn-editar-fornecedor:focus-visible {
+            outline: none !important;
+            box-shadow: 0 0 0 0.2rem var(--cor-vermelha-clara) !important;
+            border-color: var(--cor-vermelha) !important;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | BOTÃO ATIVAR / DESATIVAR
+        |--------------------------------------------------------------------------
+        */
+
+        .btn-outline-danger:focus,
+        .btn-outline-danger:focus-visible {
+            box-shadow: 0 0 0 0.2rem var(--cor-vermelha-clara) !important;
+            outline: none !important;
         }
 
     </style>
@@ -564,6 +628,7 @@ $fornecedores = mysqli_fetch_all(
                     name="nome"
                     maxlength="150"
                     autocomplete="organization"
+                    placeholder="Digite o nome do fornecedor"
                     required
                 >
 
@@ -638,6 +703,7 @@ $fornecedores = mysqli_fetch_all(
                     name="email"
                     maxlength="150"
                     autocomplete="email"
+                    placeholder="Digite o e-mail do fornecedor"
                 >
 
             </div>
@@ -661,6 +727,7 @@ $fornecedores = mysqli_fetch_all(
                     name="endereco"
                     maxlength="255"
                     autocomplete="street-address"
+                    placeholder="Digite o endereço do fornecedor"
                 >
 
             </div>
@@ -735,7 +802,7 @@ $fornecedores = mysqli_fetch_all(
                 <tbody>
 
 
-                <?php if (!$fornecedores) { ?>
+                <?php if (empty($fornecedores)) { ?>
 
                     <tr>
 
@@ -763,7 +830,9 @@ $fornecedores = mysqli_fetch_all(
                             <strong>
                                 <?php
                                 echo htmlspecialchars(
-                                    $f['nome']
+                                    $f['nome'],
+                                    ENT_QUOTES,
+                                    'UTF-8'
                                 );
                                 ?>
                             </strong>
@@ -780,7 +849,9 @@ $fornecedores = mysqli_fetch_all(
                             echo htmlspecialchars(
                                 !empty($f['cnpj'])
                                     ? formatarCNPJ($f['cnpj'])
-                                    : '-'
+                                    : '-',
+                                ENT_QUOTES,
+                                'UTF-8'
                             );
 
                             ?>
@@ -797,7 +868,9 @@ $fornecedores = mysqli_fetch_all(
                             echo htmlspecialchars(
                                 !empty($f['telefone'])
                                     ? formatarTelefone($f['telefone'])
-                                    : '-'
+                                    : '-',
+                                ENT_QUOTES,
+                                'UTF-8'
                             );
 
                             ?>
@@ -812,7 +885,11 @@ $fornecedores = mysqli_fetch_all(
                             <?php
 
                             echo htmlspecialchars(
-                                $f['email'] ?: '-'
+                                !empty($f['email'])
+                                    ? $f['email']
+                                    : '-',
+                                ENT_QUOTES,
+                                'UTF-8'
                             );
 
                             ?>
@@ -922,16 +999,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         campoCNPJ.addEventListener('input', function () {
 
-            // Mantém somente números
             let valor = this.value.replace(/\D/g, '');
 
-            // Limita a 14 números
             valor = valor.substring(0, 14);
 
 
             /*
             |--------------------------------------------------------------------------
-            | Aplica máscara:
             | 00.000.000/0000-00
             |--------------------------------------------------------------------------
             */
@@ -985,17 +1059,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
         campoTelefone.addEventListener('input', function () {
 
-            // Mantém somente números
             let valor = this.value.replace(/\D/g, '');
 
-            // Limita a 11 números
             valor = valor.substring(0, 11);
 
 
             /*
             |--------------------------------------------------------------------------
-            | Celular com 11 números
-            | (00) 00000-0000
+            | Celular - (00) 00000-0000
             |--------------------------------------------------------------------------
             */
 
@@ -1011,8 +1082,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             /*
             |--------------------------------------------------------------------------
-            | Telefone fixo com 10 números
-            | (00) 0000-0000
+            | Telefone fixo - (00) 0000-0000
             |--------------------------------------------------------------------------
             */
 

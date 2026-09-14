@@ -30,7 +30,7 @@ CREATE TABLE administradores (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     login VARCHAR(60) NOT NULL UNIQUE,
-    senha VARCHAR(100) NOT NULL,
+    senha VARCHAR(255) NOT NULL,
     ativo TINYINT(1) NOT NULL DEFAULT 1,
     criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
@@ -40,7 +40,7 @@ CREATE TABLE usuarios (
     farmacia_id INT NOT NULL,
     nome VARCHAR(100) NOT NULL, cpf VARCHAR(11), telefone VARCHAR(20), email VARCHAR(150), endereco VARCHAR(255),
     data_nascimento DATE, data_admissao DATE, salario DECIMAL(10,2) DEFAULT 0, horario_escala VARCHAR(150),
-    login VARCHAR(60) NOT NULL UNIQUE, senha VARCHAR(100) NOT NULL,
+    login VARCHAR(60) NOT NULL UNIQUE, senha VARCHAR(255) NOT NULL,
     cargo ENUM('gerente','balconista') NOT NULL,
     ativo TINYINT(1) NOT NULL DEFAULT 1,
     criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -175,12 +175,12 @@ CREATE TABLE auditoria (
 ) ENGINE=InnoDB;
 
 INSERT INTO categorias (nome) VALUES ('Medicamentos'),('Higiene'),('Cosméticos'),('Infantil'),('Suplementos'),('Outros');
-INSERT INTO administradores (nome,login,senha) VALUES ('Administrador do Sistema','admin','$2y$10$LuFRqVUmFpEmCblvz9D7fuSEexp5I7C0MBuFsAYwEJ1CmXnGKFphq');
+INSERT INTO administradores (nome,login,senha) VALUES ('Administrador do Sistema','admin','$2y$12$XXCLC7PXQRo6MBi4eezwze2vQxb/qr2gaLRCtJhWZILHWbzPCvI3m');
 INSERT INTO farmacias (nome,cnpj,telefone,endereco) VALUES
 ('Farmacia 1','00.000.000/0001-01','(84) 0000-0000','Endereco da Farmacia 1'),
 ('Farmacia 2','00.000.000/0002-02','(84) 1111-1111','Endereco da Farmacia 2');
 INSERT INTO usuarios (farmacia_id,nome,cpf,login,senha,cargo) VALUES
-(1,'Gerente da Farmacia 1',NULL,'gerente','$2y$10$LuFRqVUmFpEmCblvz9D7fuSEexp5I7C0MBuFsAYwEJ1CmXnGKFphq','gerente'),
-(1,'Balconista da Farmacia 1','00000000000','balconista','$2y$10$LuFRqVUmFpEmCblvz9D7fuSEexp5I7C0MBuFsAYwEJ1CmXnGKFphq','balconista'),
-(2,'Gerente da Farmacia 2',NULL,'gerente2','$2y$10$LuFRqVUmFpEmCblvz9D7fuSEexp5I7C0MBuFsAYwEJ1CmXnGKFphq','gerente'),
-(2,'Balconista da Farmacia 2','11111111111','balconista2','$2y$10$LuFRqVUmFpEmCblvz9D7fuSEexp5I7C0MBuFsAYwEJ1CmXnGKFphq','balconista');
+(1,'Gerente da Farmacia 1',NULL,'gerente','$2y$12$XXCLC7PXQRo6MBi4eezwze2vQxb/qr2gaLRCtJhWZILHWbzPCvI3m','gerente'),
+(1,'Balconista da Farmacia 1','00000000000','balconista','$2y$12$XXCLC7PXQRo6MBi4eezwze2vQxb/qr2gaLRCtJhWZILHWbzPCvI3m','balconista'),
+(2,'Gerente da Farmacia 2',NULL,'gerente2','$2y$12$XXCLC7PXQRo6MBi4eezwze2vQxb/qr2gaLRCtJhWZILHWbzPCvI3m','gerente'),
+(2,'Balconista da Farmacia 2','11111111111','balconista2','$2y$12$XXCLC7PXQRo6MBi4eezwze2vQxb/qr2gaLRCtJhWZILHWbzPCvI3m','balconista');

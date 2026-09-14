@@ -21,7 +21,7 @@ $gerenteCpf = preg_replace('/\D/', '', $_POST['gerente_cpf'] ?? '');
 $gerenteLogin = trim($_POST['gerente_login'] ?? '');
 $gerenteSenha = $_POST['gerente_senha'] ?? '';
 
-if ($nome == '' || $gerenteNome == '' || $gerenteLogin == '' || strlen($gerenteSenha) < 6) {
+if ($nome == '' || $gerenteNome == '' || $gerenteLogin == '' || strlen($gerenteSenha) < PasswordService::MIN_PASSWORD_LENGTH || strlen($gerenteSenha) > PasswordService::MAX_PASSWORD_LENGTH) {
     header('Location: farmacias.php?erro=campos#cadastrar');
     exit;
 }
@@ -37,6 +37,8 @@ if (mysqli_fetch_assoc($resultado)) {
     exit;
 }
 
+$gerenteSenhaHash = PasswordService::hash($gerenteSenha);
+
 mysqli_begin_transaction($conexao);
 
 $sql = 'INSERT INTO farmacias (nome, cnpj, telefone, endereco) VALUES (?, ?, ?, ?)';
@@ -51,7 +53,6 @@ if (!mysqli_stmt_execute($stmt)) {
 
 $farmaciaId = mysqli_insert_id($conexao);
 $cargo = 'gerente';
-$gerenteSenhaHash = password_hash($gerenteSenha, PASSWORD_BCRYPT);
 
 $sql = 'INSERT INTO usuarios (farmacia_id, nome, cpf, login, senha, cargo)
         VALUES (?, ?, ?, ?, ?, ?)';

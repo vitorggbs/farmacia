@@ -2,6 +2,8 @@
 
 session_start();
 
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
 require_once __DIR__ . '/../autenticacao.php';
 require_once __DIR__ . '/conexaoDB.php';
 require_once __DIR__ . '/../cabecalho.php';
@@ -13,11 +15,9 @@ $farmaciaId = (int) $_SESSION['farmacia_id'];
 $usuarioId = (int) $_SESSION['usuario_id'];
 
 
-/*
-|--------------------------------------------------------------------------
-| REGISTRO DE ENTRADA DE MERCADORIA
-|--------------------------------------------------------------------------
-*/
+/* =========================
+   REGISTRO DE ENTRADA
+   ========================= */
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -25,22 +25,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $produtoId = (int) ($_POST['produto_id'] ?? 0);
     $quantidade = (int) ($_POST['quantidade'] ?? 0);
 
-    $custo = (float) str_replace(
-        ',',
-        '.',
-        $_POST['custo_unitario'] ?? '0'
-    );
+    $custoTexto = trim($_POST['custo_unitario'] ?? '0');
+
+    // Aceita valores como:
+    // 12,50
+    // 1.250,50
+    // R$ 1.250,50
+    $custoTexto = str_replace('R$', '', $custoTexto);
+    $custoTexto = str_replace(' ', '', $custoTexto);
+    $custoTexto = str_replace('.', '', $custoTexto);
+    $custoTexto = str_replace(',', '.', $custoTexto);
+
+    $custo = (float) $custoTexto;
 
     $nota = trim($_POST['numero_nota'] ?? '');
     $numeroLote = trim($_POST['numero_lote'] ?? '');
-    $validade = $_POST['validade'] ?? '';
-
 
     /*
-    |--------------------------------------------------------------------------
-    | Validação
-    |--------------------------------------------------------------------------
-    */
+     * A tela recebe DD/MM/AAAA.
+     * O banco recebe AAAA-MM-DD.
+     */
+    $validadeTexto = trim($_POST['validade'] ?? '');
+    $validade = '';
+
+    if (
+        preg_match(
+            '/^(\d{2})\/(\d{2})\/(\d{4})$/',
+            $validadeTexto,
+            $partes
+        )
+    ) {
+        $dia = (int) $partes[1];
+        $mes = (int) $partes[2];
+        $ano = (int) $partes[3];
+
+        if (checkdate($mes, $dia, $ano)) {
+            $validade = sprintf(
+                '%04d-%02d-%02d',
+                $ano,
+                $mes,
+                $dia
+            );
+        }
+    }
+
+
+    /* =========================
+       VALIDAÇÃO
+       ========================= */
 
     if (
         $fornecedorId < 1 ||
@@ -48,9 +80,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $quantidade < 1 ||
         $custo < 0 ||
         $numeroLote === '' ||
-        !preg_match('/^\d{4}-\d{2}-\d{2}$/', $validade)
+        $validade === ''
     ) {
-
         header('Location: entradasmercadoria.php?erro=dados');
         exit;
     }
@@ -58,14 +89,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     mysqli_begin_transaction($conexao);
 
-
     try {
 
-        /*
-        |--------------------------------------------------------------------------
-        | Cria ou atualiza lote
-        |--------------------------------------------------------------------------
-        */
+        /* =========================
+           CRIA OU ATUALIZA LOTE
+           ========================= */
 
         $stmt = mysqli_prepare(
             $conexao,
@@ -94,26 +122,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
 
         mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | Busca o ID do lote
-        |--------------------------------------------------------------------------
-        */
+        /* =========================
+           BUSCA ID DO LOTE
+           ========================= */
 
         $stmt = mysqli_prepare(
             $conexao,
             'SELECT id
              FROM lotes
-             WHERE produto_id = ?
+             WHERE farmacia_id = ?
+             AND produto_id = ?
              AND numero_lote = ?
              LIMIT 1'
         );
 
         mysqli_stmt_bind_param(
             $stmt,
-            'is',
+            'iis',
+            $farmaciaId,
             $produtoId,
             $numeroLote
         );
@@ -123,14 +152,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $resultadoLote = mysqli_stmt_get_result($stmt);
         $lote = mysqli_fetch_assoc($resultadoLote);
 
+        mysqli_stmt_close($stmt);
+
         $loteId = (int) ($lote['id'] ?? 0);
 
+        if ($loteId < 1) {
+            throw new Exception('Lote não encontrado.');
+        }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Registra entrada de mercadoria
-        |--------------------------------------------------------------------------
-        */
+
+        /* =========================
+           REGISTRA ENTRADA
+           ========================= */
 
         $stmt = mysqli_prepare(
             $conexao,
@@ -165,12 +198,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $entradaId = mysqli_insert_id($conexao);
 
+        mysqli_stmt_close($stmt);
 
-        /*
-        |--------------------------------------------------------------------------
-        | Atualiza estoque do produto
-        |--------------------------------------------------------------------------
-        */
+
+        /* =========================
+           ATUALIZA ESTOQUE
+           ========================= */
 
         $stmt = mysqli_prepare(
             $conexao,
@@ -190,12 +223,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         mysqli_stmt_execute($stmt);
 
+        if (mysqli_stmt_affected_rows($stmt) < 1) {
+            mysqli_stmt_close($stmt);
+            throw new Exception('Produto não encontrado.');
+        }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Registra movimentação do estoque
-        |--------------------------------------------------------------------------
-        */
+        mysqli_stmt_close($stmt);
+
+
+        /* =========================
+           MOVIMENTAÇÃO
+           ========================= */
 
         $tipo = 'entrada';
 
@@ -235,12 +273,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         mysqli_stmt_execute($stmt);
 
+        mysqli_stmt_close($stmt);
 
-        /*
-        |--------------------------------------------------------------------------
-        | Auditoria
-        |--------------------------------------------------------------------------
-        */
+
+        /* =========================
+           AUDITORIA
+           ========================= */
 
         registrarAuditoria(
             $conexao,
@@ -259,7 +297,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: entradasmercadoria.php?ok=1');
         exit;
 
-
     } catch (Throwable $e) {
 
         mysqli_rollback($conexao);
@@ -270,11 +307,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 
-/*
-|--------------------------------------------------------------------------
-| Fornecedores
-|--------------------------------------------------------------------------
-*/
+/* =========================
+   FORNECEDORES
+   ========================= */
 
 $fornecedores = mysqli_query(
     $conexao,
@@ -286,11 +321,9 @@ $fornecedores = mysqli_query(
 );
 
 
-/*
-|--------------------------------------------------------------------------
-| Produtos
-|--------------------------------------------------------------------------
-*/
+/* =========================
+   PRODUTOS
+   ========================= */
 
 $produtos = mysqli_query(
     $conexao,
@@ -302,19 +335,17 @@ $produtos = mysqli_query(
 );
 
 
-/*
-|--------------------------------------------------------------------------
-| Histórico de entradas
-|--------------------------------------------------------------------------
-*/
+/* =========================
+   HISTÓRICO
+   ========================= */
 
 $historico = mysqli_query(
     $conexao,
     "SELECT
         e.*,
-        f.nome fornecedor,
-        p.nome produto,
-        u.nome usuario,
+        f.nome AS fornecedor,
+        p.nome AS produto,
+        u.nome AS usuario,
         l.numero_lote,
         l.validade
      FROM entradas_mercadoria e
@@ -342,23 +373,11 @@ $historico = mysqli_query(
 
     <style>
 
-        /*
-        |--------------------------------------------------------------------------
-        | Cor padrão do sistema
-        |--------------------------------------------------------------------------
-        */
-
         :root {
             --vermelho-farmacerta: #e52b38;
             --vermelho-farmacerta-hover: #c91f2d;
+            --vermelho-farmacerta-claro: rgba(229, 43, 56, 0.25);
         }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | BOTÃO REGISTRAR ENTRADA - VERMELHO
-        |--------------------------------------------------------------------------
-        */
 
         .btn-registrar-entrada {
             background-color: var(--vermelho-farmacerta) !important;
@@ -375,36 +394,42 @@ $historico = mysqli_query(
         }
 
         .btn-registrar-entrada:focus,
+        .btn-registrar-entrada:focus-visible {
+            background-color: var(--vermelho-farmacerta-hover) !important;
+            border-color: var(--vermelho-farmacerta-hover) !important;
+            color: #ffffff !important;
+
+            outline: 2px solid var(--vermelho-farmacerta) !important;
+            outline-offset: 1px !important;
+
+            box-shadow:
+                0 0 0 0.2rem var(--vermelho-farmacerta-claro) !important;
+        }
+
         .btn-registrar-entrada:active {
             background-color: var(--vermelho-farmacerta-hover) !important;
             border-color: var(--vermelho-farmacerta-hover) !important;
             color: #ffffff !important;
-            box-shadow: 0 0 0 0.2rem rgba(229, 43, 56, 0.25) !important;
         }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | LINHA/CONTORNO DE SELEÇÃO DOS CAMPOS - VERMELHO
-        |--------------------------------------------------------------------------
-        */
 
         .form-control:focus,
-        .form-select:focus {
+        .form-control:focus-visible,
+        .form-select:focus,
+        .form-select:focus-visible {
             border-color: var(--vermelho-farmacerta) !important;
 
-            box-shadow:
-                0 0 0 0.2rem rgba(229, 43, 56, 0.25) !important;
+            outline: 2px solid var(--vermelho-farmacerta) !important;
 
-            outline: none !important;
+            outline-offset: -1px !important;
+
+            box-shadow:
+                0 0 0 0.2rem var(--vermelho-farmacerta-claro) !important;
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | SELEÇÃO DE TEXTO DOS CAMPOS
-        |--------------------------------------------------------------------------
-        */
+        .form-select:hover,
+        .form-control:hover {
+            border-color: #d94a54;
+        }
 
         .form-control::selection,
         .form-select::selection {
@@ -412,18 +437,28 @@ $historico = mysqli_query(
             color: #ffffff;
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | CAMPOS
-        |--------------------------------------------------------------------------
-        */
-
         .form-control,
         .form-select {
             transition:
                 border-color 0.2s ease,
-                box-shadow 0.2s ease;
+                box-shadow 0.2s ease,
+                outline 0.2s ease;
+        }
+
+        .form-label {
+            font-weight: 600;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus,
+        button:focus {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .form-select option:checked {
+            background-color: var(--vermelho-farmacerta);
+            color: #ffffff;
         }
 
     </style>
@@ -436,10 +471,7 @@ $historico = mysqli_query(
 
 <main class="container py-4">
 
-
-    <!-- =========================================================
-         CABEÇALHO
-    ========================================================== -->
+    <!-- CABEÇALHO -->
 
     <section class="card card-brand rounded-4 p-4 mb-4">
 
@@ -454,9 +486,7 @@ $historico = mysqli_query(
     </section>
 
 
-    <!-- =========================================================
-         MENSAGENS
-    ========================================================== -->
+    <!-- MENSAGENS -->
 
     <?php if (isset($_GET['ok'])) { ?>
 
@@ -465,7 +495,6 @@ $historico = mysqli_query(
         </div>
 
     <?php } ?>
-
 
     <?php if (isset($_GET['erro'])) { ?>
 
@@ -476,9 +505,7 @@ $historico = mysqli_query(
     <?php } ?>
 
 
-    <!-- =========================================================
-         FORMULÁRIO
-    ========================================================== -->
+    <!-- FORMULÁRIO -->
 
     <section class="card shadow-sm rounded-4 p-4 mb-4">
 
@@ -486,25 +513,32 @@ $historico = mysqli_query(
             REGISTRAR ENTRADA
         </h3>
 
-        <form method="POST" class="row g-3">
-
+        <form
+            method="POST"
+            class="row g-3"
+            id="formEntrada"
+        >
 
             <!-- FORNECEDOR -->
 
             <div class="col-12 col-md-6">
 
-                <label class="form-label fw-bold">
+                <label
+                    class="form-label fw-bold"
+                    for="fornecedor_id"
+                >
                     Fornecedor
                 </label>
 
                 <select
                     class="form-select"
+                    id="fornecedor_id"
                     name="fornecedor_id"
                     required
                 >
 
                     <option value="">
-                        Selecione
+                        Selecione o fornecedor
                     </option>
 
                     <?php while ($f = mysqli_fetch_assoc($fornecedores)) { ?>
@@ -513,7 +547,9 @@ $historico = mysqli_query(
 
                             <?php
                             echo htmlspecialchars(
-                                $f['nome']
+                                $f['nome'],
+                                ENT_QUOTES,
+                                'UTF-8'
                             );
                             ?>
 
@@ -530,18 +566,22 @@ $historico = mysqli_query(
 
             <div class="col-12 col-md-6">
 
-                <label class="form-label fw-bold">
+                <label
+                    class="form-label fw-bold"
+                    for="produto_id"
+                >
                     Produto
                 </label>
 
                 <select
                     class="form-select"
+                    id="produto_id"
                     name="produto_id"
                     required
                 >
 
                     <option value="">
-                        Selecione
+                        Selecione o produto
                     </option>
 
                     <?php while ($p = mysqli_fetch_assoc($produtos)) { ?>
@@ -550,7 +590,9 @@ $historico = mysqli_query(
 
                             <?php
                             echo htmlspecialchars(
-                                $p['nome']
+                                $p['nome'],
+                                ENT_QUOTES,
+                                'UTF-8'
                             );
                             ?>
 
@@ -567,15 +609,21 @@ $historico = mysqli_query(
 
             <div class="col-6 col-md-3">
 
-                <label class="form-label fw-bold">
+                <label
+                    class="form-label fw-bold"
+                    for="quantidade"
+                >
                     Quantidade
                 </label>
 
                 <input
                     class="form-control"
                     type="number"
+                    id="quantidade"
                     min="1"
                     name="quantidade"
+                    placeholder="Digite a quantidade"
+                    inputmode="numeric"
                     required
                 >
 
@@ -586,16 +634,21 @@ $historico = mysqli_query(
 
             <div class="col-6 col-md-3">
 
-                <label class="form-label fw-bold">
+                <label
+                    class="form-label fw-bold"
+                    for="custo_unitario"
+                >
                     Custo unitário
                 </label>
 
                 <input
                     class="form-control"
-                    type="number"
-                    min="0"
-                    step="0.01"
+                    type="text"
+                    id="custo_unitario"
                     name="custo_unitario"
+                    placeholder="Digite o custo unitário"
+                    inputmode="decimal"
+                    autocomplete="off"
                     required
                 >
 
@@ -606,13 +659,20 @@ $historico = mysqli_query(
 
             <div class="col-6 col-md-3">
 
-                <label class="form-label fw-bold">
+                <label
+                    class="form-label fw-bold"
+                    for="numero_lote"
+                >
                     Lote
                 </label>
 
                 <input
                     class="form-control"
+                    type="text"
+                    id="numero_lote"
                     name="numero_lote"
+                    maxlength="50"
+                    placeholder="Digite o número do lote"
                     required
                 >
 
@@ -623,14 +683,22 @@ $historico = mysqli_query(
 
             <div class="col-6 col-md-3">
 
-                <label class="form-label fw-bold">
+                <label
+                    class="form-label fw-bold"
+                    for="validade"
+                >
                     Validade
                 </label>
 
                 <input
                     class="form-control"
-                    type="date"
+                    type="text"
+                    id="validade"
                     name="validade"
+                    maxlength="10"
+                    placeholder="DD/MM/AAAA"
+                    inputmode="numeric"
+                    autocomplete="off"
                     required
                 >
 
@@ -641,13 +709,20 @@ $historico = mysqli_query(
 
             <div class="col-12 col-md-6">
 
-                <label class="form-label fw-bold">
+                <label
+                    class="form-label fw-bold"
+                    for="numero_nota"
+                >
                     Número da nota do fornecedor
                 </label>
 
                 <input
                     class="form-control"
+                    type="text"
+                    id="numero_nota"
                     name="numero_nota"
+                    maxlength="50"
+                    placeholder="Digite o número da nota"
                 >
 
             </div>
@@ -671,9 +746,7 @@ $historico = mysqli_query(
     </section>
 
 
-    <!-- =========================================================
-         HISTÓRICO
-    ========================================================== -->
+    <!-- HISTÓRICO -->
 
     <section class="card shadow-sm rounded-4 p-3">
 
@@ -688,7 +761,6 @@ $historico = mysqli_query(
                 <thead>
 
                     <tr>
-
                         <th>Data</th>
                         <th>Fornecedor</th>
                         <th>Produto</th>
@@ -697,12 +769,26 @@ $historico = mysqli_query(
                         <th>Qtd.</th>
                         <th>Custo</th>
                         <th>Responsável</th>
-
                     </tr>
 
                 </thead>
 
                 <tbody>
+
+                <?php if (mysqli_num_rows($historico) === 0) { ?>
+
+                    <tr>
+
+                        <td
+                            colspan="8"
+                            class="text-center text-secondary py-4"
+                        >
+                            Nenhuma entrada registrada.
+                        </td>
+
+                    </tr>
+
+                <?php } ?>
 
                 <?php while ($e = mysqli_fetch_assoc($historico)) { ?>
 
@@ -720,7 +806,9 @@ $historico = mysqli_query(
                         <td>
                             <?php
                             echo htmlspecialchars(
-                                $e['fornecedor']
+                                $e['fornecedor'],
+                                ENT_QUOTES,
+                                'UTF-8'
                             );
                             ?>
                         </td>
@@ -728,7 +816,9 @@ $historico = mysqli_query(
                         <td>
                             <?php
                             echo htmlspecialchars(
-                                $e['produto']
+                                $e['produto'],
+                                ENT_QUOTES,
+                                'UTF-8'
                             );
                             ?>
                         </td>
@@ -736,24 +826,22 @@ $historico = mysqli_query(
                         <td>
                             <?php
                             echo htmlspecialchars(
-                                $e['numero_lote'] ?: '-'
+                                $e['numero_lote'] ?: '-',
+                                ENT_QUOTES,
+                                'UTF-8'
                             );
                             ?>
                         </td>
 
                         <td>
-
                             <?php
-
                             echo $e['validade']
                                 ? date(
                                     'd/m/Y',
                                     strtotime($e['validade'])
                                 )
                                 : '-';
-
                             ?>
-
                         </td>
 
                         <td>
@@ -763,25 +851,23 @@ $historico = mysqli_query(
                         </td>
 
                         <td>
-
                             R$
                             <?php
-
                             echo number_format(
                                 $e['custo_unitario'],
                                 2,
                                 ',',
                                 '.'
                             );
-
                             ?>
-
                         </td>
 
                         <td>
                             <?php
                             echo htmlspecialchars(
-                                $e['usuario']
+                                $e['usuario'],
+                                ENT_QUOTES,
+                                'UTF-8'
                             );
                             ?>
                         </td>
@@ -800,8 +886,188 @@ $historico = mysqli_query(
 
 </main>
 
-
 <?php recursosRodape(); ?>
+
+<script>
+
+/* =========================
+   CUSTO UNITÁRIO
+   ========================= */
+
+const custo = document.getElementById('custo_unitario');
+
+custo.addEventListener('input', function () {
+
+    let valor = this.value.replace(/\D/g, '');
+
+    if (!valor) {
+        this.value = '';
+        return;
+    }
+
+    let [reais, centavos] = (Number(valor) / 100)
+        .toFixed(2)
+        .split('.');
+
+    reais = reais.replace(
+        /\B(?=(\d{3})+(?!\d))/g,
+        '.'
+    );
+
+    this.value = `R$ ${reais},${centavos}`;
+
+});
+
+
+/* =========================
+   MÁSCARA DE VALIDADE
+   ========================= */
+
+const validade = document.getElementById('validade');
+
+validade.addEventListener('input', function () {
+
+    let valor = this.value.replace(/\D/g, '');
+
+    // Limita a data a 8 números:
+    // DDMMYYYY
+    valor = valor.substring(0, 8);
+
+    let dia = valor.substring(0, 2);
+    let mes = valor.substring(2, 4);
+    let ano = valor.substring(4, 8);
+
+    /*
+     * Se o usuário digitar somente 4 até 9
+     * como primeiro número, transforma em 04 até 09.
+     */
+    if (
+        dia.length === 1 &&
+        Number(dia) >= 4 &&
+        Number(dia) <= 9
+    ) {
+        dia = '0' + dia;
+    }
+
+    /*
+     * Limita o dia entre 01 e 31.
+     */
+    if (dia.length === 2) {
+
+        let numeroDia = Number(dia);
+
+        if (numeroDia < 1) {
+            dia = '01';
+        }
+
+        if (numeroDia > 31) {
+            dia = '31';
+        }
+
+    }
+
+    /*
+     * Se o usuário digitar somente 4 até 9
+     * para o mês, transforma em 04 até 09.
+     */
+    if (
+        mes.length === 1 &&
+        Number(mes) >= 4 &&
+        Number(mes) <= 9
+    ) {
+        mes = '0' + mes;
+    }
+
+    /*
+     * Limita o mês entre 01 e 12.
+     */
+    if (mes.length === 2) {
+
+        let numeroMes = Number(mes);
+
+        if (numeroMes < 1) {
+            mes = '01';
+        }
+
+        if (numeroMes > 12) {
+            mes = '12';
+        }
+
+    }
+
+    let resultado = dia;
+
+    if (valor.length > 2) {
+        resultado += '/' + mes;
+    }
+
+    if (valor.length > 4) {
+        resultado += '/' + ano;
+    }
+
+    this.value = resultado;
+
+});
+
+
+/* =========================
+   VALIDAÇÃO DO FORMULÁRIO
+   ========================= */
+
+const formEntrada = document.getElementById('formEntrada');
+
+formEntrada.addEventListener('submit', function (event) {
+
+    const valor = validade.value.trim();
+
+    const correspondencia = valor.match(
+        /^(\d{2})\/(\d{2})\/(\d{4})$/
+    );
+
+    /*
+     * Impede o envio se não estiver no formato correto.
+     */
+    if (!correspondencia) {
+        event.preventDefault();
+        validade.focus();
+        return;
+    }
+
+    const dia = Number(correspondencia[1]);
+    const mes = Number(correspondencia[2]);
+    const ano = Number(correspondencia[3]);
+
+    /*
+     * Verifica se a data realmente existe.
+     * Exemplo: 31/02/2028 será recusado.
+     */
+    const data = new Date(ano, mes - 1, dia);
+
+    const dataValida =
+        data.getFullYear() === ano &&
+        data.getMonth() === mes - 1 &&
+        data.getDate() === dia;
+
+    if (!dataValida) {
+        event.preventDefault();
+        validade.focus();
+        return;
+    }
+
+    /*
+     * Converte DD/MM/AAAA para AAAA-MM-DD
+     * antes de enviar ao PHP e ao banco.
+     */
+    validade.value =
+        String(ano).padStart(4, '0') +
+        '-' +
+        String(mes).padStart(2, '0') +
+        '-' +
+        String(dia).padStart(2, '0');
+
+});
+
+</script>
 
 </body>
 </html>

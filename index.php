@@ -6,6 +6,39 @@
     recursosCabeca('FarmaCerta - Login');
     ?>
 
+    <style>
+        /* =========================================================
+           CORREÇÃO DO FUNDO DA TELA DE LOGIN
+           Remove o degradê avermelhado do canto superior esquerdo
+           ========================================================= */
+
+        html,
+        body {
+            background: #f5f6f8 !important;
+            background-image: none !important;
+        }
+
+        body.login-tela {
+            background: #f5f6f8 !important;
+            background-image: none !important;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Remove possíveis efeitos de degradê criados por pseudo-elementos */
+        body.login-tela::before,
+        body.login-tela::after {
+            content: none !important;
+            display: none !important;
+            background: none !important;
+        }
+
+        /* Garante que o conteúdo fique acima de qualquer efeito externo */
+        body.login-tela > main {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
 </head>
 
 <body class="login-tela d-flex align-items-center py-4">
