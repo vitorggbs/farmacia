@@ -51,14 +51,50 @@ function recursosCabeca(string $titulo): void
     <link rel="icon" type="image/png" href="<?php echo $prefixo; ?>assets/LOGO_2.png">
     <link rel="manifest" href="<?php echo $prefixo; ?>manifest.webmanifest">
     <link rel="apple-touch-icon" href="<?php echo $prefixo; ?>assets/farmacerta-icon-192x192.png">
-    <meta name="theme-color" content="#0d6efd">
+    <meta name="theme-color" content="#e63946">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="FarmaCerta">
+    <script>
+        (function() {
+            var t = localStorage.getItem('farmacerta_tema');
+            if (!t) {
+                t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+            }
+            document.documentElement.setAttribute('data-bs-theme', t);
+        })();
+    </script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="<?php echo $prefixo; ?>assets/css/tema.css?v=<?php echo $versaoTema; ?>">
     <?php
+}
+
+function renderizarBotaoTema(bool $mobile = false): string
+{
+    $dimensao = $mobile ? '18' : '22';
+    $svg = '<svg class="icone-tema-svg" viewBox="0 0 32 32" width="' . $dimensao . '" height="' . $dimensao . '" fill="none" aria-hidden="true">'
+        . '<circle cx="16" cy="16" r="14.5" stroke="currentColor" stroke-width="1.8"/>'
+        . '<path d="M 16,8 A 8,8 0 0,0 16,24 Z" fill="currentColor"/>'
+        . '<path d="M 16,8 A 8,8 0 0,1 16,24" stroke="currentColor" stroke-width="1.8"/>'
+        . '<line x1="16" y1="8" x2="16" y2="24" stroke="currentColor" stroke-width="1.8"/>'
+        . '<line x1="16" y1="3.5" x2="16" y2="6.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>'
+        . '<line x1="7.5" y1="7.5" x2="9.8" y2="9.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>'
+        . '<line x1="3.5" y1="16" x2="6.5" y2="16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>'
+        . '<line x1="7.5" y1="24.5" x2="9.8" y2="22.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>'
+        . '<line x1="16" y1="28.5" x2="16" y2="25.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>'
+        . '</svg>';
+
+    if ($mobile) {
+        return '<button type="button" class="btn-alternar-tema-mobile btn-alternar-tema" aria-label="Alternar tema" title="Alternar entre tema claro e escuro">'
+            . $svg
+            . '<span class="texto-tema">Alternar Tema</span>'
+            . '</button>';
+    }
+
+    return '<button type="button" class="btn-alternar-tema" aria-label="Alternar tema" title="Alternar entre tema claro e escuro">'
+        . $svg
+        . '</button>';
 }
 
 function agenteIaDisponivel(): bool
@@ -127,11 +163,16 @@ function renderizarAgenteIa(): void
 
 function recursosRodape(): void
 {
-    $prefixo = json_encode(prefixoRelativo(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    $prefixoRel = prefixoRelativo();
+    $prefixo = json_encode($prefixoRel, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    $prefixoRaw = htmlspecialchars($prefixoRel, ENT_QUOTES, 'UTF-8');
+    $arquivoScriptTema = __DIR__ . '/../assets/js/tema.js';
+    $versaoScriptTema = is_file($arquivoScriptTema) ? filemtime($arquivoScriptTema) : time();
 
     renderizarAgenteIa();
 
     echo '<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>';
+    echo '<script src="' . $prefixoRaw . 'assets/js/tema.js?v=' . $versaoScriptTema . '"></script>';
     echo '<script>';
     echo 'if ("serviceWorker" in navigator) {';
     echo 'window.addEventListener("load", function () {';
