@@ -51,6 +51,41 @@ $resultado = mysqli_stmt_get_result($stmt);
 
     <?php recursosCabeca('FarmaCerta - Produtos'); ?>
 
+    <style>
+        /* ==========================================
+           CAMPO DE PREÇO
+           Formato: R$ 9.999.999.999.999,99
+           Limite: 13 dígitos inteiros + 2 centavos
+        ========================================== */
+
+        .campo-preco {
+            background-color: var(--fc-surface, #fff) !important;
+            border: 2px solid rgba(229, 43, 56, 0.35) !important;
+            border-radius: 30px !important;
+            box-shadow: 0 0 0 4px rgba(229, 43, 56, 0.12) !important;
+            color: var(--fc-text, #333) !important;
+        }
+
+        .campo-preco:focus {
+            background-color: var(--fc-surface, #fff) !important;
+            border-color: #e52b38 !important;
+            box-shadow: 0 0 0 4px rgba(229, 43, 56, 0.20) !important;
+            outline: none !important;
+        }
+
+        [data-bs-theme="dark"] .campo-preco {
+            background-color: #121720 !important;
+            color: #f1f5f9 !important;
+            border-color: rgba(230, 57, 70, 0.5) !important;
+        }
+
+        [data-bs-theme="dark"] .campo-preco:focus {
+            background-color: #151c27 !important;
+            color: #f1f5f9 !important;
+            border-color: #e63946 !important;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -142,13 +177,15 @@ $resultado = mysqli_stmt_get_result($stmt);
                 </label>
 
                 <input
-                    class="form-control"
-                    type="number"
+                    class="form-control campo-preco"
+                    type="text"
                     id="valor"
                     name="valor"
-                    step="0.01"
-                    min="0"
-                    placeholder="Digite o preço do produto"
+                    inputmode="decimal"
+                    autocomplete="off"
+                    maxlength="23"
+                    placeholder="R$ 0,00"
+                    oninput="mascaraMoeda(this)"
                     required
                 >
 
@@ -550,12 +587,15 @@ $resultado = mysqli_stmt_get_result($stmt);
                                     <!-- PREÇO -->
 
                                     <input
-                                        class="form-control form-control-sm"
-                                        type="number"
-                                        step="0.01"
+                                        class="form-control form-control-sm campo-preco"
+                                        type="text"
                                         name="preco"
-                                        value="<?php echo $produto['preco']; ?>"
-                                        placeholder="Digite o preço do produto"
+                                        inputmode="decimal"
+                                        autocomplete="off"
+                                        maxlength="23"
+                                        value="<?php echo number_format((float) $produto['preco'], 2, ',', '.'); ?>"
+                                        oninput="mascaraMoeda(this)"
+                                        placeholder="R$ 0,00"
                                         required
                                     >
 
@@ -690,6 +730,132 @@ $resultado = mysqli_stmt_get_result($stmt);
 
 
 <script>
+
+/* ==========================================
+   MÁSCARA DE PREÇO
+
+   Formato:
+   R$ 0,01
+   R$ 1,23
+   R$ 1.234,56
+   R$ 9.999.999.999.999,99
+
+   Limite máximo:
+   9.999.999.999.999,99
+========================================== */
+
+function mascaraMoeda(campo) {
+
+    var numeros = campo.value.replace(/\D/g, '');
+
+    /* Máximo de 15 dígitos:
+       13 para reais + 2 para centavos. */
+    numeros = numeros.substring(0, 15);
+
+    if (numeros.length === 0) {
+        campo.value = '';
+        return;
+    }
+
+    /* Garante pelo menos 3 dígitos para
+       separar reais e centavos. */
+    numeros = numeros.padStart(3, '0');
+
+    var centavos = numeros.slice(-2);
+    var reais = numeros.slice(0, -2);
+
+    reais = reais.replace(/^0+(?=\d)/, '');
+
+    /* Coloca os pontos a cada 3 dígitos. */
+    reais = reais.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+    campo.value = 'R$ ' + reais + ',' + centavos;
+}
+
+
+/* ==========================================
+   CONVERTE O PREÇO PARA O FORMATO DO PHP
+
+   Exemplo:
+   R$ 1.234,56 -> 1234.56
+========================================== */
+
+function prepararPrecoParaEnvio(campo) {
+
+    var valor = campo.value
+        .replace(/R\$/g, '')
+        .replace(/\./g, '')
+        .replace(',', '.')
+        .trim();
+
+    if (valor === '') {
+        valor = '0.00';
+    }
+
+    campo.value = valor;
+}
+
+
+/* ==========================================
+   MÁSCARA INICIAL DOS PREÇOS DE EDIÇÃO
+========================================== */
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    var camposPreco = document.querySelectorAll('.campo-preco');
+
+    camposPreco.forEach(function (campo) {
+
+        if (campo.value.trim() !== '') {
+            mascaraMoeda(campo);
+        }
+
+    });
+
+
+    /* Cadastro de produto */
+
+    var formularioCadastro = document.querySelector(
+        'form[action="cadastrargerente.php"]'
+    );
+
+    if (formularioCadastro) {
+
+        formularioCadastro.addEventListener('submit', function () {
+
+            prepararPrecoParaEnvio(
+                document.getElementById('valor')
+            );
+
+        });
+
+    }
+
+
+    /* Edição de produto */
+
+    var formulariosEdicao = document.querySelectorAll(
+        'form[action="editarproduto.php"]'
+    );
+
+    formulariosEdicao.forEach(function (formulario) {
+
+        formulario.addEventListener('submit', function () {
+
+            var campo = formulario.querySelector(
+                'input[name="preco"]'
+            );
+
+            if (campo) {
+                prepararPrecoParaEnvio(campo);
+            }
+
+        });
+
+    });
+
+});
+
 
 /* ==========================================
    BUSCAR PRODUTO
