@@ -1,6 +1,6 @@
 <?php
 //CONEXÃO COM O GOOGLE CLOUD
-$usuarioBanco = 'admin';
+$usuarioBanco = 'farmacia_app';
 $senhaBanco = getenv('DB_PASSWORD');
 $nomeBanco = 'farmacerta';
 
