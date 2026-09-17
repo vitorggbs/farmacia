@@ -1,0 +1,1244 @@
+:root {
+    --fc-primary: #e63946;
+    --fc-primary-dark: #c92f3b;
+    --fc-background: #f4f6f8;
+    --fc-surface: #ffffff;
+    --fc-text: #202124;
+    --fc-text-light: #6b7280;
+    --fc-border: #e5e7eb;
+    --fc-danger: #b42318;
+    --fc-danger-dark: #8f1d14;
+    --fc-rosca-vazio: #e5e7eb;
+    --fc-success: #218c5a;
+    --fc-warning: #c47a00;
+    --fc-debito: #3974c5;
+    --fc-credito: #9255bd;
+    --fc-pix: #ff9f1c;
+    --bs-primary: #e63946;
+    --bs-primary-rgb: 230, 57, 70;
+    --bs-danger: #b42318;
+    --bs-danger-rgb: 180, 35, 24;
+    --bs-success: #218c5a;
+    --bs-warning: #c47a00;
+    --bs-body-bg: #f4f6f8;
+    --bs-body-color: #202124;
+    --bs-secondary-color: #6b7280;
+    --bs-border-color: #e5e7eb;
+    --bs-link-color: #e63946;
+    --bs-link-hover-color: #c92f3b;
+    --bs-font-sans-serif: Arial, Helvetica, sans-serif;
+    --bs-body-font-family: Arial, Helvetica, sans-serif;
+    --bs-border-radius: 10px;
+    --bs-border-radius-sm: 10px;
+    --bs-border-radius-lg: 24px;
+    --bs-border-radius-xl: 24px;
+    --bs-border-radius-pill: 50rem;
+    --bs-focus-ring-color: rgba(230, 57, 70, 0.35);
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 85px;
+}
+
+section[id],
+header[id],
+div[id] {
+    scroll-margin-top: 85px;
+}
+
+body {
+    min-height: 100vh;
+    background: var(--fc-background);
+    color: var(--fc-text);
+}
+
+.btn:focus-visible,
+.form-control:focus-visible,
+.form-select:focus-visible,
+.nav-link:focus-visible,
+a:focus-visible {
+    box-shadow: 0 0 0 0.2rem var(--bs-focus-ring-color);
+}
+
+.navbar-farmacia {
+    background: linear-gradient(135deg, var(--fc-primary), var(--fc-primary-dark));
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-farmacia .navbar-brand img {
+    height: 48px;
+    width: auto;
+}
+
+.navbar-farmacia .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.45);
+}
+
+.navbar-farmacia .navbar-toggler-icon {
+    filter: invert(1);
+}
+
+.menu-app {
+    background: var(--fc-surface);
+    border-bottom: 1px solid var(--fc-border);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.menu-app .nav-link {
+    border: 1.5px solid var(--fc-primary);
+    color: var(--fc-primary);
+    font-size: 0.875rem;
+    font-weight: 700;
+}
+
+.menu-app .nav-link:hover,
+.menu-app .nav-link.active {
+    background: var(--fc-primary);
+    border-color: var(--fc-primary);
+    color: #fff;
+}
+
+.btn-sair {
+    background: #fff;
+    color: var(--fc-primary);
+    font-weight: 700;
+}
+
+.btn-sair:hover {
+    background: #fff;
+    color: var(--fc-primary-dark);
+}
+
+.login-tela {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at top left, rgba(230, 57, 70, 0.12), transparent 35%),
+        var(--fc-background);
+}
+
+.card-brand {
+    background: linear-gradient(145deg, var(--fc-primary), var(--fc-primary-dark));
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.14);
+}
+
+.card-brand h1,
+.card-brand h2,
+.card-brand h3,
+.card-brand label,
+.card-brand p,
+.card-brand .form-label {
+    color: #fff;
+}
+
+.card-brand p {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.card-brand .form-control,
+.card-brand .form-select {
+    min-height: 3rem;
+    border: 2px solid transparent;
+    border-radius: var(--bs-border-radius-pill);
+}
+
+.card-brand .form-control:focus,
+.card-brand .form-select:focus {
+    border-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.18);
+}
+
+.card-brand .form-control-file,
+.card-brand input[type="file"] {
+    border-radius: var(--bs-border-radius);
+    background: #fff;
+    color: var(--fc-text);
+}
+
+.card-brand .btn-outline-light:hover {
+    color: var(--fc-primary);
+}
+
+.kpi-icone {
+    width: 54px;
+    height: 54px;
+    background: var(--fc-primary);
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.kpi-valor {
+    color: var(--fc-primary);
+}
+
+.grafico-linha {
+    width: 100%;
+    height: 205px;
+}
+
+.grafico-linha .grade {
+    stroke: #edf0f3;
+    stroke-width: 1;
+}
+
+.linha-faturamento {
+    fill: none;
+    stroke: var(--fc-primary);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.ponto-faturamento {
+    fill: var(--fc-primary);
+    stroke: #fff;
+    stroke-width: 2;
+}
+
+.grafico-rosca {
+    box-sizing: border-box;
+    width: 190px;
+    height: 190px;
+    min-width: 190px;
+    min-height: 190px;
+    max-width: 190px;
+    max-height: 190px;
+    flex: 0 0 190px;
+    aspect-ratio: 1 / 1;
+    align-self: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.grafico-rosca-centro {
+    box-sizing: border-box;
+    width: 112px;
+    height: 112px;
+    min-width: 112px;
+    min-height: 112px;
+    flex: none;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+}
+
+.grafico-rosca-vazio {
+    background: var(--fc-rosca-vazio, #e5e7eb) !important;
+}
+
+[data-bs-theme="dark"] .grafico-rosca-vazio {
+    background: #4d4e4f !important;
+}
+
+[data-bs-theme="dark"] .grafico-rosca-centro {
+    background-color: var(--fc-background, #272929) !important;
+    color: var(--fc-text, #f1f5f9) !important;
+}
+
+.pagamento-debito .progress-bar {
+    background-color: var(--fc-debito);
+}
+
+.pagamento-credito .progress-bar {
+    background-color: var(--fc-credito);
+}
+
+.pagamento-pix .progress-bar {
+    background-color: var(--fc-pix);
+}
+
+.pagamento-dinheiro .progress-bar {
+    background-color: var(--fc-primary);
+}
+
+.dica-estoque {
+    background: #fff7f7;
+    border: 1px solid #f4c8cc;
+}
+
+.produto-img,
+.foto-exemplo {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+}
+
+.foto-exemplo {
+    background: #f1f3f5;
+    border: 1px solid var(--fc-border);
+}
+
+.table thead th {
+    color: var(--fc-primary);
+    font-weight: 800;
+    background: #f8fafc;
+}
+
+@media print {
+    .navbar-farmacia,
+    .menu-app,
+    .offcanvas,
+    .btn {
+        display: none !important;
+    }
+
+    .card-brand {
+        background: #fff;
+        color: #000;
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
+
+    .card-brand h2,
+    .card-brand p,
+    .card-brand label {
+        color: #000;
+    }
+}
+
+/* ================================================================
+   AGENTE IA - botão flutuante e janela de chat
+   ================================================================ */
+.farma-ai-launcher {
+    position: fixed;
+    right: 28px;
+    bottom: 28px;
+    width: 62px;
+    height: 62px;
+    border: 0;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #e33143, #c91f35);
+    color: #fff;
+    box-shadow: 0 12px 30px rgba(110, 18, 32, .28);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1080;
+    transition: transform .18s ease, box-shadow .18s ease;
+}
+.farma-ai-launcher:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 15px 34px rgba(110,18,32,.34); }
+.farma-ai-launcher:focus-visible { outline: 3px solid rgba(227,49,67,.28); outline-offset: 4px; }
+.farma-ai-launcher svg { width: 29px; height: 29px; }
+.farma-ai-launcher img,
+.farma-ai-launcher .farma-ai-icon-img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    display: block;
+    pointer-events: none;
+    filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.2));
+}
+.farma-ai-launcher .farma-ai-dot {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #31c779;
+    border: 2px solid #fff;
+}
+
+.farma-ai-panel {
+    position: fixed;
+    right: 28px;
+    bottom: 102px;
+    width: min(390px, calc(100vw - 30px));
+    height: min(600px, calc(100vh - 135px));
+    background: #fff;
+    border: 1px solid rgba(30, 41, 59, .10);
+    border-radius: 22px;
+    box-shadow: 0 22px 60px rgba(15, 23, 42, .22);
+    z-index: 1080;
+    overflow: hidden;
+    display: none;
+    flex-direction: column;
+}
+.farma-ai-panel.is-open { display: flex; animation: farmaAiOpen .18s ease-out; }
+@keyframes farmaAiOpen { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: none; } }
+
+.farma-ai-header {
+    background: linear-gradient(135deg, #df3142, #c91f35);
+    color: #fff;
+    padding: 16px 17px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+.farma-ai-avatar {
+    width: 39px;
+    height: 39px;
+    border-radius: 13px;
+    background: rgba(255,255,255,.16);
+    display: grid;
+    place-items: center;
+    font-size: 20px;
+    flex: 0 0 auto;
+}
+.farma-ai-avatar img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    display: block;
+}
+.farma-ai-heading { min-width: 0; flex: 1; }
+.farma-ai-heading strong { display: block; font-size: 15px; line-height: 1.2; }
+.farma-ai-heading span { display: block; font-size: 11px; opacity: .85; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.farma-ai-close {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 0;
+    background: rgba(255,255,255,.12);
+    color: #fff;
+    font-size: 21px;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+}
+.farma-ai-close:hover { background: rgba(255,255,255,.20); }
+
+.farma-ai-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 14px;
+    background: #f8fafc;
+    scroll-behavior: smooth;
+}
+.farma-ai-message { display: flex; margin-bottom: 12px; }
+.farma-ai-message.user { justify-content: flex-end; }
+.farma-ai-bubble {
+    max-width: 84%;
+    padding: 10px 12px;
+    border-radius: 15px;
+    font-size: 13px;
+    line-height: 1.45;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+.farma-ai-message.assistant .farma-ai-bubble {
+    background: #fff;
+    color: #263241;
+    border: 1px solid #e6eaf0;
+    border-bottom-left-radius: 5px;
+}
+.farma-ai-message.user .farma-ai-bubble {
+    background: #df3142;
+    color: #fff;
+    border-bottom-right-radius: 5px;
+}
+.farma-ai-typing .farma-ai-bubble { color: #7c8796; font-style: italic; }
+
+.farma-ai-suggestions {
+    display: flex;
+    gap: 7px;
+    overflow-x: auto;
+    padding: 9px 12px 3px;
+    background: #fff;
+    scrollbar-width: none;
+}
+.farma-ai-suggestions::-webkit-scrollbar { display: none; }
+.farma-ai-chip {
+    border: 1px solid #f0aab3;
+    background: #fff;
+    color: #c7273a;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    white-space: nowrap;
+    cursor: pointer;
+}
+.farma-ai-chip:hover { background: #fff2f4; }
+
+.farma-ai-form {
+    padding: 10px 11px 12px;
+    background: #fff;
+    border-top: 1px solid #edf0f4;
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+}
+.farma-ai-input {
+    flex: 1;
+    min-height: 42px;
+    max-height: 110px;
+    resize: none;
+    border: 1px solid #dce2e8;
+    border-radius: 14px;
+    padding: 10px 12px;
+    font-size: 13px;
+    outline: none;
+}
+.farma-ai-input:focus { border-color: #e33143; box-shadow: 0 0 0 3px rgba(227,49,67,.09); }
+.farma-ai-send {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 auto;
+    border: 0;
+    border-radius: 13px;
+    background: #df3142;
+    color: #fff;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    font-size: 18px;
+}
+.farma-ai-send:disabled { opacity: .55; cursor: wait; }
+.farma-ai-note { padding: 0 12px 9px; background:#fff; color:#8a94a3; font-size:9.5px; text-align:center; }
+
+@media (max-width: 575.98px) {
+    .farma-ai-launcher { right: 16px; bottom: 18px; width: 56px; height: 56px; }
+    .farma-ai-panel { right: 8px; left: 8px; bottom: 82px; width: auto; height: min(620px, calc(100vh - 98px)); border-radius: 18px; }
+}
+
+/* ================================================================
+   BOTÃO DE ALTERNÂNCIA DE TEMA (CLARO / ESCURO)
+   Baseado fielmente no design do ícone Day/Night circular
+   ================================================================ */
+.btn-alternar-tema {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    color: #202124;
+    border: 1.5px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    transition: transform 0.25s ease, background 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    user-select: none;
+    flex-shrink: 0;
+}
+
+.btn-alternar-tema:hover {
+    transform: scale(1.08) rotate(15deg);
+    background: #ffffff;
+    color: var(--fc-primary);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+
+.btn-alternar-tema:active {
+    transform: scale(0.94);
+}
+
+.btn-alternar-tema .icone-tema-svg {
+    display: block;
+    width: 22px;
+    height: 22px;
+    transition: none;
+}
+
+.btn-alternar-tema.animando-clique .icone-tema-svg {
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Versão mobile com texto */
+.btn-alternar-tema-mobile {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 50rem;
+    padding: 6px 14px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    border: 1.5px solid var(--fc-primary);
+    color: var(--fc-primary);
+    background: transparent;
+    cursor: pointer;
+}
+
+.btn-alternar-tema-mobile:hover {
+    background: var(--fc-primary);
+    color: #ffffff;
+}
+
+/* ================================================================
+   MODO ESCURO - FarmaCerta (Mantém a Identidade Visual Vermelha)
+   ================================================================ */
+[data-bs-theme="dark"] {
+    --fc-primary: #e63946;
+    --fc-primary-dark: #c92f3b;
+    --fc-background: #272929;
+    --fc-surface: #323535;
+    --fc-text: #f1f5f9;
+    --fc-text-light: #9ca3af;
+    --fc-border: #3d4141;
+    --fc-danger: #ef4444;
+    --fc-danger-dark: #dc2626;
+    --fc-rosca-vazio: #4d4e4f;
+    --fc-success: #22c55e;
+    --fc-warning: #eab308;
+    --fc-debito: #4f8cf0;
+    --fc-credito: #aa6ee0;
+    --fc-pix: #ffaa33;
+    --bs-body-bg: #272929;
+    --bs-body-color: #f1f5f9;
+    --bs-secondary-color: #9ca3af;
+    --bs-border-color: #3d4141;
+    --bs-card-bg: #323535;
+    --bs-card-border-color: #3d4141;
+    --bs-card-color: #f1f5f9;
+    --bs-modal-bg: #323535;
+    --bs-modal-border-color: #3d4141;
+    --bs-modal-color: #f1f5f9;
+    --bs-tertiary-bg: #3a3e3e;
+    --bs-secondary-bg: #3a3e3e;
+    --bs-emphasis-color: #ffffff;
+    --bs-focus-ring-color: rgba(230, 57, 70, 0.45);
+}
+
+[data-bs-theme="dark"] body {
+    background-color: var(--fc-background) !important;
+    color: var(--fc-text) !important;
+}
+
+/* No tema escuro: Rotação estática sem transição no load */
+[data-bs-theme="dark"] .btn-alternar-tema .icone-tema-svg {
+    transform: rotate(180deg);
+}
+
+/* No tema escuro: Botão circular com fundo escuro e ícone branco (conforme imagem) */
+[data-bs-theme="dark"] .btn-alternar-tema {
+    background: #323535;
+    color: #ffffff;
+    border: 1.5px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+
+[data-bs-theme="dark"] .btn-alternar-tema:hover {
+    background: #3d4141;
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+[data-bs-theme="dark"] .btn-alternar-tema-mobile {
+    border-color: #ff6b77;
+    color: #ff6b77;
+    background: #323535;
+}
+
+[data-bs-theme="dark"] .btn-alternar-tema-mobile:hover {
+    background: var(--fc-primary);
+    color: #ffffff;
+}
+
+/* Navbar permanece na cor vermelha original e vibrante da FarmaCerta */
+[data-bs-theme="dark"] .navbar-farmacia {
+    background: linear-gradient(135deg, var(--fc-primary), var(--fc-primary-dark)) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+[data-bs-theme="dark"] .menu-app {
+    background: var(--fc-surface);
+    border-bottom: 1px solid var(--fc-border);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+[data-bs-theme="dark"] .menu-app .nav-link {
+    border-color: rgba(230, 57, 70, 0.85);
+    color: #ff6b77;
+}
+
+[data-bs-theme="dark"] .menu-app .nav-link:hover,
+[data-bs-theme="dark"] .menu-app .nav-link.active {
+    background: var(--fc-primary);
+    border-color: var(--fc-primary);
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(230, 57, 70, 0.4);
+}
+
+/* Offcanvas no tema escuro */
+[data-bs-theme="dark"] .offcanvas {
+    background-color: var(--fc-surface);
+    color: var(--fc-text);
+    border-left: 1px solid var(--fc-border);
+}
+
+[data-bs-theme="dark"] .offcanvas-header {
+    border-bottom: 1px solid var(--fc-border);
+}
+
+[data-bs-theme="dark"] .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* Cards, superfícies e caixas */
+[data-bs-theme="dark"] .card {
+    background-color: var(--fc-surface);
+    border-color: var(--fc-border);
+    color: var(--fc-text);
+}
+
+[data-bs-theme="dark"] .bg-white {
+    background-color: var(--fc-background) !important;
+    color: var(--fc-text) !important;
+}
+
+/* Cápsulas/quadrados internos do card-brand mantêm fundo translúcido suave idêntico ao tema claro */
+.card-brand .bg-white.bg-opacity-10,
+.card-brand [class*="bg-opacity"],
+[data-bs-theme="dark"] .card-brand .bg-white:not(.table-responsive),
+[data-bs-theme="dark"] .card-brand [class*="bg-opacity"] {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
+}
+
+/* Tabelas e containers de tabela dentro ou fora de card-brand no tema escuro */
+[data-bs-theme="dark"] .card-brand .table-responsive,
+[data-bs-theme="dark"] .card-brand .table-responsive.bg-white,
+[data-bs-theme="dark"] .table-responsive.bg-white {
+    background-color: #323535 !important;
+    border: 1px solid var(--fc-border) !important;
+    color: var(--fc-text) !important;
+}
+
+/* Palavra "FarmaCerta" (especialmente em "Bem-vindo à FarmaCerta"):
+   sempre com a cor vermelha oficial da marca (#e63946) no tema claro e no tema escuro */
+.hero-banner .text-danger,
+h1 .text-danger,
+.texto-marca-farmacerta,
+.destaque-farmacerta {
+    color: var(--fc-primary, #e63946) !important;
+}
+
+[data-bs-theme="dark"] .text-danger,
+[data-bs-theme="dark"] h1 .text-danger,
+[data-bs-theme="dark"] .hero-banner .text-danger,
+[data-bs-theme="dark"] .texto-marca-farmacerta {
+    color: var(--fc-primary, #e63946) !important;
+}
+
+/* Pílulas de destaque (badges) - Escurecidas suavemente para máximo conforto visual no modo escuro */
+[data-bs-theme="dark"] .bg-danger-subtle,
+[data-bs-theme="dark"] .badge.bg-danger-subtle {
+    background-color: rgba(230, 57, 70, 0.18) !important;
+    border: 1px solid rgba(230, 57, 70, 0.45) !important;
+    color: #ff6b77 !important;
+}
+
+[data-bs-theme="dark"] .border-danger-subtle {
+    border-color: rgba(230, 57, 70, 0.45) !important;
+}
+
+/* Pílula amarela (Gerente) com letras amarelas combinando e alta legibilidade */
+[data-bs-theme="dark"] .bg-warning-subtle,
+[data-bs-theme="dark"] .badge.bg-warning-subtle {
+    background-color: rgba(245, 158, 11, 0.18) !important;
+    border: 1px solid rgba(245, 158, 11, 0.45) !important;
+    color: #ffc107 !important;
+}
+
+[data-bs-theme="dark"] .border-warning-subtle {
+    border-color: rgba(245, 158, 11, 0.45) !important;
+}
+
+[data-bs-theme="dark"] .badge.bg-warning-subtle.text-dark,
+[data-bs-theme="dark"] .badge.bg-warning-subtle .text-dark,
+[data-bs-theme="dark"] .badge.bg-warning-subtle.text-warning,
+[data-bs-theme="dark"] .badge.bg-warning-subtle .text-warning {
+    color: #ffc107 !important;
+}
+
+/* Pílula azul (Balconista) */
+[data-bs-theme="dark"] .bg-primary-subtle,
+[data-bs-theme="dark"] .badge.bg-primary-subtle {
+    background-color: rgba(13, 110, 253, 0.18) !important;
+    border: 1px solid rgba(13, 110, 253, 0.40) !important;
+    color: #60a5fa !important;
+}
+
+[data-bs-theme="dark"] .border-primary-subtle {
+    border-color: rgba(13, 110, 253, 0.40) !important;
+}
+
+/* Pílula verde (Status Aberta) */
+[data-bs-theme="dark"] .bg-success-subtle,
+[data-bs-theme="dark"] .badge.bg-success-subtle {
+    background-color: rgba(34, 197, 94, 0.18) !important;
+    border: 1px solid rgba(34, 197, 94, 0.40) !important;
+    color: #4ade80 !important;
+}
+
+[data-bs-theme="dark"] .border-success-subtle {
+    border-color: rgba(34, 197, 94, 0.40) !important;
+}
+
+[data-bs-theme="dark"] .bg-light {
+    background-color: #323535 !important;
+    border-color: var(--fc-border) !important;
+    color: var(--fc-text) !important;
+}
+
+[data-bs-theme="dark"] .text-dark {
+    color: #f8fafc !important;
+}
+
+[data-bs-theme="dark"] .text-secondary {
+    color: #9ca3af !important;
+}
+
+/* Landing Page (index.php) no tema escuro */
+[data-bs-theme="dark"] .hero-banner {
+    background: #272929;
+    border-bottom: 1px solid var(--fc-border);
+}
+
+[data-bs-theme="dark"] .card-recurso,
+[data-bs-theme="dark"] .indicador-box {
+    background: #323535;
+    border-color: var(--fc-border);
+    color: var(--fc-text);
+}
+
+[data-bs-theme="dark"] .card-recurso:hover {
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45) !important;
+}
+
+/* Tabelas no tema escuro */
+[data-bs-theme="dark"] .table {
+    --bs-table-bg: #323535;
+    --bs-table-color: var(--fc-text);
+    --bs-table-border-color: var(--fc-border);
+    --bs-table-striped-bg: rgba(255, 255, 255, 0.025);
+    background-color: #323535 !important;
+    color: var(--fc-text) !important;
+}
+
+[data-bs-theme="dark"] .table > :not(caption) > * > * {
+    background-color: #323535;
+    color: var(--fc-text);
+    border-bottom-color: var(--fc-border);
+}
+
+[data-bs-theme="dark"] .table thead th {
+    background: #323535;
+    color: #ff6b77;
+    border-bottom: 2px solid var(--fc-border);
+}
+
+[data-bs-theme="dark"] .table-hover > tbody > tr:hover,
+[data-bs-theme="dark"] .table-hover > tbody > tr:hover > * {
+    background-color: #3d4141 !important;
+    --bs-table-hover-bg: #3d4141 !important;
+}
+
+/* Formulários, campos e inputs - Correção para nenhum campo ficar branco no tema escuro */
+[data-bs-theme="dark"] .form-control,
+[data-bs-theme="dark"] .form-select,
+[data-bs-theme="dark"] .campo-preco,
+[data-bs-theme="dark"] .campo-data,
+[data-bs-theme="dark"] .card-brand input[type="file"],
+[data-bs-theme="dark"] .card-brand .form-control-file,
+[data-bs-theme="dark"] input[type="file"] {
+    background-color: #1e2020 !important;
+    border-color: #3d4141 !important;
+    color: #f1f5f9 !important;
+}
+
+[data-bs-theme="dark"] .form-control:focus,
+[data-bs-theme="dark"] .form-select:focus,
+[data-bs-theme="dark"] .campo-preco:focus,
+[data-bs-theme="dark"] .campo-data:focus {
+    background-color: #232525 !important;
+    border-color: var(--fc-primary) !important;
+    color: #f1f5f9 !important;
+    box-shadow: 0 0 0 0.2rem rgba(230, 57, 70, 0.35) !important;
+}
+
+[data-bs-theme="dark"] .form-control::placeholder,
+[data-bs-theme="dark"] .campo-preco::placeholder,
+[data-bs-theme="dark"] .campo-data::placeholder {
+    color: #64748b !important;
+}
+
+[data-bs-theme="dark"] input[type="file"]::file-selector-button {
+    background-color: #323535 !important;
+    color: #f1f5f9 !important;
+    border: 1px solid #4a4f4f !important;
+    border-radius: 6px;
+    padding: 4px 10px;
+}
+
+[data-bs-theme="dark"] input[type="file"]::file-selector-button:hover {
+    background-color: #3d4141 !important;
+    color: #ffffff !important;
+}
+
+[data-bs-theme="dark"] select option {
+    background-color: #323535;
+    color: #f1f5f9;
+}
+
+[data-bs-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+/* Modais */
+[data-bs-theme="dark"] .modal-content {
+    background-color: var(--fc-surface);
+    border: 1px solid var(--fc-border);
+    color: var(--fc-text);
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.6);
+}
+
+/* Badges e Dicas */
+[data-bs-theme="dark"] .dica-estoque {
+    background: rgba(230, 57, 70, 0.12);
+    border: 1px solid rgba(230, 57, 70, 0.35);
+    color: #fca5a5;
+}
+
+[data-bs-theme="dark"] .foto-exemplo {
+    background: #323535;
+    border-color: var(--fc-border);
+}
+
+/* Gráficos em SVG */
+[data-bs-theme="dark"] .grafico-linha .grade {
+    stroke: #3d4141;
+}
+
+[data-bs-theme="dark"] .ponto-faturamento {
+    stroke: #323535;
+}
+
+/* Painel do Agente FarmaCerta IA no tema escuro */
+[data-bs-theme="dark"] .farma-ai-panel {
+    background: #323535;
+    border-color: #3d4141;
+    box-shadow: 0 22px 60px rgba(0, 0, 0, 0.6);
+}
+
+[data-bs-theme="dark"] .farma-ai-messages {
+    background: #272929;
+}
+
+[data-bs-theme="dark"] .farma-ai-message.assistant .farma-ai-bubble {
+    background: #3a3e3e;
+    color: #e2e8f0;
+    border-color: #4a4f4f;
+}
+
+[data-bs-theme="dark"] .farma-ai-suggestions {
+    background: #323535;
+}
+
+[data-bs-theme="dark"] .farma-ai-chip {
+    background: #3a3e3e;
+    border-color: #52272e;
+    color: #ff8b97;
+}
+
+[data-bs-theme="dark"] .farma-ai-chip:hover {
+    background: #463135;
+}
+
+[data-bs-theme="dark"] .farma-ai-form {
+    background: #323535;
+    border-top-color: #3d4141;
+}
+
+[data-bs-theme="dark"] .farma-ai-input {
+    background: #1e2020;
+    border-color: #3d4141;
+    color: #f1f5f9;
+}
+
+[data-bs-theme="dark"] .farma-ai-input:focus {
+    border-color: var(--fc-primary);
+}
+
+[data-bs-theme="dark"] .farma-ai-note {
+    background: #323535;
+    color: #9ca3af;
+}
+
+/* ================================================================
+   COMPONENTE DE SELEÇÃO CUSTOMIZADO GLOBAL (FarmaCerta)
+   - Estilo pílula com chevron, combinando exatamente com os demais campos
+   - Card flutuante branco com cantos arredondados (18px)
+   - Opção ativa com fundo avermelhado suave (#DB7E7D) e texto vinho
+   - Abertura posicionada BEM NO CENTRO/LOCAL de onde fica a seleção (imagem 4)
+   - Sem barra de rolagem visível
+   ================================================================ */
+.fc-select-wrapper {
+    position: relative;
+    width: 100%;
+    display: block;
+}
+
+/* Oculta o select nativo mas mantém foco, validação HTML5 e submissão nativa intactos */
+.fc-native-select-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+/* Gatilho (botão do select fechado) - Tema Claro padrão */
+.fc-custom-select-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.625rem 1.25rem;
+    background-color: #ffffff !important;
+    border: 1.5px solid var(--fc-border, #e5e7eb) !important;
+    border-radius: var(--bs-border-radius-pill, 50rem) !important;
+    color: var(--fc-text, #202124) !important;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    user-select: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    text-align: left;
+}
+
+.fc-custom-select-trigger:focus,
+.fc-custom-select-trigger:focus-visible,
+.fc-custom-select-trigger:active,
+.fc-select-wrapper.is-open .fc-custom-select-trigger {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.fc-custom-select-text {
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.fc-custom-select-arrow {
+    flex: 0 0 auto;
+    width: 14px;
+    height: 14px;
+    transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #64748b !important;
+}
+
+.fc-select-wrapper.is-open .fc-custom-select-arrow {
+    transform: rotate(180deg);
+}
+
+/* No tema claro dentro de card-brand (modal de login):
+   Fundo branco idêntico aos campos Login e Senha, sem linha clara ou sombra */
+.card-brand .fc-custom-select-trigger {
+    background-color: #ffffff !important;
+    border: 2px solid transparent !important;
+    color: var(--fc-text, #202124) !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.card-brand .fc-custom-select-trigger .fc-custom-select-arrow {
+    color: #64748b !important;
+}
+
+.card-brand .fc-custom-select-trigger:focus,
+.card-brand .fc-custom-select-trigger:focus-visible,
+.card-brand .fc-custom-select-trigger:active,
+.card-brand .fc-select-wrapper.is-open .fc-custom-select-trigger {
+    border-color: transparent !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Quando a seleção estiver aberta em qualquer tela, elimina qualquer contorno/borda por trás */
+.fc-select-wrapper.is-open .fc-custom-select-trigger {
+    border-color: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* No tema escuro: cor exatamente igual aos outros inputs (#1e2020) tanto fora quanto dentro de card-brand */
+[data-bs-theme="dark"] .fc-custom-select-trigger,
+[data-bs-theme="dark"] .card-brand .fc-custom-select-trigger {
+    background-color: #1e2020 !important;
+    border: 1.5px solid #3d4141 !important;
+    color: #f1f5f9 !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+[data-bs-theme="dark"] .fc-custom-select-arrow,
+[data-bs-theme="dark"] .card-brand .fc-custom-select-arrow {
+    color: #9ca3af !important;
+}
+
+[data-bs-theme="dark"] .fc-custom-select-trigger:focus,
+[data-bs-theme="dark"] .fc-custom-select-trigger:focus-visible,
+[data-bs-theme="dark"] .card-brand .fc-custom-select-trigger:focus,
+[data-bs-theme="dark"] .card-brand .fc-custom-select-trigger:focus-visible,
+[data-bs-theme="dark"] .fc-select-wrapper.is-open .fc-custom-select-trigger,
+[data-bs-theme="dark"] .card-brand .fc-select-wrapper.is-open .fc-custom-select-trigger {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+[data-bs-theme="dark"] .fc-select-wrapper.is-open .fc-custom-select-trigger {
+    border-color: transparent !important;
+}
+
+/* Card flutuante com as opções
+   Posicionado BEM NO CENTRO/LOCAL de onde fica a seleção (conforme imagem 4 - lado direito) */
+.fc-custom-select-menu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    min-width: 100%;
+    background-color: #ffffff !important;
+    border-radius: 18px !important;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25), 0 4px 12px rgba(0, 0, 0, 0.12) !important;
+    overflow: hidden;
+    z-index: 1065;
+    display: none;
+    flex-direction: column;
+    max-height: 380px;
+    overflow-y: auto;
+    padding: 0;
+    margin: 0;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+
+    /* Oculta completamente a barra de rolagem (sem barra lateral) */
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+}
+
+.fc-custom-select-menu::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+/* Animação suave ao abrir */
+.fc-select-wrapper.is-open .fc-custom-select-menu {
+    display: flex;
+    animation: fcFadeInScale 0.14s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes fcFadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Itens da lista de opções */
+.fc-custom-select-option {
+    display: flex;
+    align-items: center;
+    padding: 12px 18px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #1e293b !important;
+    background-color: #ffffff !important;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.1s ease, color 0.1s ease;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.fc-custom-select-option:last-child {
+    border-bottom: none;
+}
+
+.fc-custom-select-option:hover:not(.is-selected) {
+    background-color: #f8fafc !important;
+    color: #0f172a !important;
+}
+
+/* Opção selecionada ou destacada via teclado/hover:
+   Fundo avermelhado suave (#DB7E7D) com texto vinho (#701a22) idêntico à imagem */
+.fc-custom-select-option.is-selected,
+.fc-custom-select-option.is-highlighted {
+    background-color: #db7e7d !important;
+    color: #701a22 !important;
+    font-weight: 700 !important;
+}
+
+.fc-custom-select-option.is-selected:hover,
+.fc-custom-select-option.is-highlighted:hover {
+    background-color: #d37372 !important;
+    color: #60141b !important;
+}
+
+/* Cantos arredondados perfeitos nas extremidades do menu */
+.fc-custom-select-option:first-child {
+    border-top-left-radius: 17px;
+    border-top-right-radius: 17px;
+}
+
+.fc-custom-select-option:last-child {
+    border-bottom-left-radius: 17px;
+    border-bottom-right-radius: 17px;
+}
+
+/* ================================================================
+   MENU DE SELEÇÃO NO TEMA ESCURO (FarmaCerta)
+   - Card e opções no tom escuro padronizado (#1e2020)
+   - Texto claro (#f1f5f9) e divisores sutis (#2d3030)
+   - Opção ativa mantendo o destaque característico da marca (#DB7E7D)
+   ================================================================ */
+[data-bs-theme="dark"] .fc-custom-select-menu {
+    background-color: #1e2020 !important;
+    border: 1.5px solid #3d4141 !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55), 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+}
+
+[data-bs-theme="dark"] .fc-custom-select-option {
+    background-color: #1e2020 !important;
+    color: #f1f5f9 !important;
+    border-bottom: 1px solid #2d3030 !important;
+}
+
+[data-bs-theme="dark"] .fc-custom-select-option:last-child {
+    border-bottom: none !important;
+}
+
+[data-bs-theme="dark"] .fc-custom-select-option:hover:not(.is-selected):not(.is-highlighted) {
+    background-color: #2a2d2d !important;
+    color: #ffffff !important;
+}
+
+/* Opção selecionada ou em foco por teclado no tema escuro */
+[data-bs-theme="dark"] .fc-custom-select-option.is-selected,
+[data-bs-theme="dark"] .fc-custom-select-option.is-highlighted {
+    background-color: #db7e7d !important;
+    color: #701a22 !important;
+    font-weight: 700 !important;
+}
+
+[data-bs-theme="dark"] .fc-custom-select-option.is-selected:hover,
+[data-bs-theme="dark"] .fc-custom-select-option.is-highlighted:hover {
+    background-color: #d37372 !important;
+    color: #60141b !important;
+}
+
+
