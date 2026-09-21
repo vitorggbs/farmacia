@@ -17,8 +17,8 @@ $cargo = $_POST['cargo'] ?? '';
 $ip = substr((string) ($_SERVER['REMOTE_ADDR'] ?? 'desconhecido'), 0, 45);
 
 // Limite: cinco falhas para o mesmo login/IP em 15 minutos.
-$stmtLimite = mysqli_prepare($conexao, 'SELECT COUNT(*) total FROM tentativas_login WHERE login = ? AND ip = ? AND criado_em >= DATE_SUB(NOW(), INTERVAL 15 MINUTE)');
-mysqli_stmt_bind_param($stmtLimite, 'ss', $login, $ip);
+$stmtLimite = mysqli_prepare($conexao, 'SELECT COUNT(*) total FROM tentativas_login WHERE ip = ? AND criado_em >= DATE_SUB(NOW(), INTERVAL 15 MINUTE)');
+mysqli_stmt_bind_param($stmtLimite, 's', $ip);
 mysqli_stmt_execute($stmtLimite);
 $falhas = (int) (mysqli_fetch_assoc(mysqli_stmt_get_result($stmtLimite))['total'] ?? 0);
 mysqli_stmt_close($stmtLimite);
