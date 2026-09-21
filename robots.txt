@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Allow: /assets/
+Disallow: /administrador/
+Disallow: /gerente/
+Disallow: /balconista/
+Disallow: /api/
+Disallow: /includes/
+
+Sitemap: sitemap.xml
