@@ -3,7 +3,6 @@
 session_start();
 
 require_once __DIR__ . '/gerente/conexaoDB.php';
-require_once __DIR__ . '/includes/seguranca.php';
 
 if ($_SERVER['REQUEST_METHOD'] != 'POST') {
     header('Location: index.php');
@@ -11,8 +10,8 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 }
 
 $login = trim($_POST['login'] ?? '');
-$senha = (string) ($_POST['senha'] ?? '');
-$cargo = trim($_POST['cargo'] ?? '');
+$senha = $_POST['senha'] ?? '';
+$cargo = $_POST['cargo'] ?? '';
 
 if ($cargo == 'administrador') {
     $sql = 'SELECT id, nome, senha
@@ -27,20 +26,30 @@ if ($cargo == 'administrador') {
     $resultado = mysqli_stmt_get_result($stmt);
     $admin = mysqli_fetch_assoc($resultado);
 
-    if (!$admin || !PasswordService::verify($senha, $admin['senha'])) {
-        header('Location: index.php?erro=login');
-        exit;
-    }
-
-    // Atualização automática transparente caso a senha seja legada ou precise de rehash
-    if (PasswordService::needsRehash($admin['senha'])) {
-        $novoHash = PasswordService::hash($senha);
-        $stmtRehash = mysqli_prepare($conexao, 'UPDATE administradores SET senha = ? WHERE id = ?');
-        if ($stmtRehash) {
+    $senhaValida = false;
+    if ($admin) {
+        if (password_verify($senha, $admin['senha'])) {
+            $senhaValida = true;
+            if (password_needs_rehash($admin['senha'], PASSWORD_BCRYPT)) {
+                $novoHash = password_hash($senha, PASSWORD_BCRYPT);
+                $stmtRehash = mysqli_prepare($conexao, 'UPDATE administradores SET senha = ? WHERE id = ?');
+                mysqli_stmt_bind_param($stmtRehash, 'si', $novoHash, $admin['id']);
+                mysqli_stmt_execute($stmtRehash);
+                mysqli_stmt_close($stmtRehash);
+            }
+        } elseif ($admin['senha'] === $senha) {
+            $senhaValida = true;
+            $novoHash = password_hash($senha, PASSWORD_BCRYPT);
+            $stmtRehash = mysqli_prepare($conexao, 'UPDATE administradores SET senha = ? WHERE id = ?');
             mysqli_stmt_bind_param($stmtRehash, 'si', $novoHash, $admin['id']);
             mysqli_stmt_execute($stmtRehash);
             mysqli_stmt_close($stmtRehash);
         }
+    }
+
+    if (!$senhaValida) {
+        header('Location: index.php?erro=login');
+        exit;
     }
 
     session_regenerate_id(true);
@@ -68,20 +77,30 @@ mysqli_stmt_execute($stmt);
 $resultado = mysqli_stmt_get_result($stmt);
 $usuario = mysqli_fetch_assoc($resultado);
 
-if (!$usuario || !PasswordService::verify($senha, $usuario['senha'])) {
-    header('Location: index.php?erro=login');
-    exit;
-}
-
-// Atualização automática transparente caso a senha seja legada ou precise de rehash
-if (PasswordService::needsRehash($usuario['senha'])) {
-    $novoHash = PasswordService::hash($senha);
-    $stmtRehash = mysqli_prepare($conexao, 'UPDATE usuarios SET senha = ? WHERE id = ?');
-    if ($stmtRehash) {
+$senhaValida = false;
+if ($usuario) {
+    if (password_verify($senha, $usuario['senha'])) {
+        $senhaValida = true;
+        if (password_needs_rehash($usuario['senha'], PASSWORD_BCRYPT)) {
+            $novoHash = password_hash($senha, PASSWORD_BCRYPT);
+            $stmtRehash = mysqli_prepare($conexao, 'UPDATE usuarios SET senha = ? WHERE id = ?');
+            mysqli_stmt_bind_param($stmtRehash, 'si', $novoHash, $usuario['id']);
+            mysqli_stmt_execute($stmtRehash);
+            mysqli_stmt_close($stmtRehash);
+        }
+    } elseif ($usuario['senha'] === $senha) {
+        $senhaValida = true;
+        $novoHash = password_hash($senha, PASSWORD_BCRYPT);
+        $stmtRehash = mysqli_prepare($conexao, 'UPDATE usuarios SET senha = ? WHERE id = ?');
         mysqli_stmt_bind_param($stmtRehash, 'si', $novoHash, $usuario['id']);
         mysqli_stmt_execute($stmtRehash);
         mysqli_stmt_close($stmtRehash);
     }
+}
+
+if (!$senhaValida) {
+    header('Location: index.php?erro=login');
+    exit;
 }
 
 session_regenerate_id(true);

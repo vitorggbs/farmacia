@@ -39,10 +39,5 @@ CREATE TABLE IF NOT EXISTS notas_fiscais (
     UNIQUE KEY unico_fiscal_venda (venda_id)
 ) ENGINE=InnoDB;
 
--- Atualização de segurança para hashes de senha (Bcrypt)
 ALTER TABLE administradores MODIFY COLUMN senha VARCHAR(255) NOT NULL;
 ALTER TABLE usuarios MODIFY COLUMN senha VARCHAR(255) NOT NULL;
-
--- Migração de senhas padrão em texto plano remanescentes para hash bcrypt de '123456'
-UPDATE administradores SET senha = '$2y$12$XXCLC7PXQRo6MBi4eezwze2vQxb/qr2gaLRCtJhWZILHWbzPCvI3m' WHERE senha = '123456';
-UPDATE usuarios SET senha = '$2y$12$XXCLC7PXQRo6MBi4eezwze2vQxb/qr2gaLRCtJhWZILHWbzPCvI3m' WHERE senha = '123456';

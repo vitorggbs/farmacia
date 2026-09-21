@@ -175,12 +175,12 @@ CREATE TABLE auditoria (
 ) ENGINE=InnoDB;
 
 INSERT INTO categorias (nome) VALUES ('Medicamentos'),('Higiene'),('Cosméticos'),('Infantil'),('Suplementos'),('Outros');
-INSERT INTO administradores (nome,login,senha) VALUES ('Administrador do Sistema','admin','$2y$12$XXCLC7PXQRo6MBi4eezwze2vQxb/qr2gaLRCtJhWZILHWbzPCvI3m');
+INSERT INTO administradores (nome,login,senha) VALUES ('Administrador do Sistema','admin','$2y$10$bjaiQ838KijcCsE.O5iRi.u7Adcsa6mDYujRZOpgjGaZD/eZ4wtjC');
 INSERT INTO farmacias (nome,cnpj,telefone,endereco) VALUES
 ('Farmacia 1','00.000.000/0001-01','(84) 0000-0000','Endereco da Farmacia 1'),
 ('Farmacia 2','00.000.000/0002-02','(84) 1111-1111','Endereco da Farmacia 2');
 INSERT INTO usuarios (farmacia_id,nome,cpf,login,senha,cargo) VALUES
-(1,'Gerente da Farmacia 1',NULL,'gerente','$2y$12$XXCLC7PXQRo6MBi4eezwze2vQxb/qr2gaLRCtJhWZILHWbzPCvI3m','gerente'),
-(1,'Balconista da Farmacia 1','00000000000','balconista','$2y$12$XXCLC7PXQRo6MBi4eezwze2vQxb/qr2gaLRCtJhWZILHWbzPCvI3m','balconista'),
-(2,'Gerente da Farmacia 2',NULL,'gerente2','$2y$12$XXCLC7PXQRo6MBi4eezwze2vQxb/qr2gaLRCtJhWZILHWbzPCvI3m','gerente'),
-(2,'Balconista da Farmacia 2','11111111111','balconista2','$2y$12$XXCLC7PXQRo6MBi4eezwze2vQxb/qr2gaLRCtJhWZILHWbzPCvI3m','balconista');
+(1,'Gerente da Farmacia 1',NULL,'gerente','$2y$10$bjaiQ838KijcCsE.O5iRi.u7Adcsa6mDYujRZOpgjGaZD/eZ4wtjC','gerente'),
+(1,'Balconista da Farmacia 1','00000000000','balconista','$2y$10$bjaiQ838KijcCsE.O5iRi.u7Adcsa6mDYujRZOpgjGaZD/eZ4wtjC','balconista'),
+(2,'Gerente da Farmacia 2',NULL,'gerente2','$2y$10$bjaiQ838KijcCsE.O5iRi.u7Adcsa6mDYujRZOpgjGaZD/eZ4wtjC','gerente'),
+(2,'Balconista da Farmacia 2','11111111111','balconista2','$2y$10$bjaiQ838KijcCsE.O5iRi.u7Adcsa6mDYujRZOpgjGaZD/eZ4wtjC','balconista');

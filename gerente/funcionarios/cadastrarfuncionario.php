@@ -36,15 +36,9 @@ if (strlen($cpf) != 11) {
     die('CPF invalido. <a href="funcionarios.php#cadastrar">Voltar</a>');
 }
 
-if (strlen($senha) < PasswordService::MIN_PASSWORD_LENGTH) {
-    die('A senha deve ter pelo menos ' . PasswordService::MIN_PASSWORD_LENGTH . ' caracteres. <a href="funcionarios.php#cadastrar">Voltar</a>');
+if (strlen($senha) < 6) {
+    die('A senha deve ter pelo menos 6 caracteres. <a href="funcionarios.php#cadastrar">Voltar</a>');
 }
-
-if (strlen($senha) > PasswordService::MAX_PASSWORD_LENGTH) {
-    die('A senha não pode ter mais de ' . PasswordService::MAX_PASSWORD_LENGTH . ' caracteres. <a href="funcionarios.php#cadastrar">Voltar</a>');
-}
-
-$senhaHash = PasswordService::hash($senha);
 
 if ($nascimento == '') {
     $nascimento = null;
@@ -68,6 +62,8 @@ $sql = 'INSERT INTO usuarios
          data_nascimento, data_admissao, salario, horario_escala,
          login, senha, cargo)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+
+$senhaHash = password_hash($senha, PASSWORD_BCRYPT);
 
 $stmt = mysqli_prepare($conexao, $sql);
 

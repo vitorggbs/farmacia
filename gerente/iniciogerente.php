@@ -264,7 +264,7 @@ foreach ($categorias as $nome => $valor) {
 
 if ($totalCategorias == 0) {
 
-    $fundoRosca = '#e5e7eb 0% 100%';
+    $fundoRosca = 'var(--fc-rosca-vazio, #e5e7eb) 0% 100%';
 
 } else {
 
@@ -581,7 +581,11 @@ $areaGrafico[] = '600,180';
             <div class="card h-100 shadow-sm p-3 d-flex flex-row gap-3">
 
                 <div class="kpi-icone rounded-circle d-flex align-items-center justify-content-center">
-                    🛒
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="9" cy="21" r="1.5"></circle>
+                        <circle cx="20" cy="21" r="1.5"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
                 </div>
 
                 <div>
@@ -745,8 +749,8 @@ $areaGrafico[] = '600,180';
                 <div class="d-flex flex-column flex-sm-row align-items-center gap-4">
 
                     <div
-                        class="grafico-rosca"
-                        style="background: conic-gradient(<?php echo $fundoRosca; ?>);"
+                        class="grafico-rosca <?php echo ($totalCategorias == 0) ? 'grafico-rosca-vazio' : ''; ?>"
+                        style="<?php echo ($totalCategorias > 0) ? 'background: conic-gradient(' . $fundoRosca . ');' : ''; ?>"
                     >
 
                         <div class="grafico-rosca-centro bg-white d-flex flex-column align-items-center justify-content-center text-center">
@@ -1121,7 +1125,7 @@ $areaGrafico[] = '600,180';
 
         <a
             class="btn btn-gerente-vermelho rounded-pill"
-            href="historicorecibogerente.php"
+            href="relatorios.php"
         >
             VER RELATÓRIOS
         </a>

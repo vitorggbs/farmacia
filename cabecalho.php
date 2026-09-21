@@ -50,6 +50,7 @@ function cabecalho($titulo, $pasta, $paginaAtiva)
     echo '</a>';
     echo '<span class="text-white fw-bold fs-5 d-none d-md-inline">' . htmlspecialchars($titulo, ENT_QUOTES, 'UTF-8') . '</span>';
     echo '<div class="d-flex align-items-center gap-2 ms-auto">';
+    echo renderizarBotaoTema();
     echo '<span class="text-white small d-none d-lg-inline">' . $identidade . '</span>';
     echo '<a class="btn btn-sair rounded-pill px-3 d-none d-lg-inline-flex" href="' . htmlspecialchars($raiz, ENT_QUOTES, 'UTF-8') . 'logout.php">SAIR</a>';
     echo '<button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuLateral" aria-controls="menuLateral" aria-label="Abrir menu">';
@@ -75,6 +76,10 @@ function cabecalho($titulo, $pasta, $paginaAtiva)
     echo '</div>';
     echo '<div class="offcanvas-body d-flex flex-column gap-3">';
     echo '<p class="small text-secondary mb-0">' . $identidade . '</p>';
+    echo '<div class="d-flex align-items-center justify-content-between p-2 rounded-3 border bg-body-tertiary">';
+    echo '<span class="small fw-semibold">Aparência:</span>';
+    echo renderizarBotaoTema(true);
+    echo '</div>';
     echo '<nav class="nav flex-column gap-2 menu-app border-0 shadow-none bg-transparent">';
     foreach ($itens as $chave => $item) {
         $classe = $paginaAtiva === $chave ? ' nav-link rounded-pill px-3 py-2 active border border-primary' : ' nav-link rounded-pill px-3 py-2 border';
