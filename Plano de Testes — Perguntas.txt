@@ -1,0 +1,404 @@
+Plano de Testes — Perguntas
+Objetivo
+
+Qual é o principal objetivo do seu site?
+
+
+
+gerenciar estoques da farmácia
+
+
+
+Qual problema o sistema pretende resolver?
+
+
+
+
+
+
+
+Quem são os usuários do site?
+
+
+
+
+
+
+
+O que você pretende verificar com os testes?
+
+
+
+
+
+
+
+Quais funcionalidades são mais importantes para garantir que o site funcione corretamente?
+
+
+
+
+
+
+
+Você pretende testar apenas as funcionalidades ou também desempenho, segurança e facilidade de uso?
+
+
+
+
+
+
+
+Escopo
+
+Quais páginas fazem parte do sistema?
+
+
+
+
+
+
+
+Quais funcionalidades serão testadas?
+
+
+
+
+
+
+
+Quais funcionalidades não serão testadas neste projeto?
+
+
+
+
+
+
+
+O site possui diferentes tipos de usuários? Quais?
+
+
+
+
+
+
+
+Existem funcionalidades que dependem de outros sistemas ou serviços externos?
+
+
+
+
+
+
+
+O site precisa funcionar em quais navegadores?
+
+
+
+
+
+
+
+O site será utilizado em computador, celular ou ambos?
+
+
+
+
+
+
+
+Casos de Teste
+Funcionalidade
+
+Qual funcionalidade será testada?
+
+
+
+
+
+
+
+Qual ação o usuário deve realizar?
+
+
+
+
+
+
+
+Quais dados o usuário precisa informar?
+
+
+
+
+
+
+
+O que deve acontecer quando os dados estiverem corretos?
+
+
+
+
+
+
+
+O que deve acontecer quando os dados estiverem incorretos?
+
+
+
+
+
+
+
+O que deve acontecer quando algum campo obrigatório estiver vazio?
+
+
+
+
+
+
+
+O sistema apresenta alguma mensagem de sucesso?
+
+
+
+
+
+
+
+O sistema apresenta alguma mensagem de erro?
+
+
+
+
+
+
+
+O usuário deve ser redirecionado para outra página?
+
+
+
+
+
+
+
+Como saberemos que o teste foi aprovado?
+
+
+
+
+
+
+
+Cenários de Teste
+Cenários positivos
+
+O que acontece quando o usuário realiza a operação corretamente?
+
+
+
+
+
+
+
+Cenários negativos
+
+O que acontece quando o usuário informa dados incorretos?
+
+
+
+
+
+
+
+Campos obrigatórios
+
+O que acontece se o usuário não preencher um campo obrigatório?
+
+
+
+
+
+
+
+Dados inválidos
+
+O que acontece se o usuário informar um formato inválido?
+
+
+
+
+
+
+
+O que acontece se o usuário ultrapassar o limite permitido de caracteres?
+
+
+
+
+
+
+
+Limites
+
+Qual é o menor valor ou quantidade permitida?
+
+
+
+
+
+
+
+Qual é o maior valor ou quantidade permitida?
+
+
+
+
+
+
+
+O sistema funciona corretamente nos limites definidos?
+
+
+
+
+
+
+
+Navegação
+
+O usuário consegue acessar as páginas esperadas?
+
+
+
+
+
+
+
+Os botões, menus e links levam para os locais corretos?
+
+
+
+
+
+
+
+Compatibilidade
+
+O site funciona corretamente no celular?
+
+
+
+
+
+
+
+O site funciona corretamente no computador?
+
+
+
+
+
+
+
+O site funciona nos navegadores definidos no escopo?
+
+
+
+
+
+
+
+Segurança
+
+O usuário consegue acessar informações que não deveria?
+
+
+
+
+
+
+
+O sistema protege corretamente as senhas e os dados pessoais?
+
+
+
+
+
+
+
+O usuário consegue acessar páginas restritas sem fazer login?
+
+
+
+
+
+
+
+Informações gerais do projeto
+
+Qual é o nome do projeto/site?
+
+
+
+
+
+
+
+Qual é a finalidade do site?
+
+
+
+
+
+
+
+Quem vai utilizá-lo?
+
+
+
+
+
+
+
+Quais são as principais páginas?
+
+
+
+
+
+
+
+Quais são as principais funcionalidades?
+
+
+
+
+
+
+
+Existe cadastro e login? Como funcionam?
+
+
+
+
+
+
+
+Quais dados o usuário informa no sistema?
+
+
+
+
+
+
+
+O que deve acontecer quando uma operação é realizada corretamente?
+
+
+
+
+
+
+
+Quais erros você espera que possam acontecer?
